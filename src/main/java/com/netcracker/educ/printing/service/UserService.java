@@ -48,7 +48,7 @@ public class UserService implements UserDetailsService {
             String information,
             String phone,
             String password,
-            String role,
+//            String role,
             User user
     )  {
 
@@ -57,7 +57,7 @@ public class UserService implements UserDetailsService {
         editInfo(user, "email", email);
         editInfo(user, "information", information);
         editInfo(user, "phone", phone);
-        editInfo(user, "role", role);
+//        editInfo(user, "role", role);
         savePass(user, password);
 
         userRepo.save(user);

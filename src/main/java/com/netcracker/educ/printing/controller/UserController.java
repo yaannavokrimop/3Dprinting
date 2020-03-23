@@ -57,7 +57,7 @@ public class UserController {
         @RequestParam String information,
         @RequestParam String phone,
         @RequestParam String password,
-        @RequestParam String role,
+//        @RequestParam String role,
         @AuthenticationPrincipal User user
     )  {
 
@@ -68,7 +68,7 @@ public class UserController {
                 information,
                 phone,
                 password,
-                role,
+//                role,
                 user
         );
 
