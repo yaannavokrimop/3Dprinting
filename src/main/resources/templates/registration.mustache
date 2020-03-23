@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
+<head>
+    <title>Spring Security Example </title>
+</head>
+<body>
+
+<form action="/registration" method="post">
+    <fieldset>
+        <legend><h3>Add new user</h3></legend>
+        <div><label> E-mail: <input type="email" name="email" required/> </label></div>
+        <div><label> Пароль: <input type="password" name="password" required/> </label></div>
+        <p>Укажите вашу роль: <br>
+            <input type="radio" name="role" value="{{customer}}"/>Заказчик<Br>
+            <input type="radio" name="role" value="{{executor}}"/>Исполнитель<Br>
+        </p>
+        <h4>Контактная информация</h4>
+        <div><label> Имя: <input type="text" name="name" required/> </label></div>
+        <div><label> Фамилия: <input type="text" name="surname"/> </label></div>
+        <div><label> Телефон: <input type="tel" name="phone"/> </label></div>
+        <div><label> Дополнительная информация: <textarea name="information"> </textarea> </label></div>
+    </fieldset>
+    <input type="hidden" name="_csrf" value="{{_csrf.token}}"/>
+    <div><input type="submit" value="Add"/></div>
+</form>
+</body>
+</html>
