@@ -1,22 +1,17 @@
 <template>
-    <v-app>
-        <div><v-app-bar  dark>
-         <v-app-bar-nav-icon></v-app-bar-nav-icon>
-            <v-toolbar-title>3DPrinting</v-toolbar-title>
-            <v-spacer></v-spacer>
 
-             <v-btn icon  href="/logout">
-                    <v-icon>mdi-exit-to-app</v-icon>
-             </v-btn>
-         </v-app-bar>
-         </div>
 
-        <v-content>
             <v-container>
-                <user-data v-bind:user='user'></user-data>
+                <v-layout justify-space-around column>
+                    <div class="title">Профиль</div>
+
+                   <v-flex xs6>
+                        <user-data v-bind:user='user'></user-data>
+                   </v-flex>
+                </v-layout>
             </v-container>
-        </v-content>
-    </v-app>
+
+
 </template>
 
 <script>
@@ -39,7 +34,8 @@ export default {
 
             }
             }
-          }
+          },
+
 }
 </script>
 
