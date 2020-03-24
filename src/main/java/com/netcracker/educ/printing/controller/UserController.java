@@ -75,6 +75,10 @@ public class UserController {
 
         return "redirect:/user";
     }
+    @GetMapping("/profile")
+    public String testVue(){
+        return "profile";
+    }
 
 
 
