@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>3Dprinting</title>
+</head>
+<form action="/user" method="get">
+    <fieldset>
+        <legend><h3>Ваш профиль</h3></legend>
+        <div><label> E-mail: {{email}}.  </label></div>
+        <p>Ваша роль: {{role}}.         </p>
+        <h4>Контактная информация</h4>
+        <div><label> Имя: {{name}}.  </label></div>
+        <div><label> Фамилия: {{surname}}.  </label></div>
+        <div><label> Телефон: {{phone}}.  </label></div>
+        <div><label> Дополнительная информация: {{information}}.  </label></div>
+    </fieldset>
+
+    <a href="/user/edit"> Изменить профиль </a>
+</form>
+<form action="/logout" method="post">
+    <input type="hidden" name="_csrf" value="{{_csrf.token}}" />
+    <input type="submit" value="Sign Out"/>
+</form>
+
+</body>
+</html>
