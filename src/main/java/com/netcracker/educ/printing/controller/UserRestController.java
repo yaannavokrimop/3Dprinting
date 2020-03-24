@@ -24,6 +24,7 @@ public class UserRestController {
     }
 
 
+
     @GetMapping
     public User getCurrentUser(@AuthenticationPrincipal User user){
         log.info("This user "+user.getEmail()+" in his profile");

@@ -1,6 +1,5 @@
 <template>
 
-<v-layout column>
 
 <v-card>
     <v-card-title>
@@ -26,8 +25,6 @@
      </v-text-field>
     </v-card-text>
 </v-card>
-
-</v-layout>
 
 
 </template>
