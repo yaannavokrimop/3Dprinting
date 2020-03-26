@@ -18,7 +18,7 @@
                     </b-alert>
                 </div>
                 <div>
-                    <b-form-input type="text" placeholder="Email" v-model="email" />
+                    <b-form-input type="email" placeholder="Email" v-model="email" />
                     <div class="mt-2"></div>
 
                     <b-form-input type="password" placeholder="Password" v-model="password" />
@@ -40,7 +40,7 @@
         name: 'SignIn',
         data() {
             return {
-                username: '',
+                email: '',
                 password: '',
                 dismissSecs: 5,
                 dismissCountDown: 0,
@@ -49,10 +49,10 @@
         },
         methods: {
             login() {
-                AXIOS.post(`/auth/signin`, {'username': this.$data.username, 'password': this.$data.password})
+                AXIOS.post(`/auth/signin`, {'email': this.$data.email, 'password': this.$data.password})
                     .then(response => {
                         this.$store.dispatch('login', {'token': response.data.accessToken, 'roles': response.data.authorities, 'username': response.data.username});
-                        this.$router.push('/home')
+                        this.$router.push('/profile')
                     }, error => {
                         this.$data.alertMessage = (error.response.data.message.length < 150) ? error.response.data.message : 'Request error. Please, report this error website owners';
                         console.log(error)

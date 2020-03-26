@@ -10,6 +10,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
@@ -22,6 +23,7 @@ public class UserService implements UserDetailsService {
     private final PasswordEncoder passwordEncoder;
 
     @Override
+    @Transactional
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         User user = userRepo.findByEmail(email);
 
@@ -31,10 +33,17 @@ public class UserService implements UserDetailsService {
         return user;
     }
 
+    @Transactional
+    public UserDetails loadUserById(UUID id) {
+        User user = userRepo.findById(id).orElseThrow(
+                () -> new UsernameNotFoundException("User not found!!!")
+        );
+        return user;
+    }
+
     public boolean createUser(User user) {
         User userFromDB = userRepo.findByEmail(user.getEmail());
         if (userFromDB != null) return false;
-
         user.setId(UUID.randomUUID());
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepo.save(user);
@@ -87,7 +96,7 @@ public class UserService implements UserDetailsService {
         if (!password.equals("")) {
             editInfo(user,
                     "password",
-                    WebSecurityConfig.getPasswordEncoder().encode(password)
+                    passwordEncoder.encode(password)
             );
         }
     }

@@ -15,7 +15,7 @@ const routes=[
     {path:'/singin',component:SignIn},
     // {path:'/profile/:id',component:'Profile'},
     // {path:'*',component:'Main'}
-];
+]
 
 export default new VueRouter({
     mode:'history',
