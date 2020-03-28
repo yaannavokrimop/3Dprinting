@@ -1,53 +1,34 @@
 package com.netcracker.educ.printing.service;
 
-import com.netcracker.educ.printing.config.WebSecurityConfig;
 import com.netcracker.educ.printing.model.entity.User;
 import com.netcracker.educ.printing.model.repository.UserRepo;
 import lombok.AllArgsConstructor;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
 @AllArgsConstructor
-public class UserService implements UserDetailsService {
+public class UserService {
     private final UserRepo userRepo;
     private final PasswordEncoder passwordEncoder;
 
-    @Override
-    @Transactional
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        User user = userRepo.findByEmail(email);
-
-        if (user == null) {
-            throw new UsernameNotFoundException("User not found");
-        }
-        return user;
-    }
-
-    @Transactional
-    public UserDetails loadUserById(UUID id) {
-        User user = userRepo.findById(id).orElseThrow(
-                () -> new UsernameNotFoundException("User not found!!!")
-        );
-        return user;
-    }
-
-    public boolean createUser(User user) {
+        public boolean createUser(User user) {
         User userFromDB = userRepo.findByEmail(user.getEmail());
         if (userFromDB != null) return false;
         user.setId(UUID.randomUUID());
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepo.save(user);
         return true;
+    }
+
+    public Optional<User> get(UUID id) {
+            return userRepo.findById(id);
     }
 
     public String userSave(
