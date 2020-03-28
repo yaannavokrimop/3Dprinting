@@ -8,6 +8,10 @@
                    <v-flex xs6>
                         <user-data v-bind:user='user'></user-data>
                    </v-flex>
+
+                    <div class="my-2">
+                            <v-btn to="/profile_edit">Normal</v-btn>
+                    </div>
                 </v-layout>
             </v-container>
 

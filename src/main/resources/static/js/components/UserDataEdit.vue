@@ -4,9 +4,17 @@
 
 <v-card>
     <v-card-title>
-     {{user.name }} {{user.surname}}
+     Edit Profile
     </v-card-title>
     <v-card-text>
+     <v-text-field
+          v-model="user.name"
+          label="Name">
+     </v-text-field>
+     <v-text-field
+          v-model="user.surname"
+          label="Surname">
+     </v-text-field>
      <v-text-field
           v-model="user.email"
           label="Email Address">
@@ -21,8 +29,7 @@
           label="Information">
      </v-text-field>
      <v-text-field
-          v-model="user.role"
-          label="Information">
+          Смена роли(пока не реализовано)
      </v-text-field>
     </v-card-text>
 </v-card>
@@ -46,7 +53,8 @@ export default {
              this.user.phone = responce.data.phone;
              this.user.role = responce.data.role;
              this.user.surname = responce.data.surname;
-         }).catch(error => console.log(error));;
+             this.user.password = responce.data.password;
+         }).catch(error => console.log(error));
     }
 }
 </script>

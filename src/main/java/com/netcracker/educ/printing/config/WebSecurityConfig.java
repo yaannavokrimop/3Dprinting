@@ -41,8 +41,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests().antMatchers("/api/auth/**", "/js/**").permitAll()
-                .mvcMatchers("/", "/singin", "/signup").permitAll()
-                .anyRequest().authenticated();
+                .mvcMatchers("/", "/signin", "/signup").permitAll()
+                .anyRequest().authenticated()
+                .and()
+                .formLogin()
+                    .loginPage("/signin");
         // Add our custom JWT security filter
         http.addFilterBefore(authJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
     }
