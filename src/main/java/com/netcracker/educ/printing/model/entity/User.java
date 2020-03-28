@@ -35,33 +35,11 @@ public class User {
     @Column(length = 500)
     private String information;
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.singleton(this.getRole());
-    }
-
-    @Override
-    public String getUsername() {
-        return this.getEmail();
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return true;
-    }
+   /* public User(String name, String surname, String email, String information, String phone) {
+        this.name = name;
+        this.surname = surname;
+        this.email = email;
+        this.information = information;
+        this.phone = phone;
+    }*/
 }
