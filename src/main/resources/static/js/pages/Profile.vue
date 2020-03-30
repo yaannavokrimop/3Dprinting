@@ -12,6 +12,8 @@
                     <div class="my-2">
                             <v-btn to="/profile_edit">Normal</v-btn>
                     </div>
+
+                    <div> {{accessToken}}</div>
                 </v-layout>
             </v-container>
 
@@ -22,6 +24,7 @@
 import UserData from 'components/UserData.vue'
 
 export default {
+name: "profile",
     components:{
         UserData
     },
@@ -36,7 +39,8 @@ export default {
                  role:'',
                  surname:'',
 
-            }
+            },
+             accessToken: localStorage.getItem('accessToken'),
             }
           },
 

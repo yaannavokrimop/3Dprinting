@@ -4,18 +4,38 @@ import com.netcracker.educ.printing.exception.NotFoundException;
 import com.netcracker.educ.printing.model.entity.Order;
 import com.netcracker.educ.printing.model.entity.User;
 import com.netcracker.educ.printing.model.repository.OrderRepo;
+import com.netcracker.educ.printing.model.repository.UserRepo;
+import com.netcracker.educ.printing.security.UserDetailsImpl;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/order")
 public class OrderController {
 
+    private OrderRepo repo;
+    private UserRepo userRepo;
+
     @Autowired
-    OrderRepo repo;
+    public OrderController(UserRepo userRepo,OrderRepo repo) {
+        this.userRepo = userRepo;
+        this.repo=repo;
+    }
+
+
+    @GetMapping("/user")
+    public List<Order> getOrderByUserId() {
+        UserDetailsImpl principal = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = userRepo.findByName(principal.getUsername());
+        return repo.findByUserId(user.getId());
+
+    }
 
     @GetMapping
     public List<Order> getAllOrders(@RequestParam(required = false) String description) {

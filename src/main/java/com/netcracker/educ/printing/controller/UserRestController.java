@@ -39,16 +39,16 @@ public class UserRestController {
 
 
 
-
     @GetMapping("{id}")
     public User getUserById(@PathVariable("id") User user){
         log.info("This user "+user.getEmail()+" in his profile");
         return user;
     }
 
+    //Возвращает всех Исполнителей
     @GetMapping("/executors")
     public List<User> listExecutors(){
-        return userService.findAll();
+        return userService.findAllExecutors();
     }
 
     @PostMapping("/update/{id}")

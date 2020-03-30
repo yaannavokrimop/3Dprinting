@@ -12,7 +12,7 @@
                 <v-btn icon class="nav-link" to="/profile" v-show="authenticated">
                     <v-icon>mdi-account</v-icon>
                 </v-btn>
-                <v-btn icon href="/">
+                <v-btn icon to="/orders">
                     <v-icon>mdi-email</v-icon>
                 </v-btn>
 

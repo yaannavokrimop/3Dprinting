@@ -31,6 +31,7 @@
      <v-text-field
           Смена роли(пока не реализовано)
      </v-text-field>
+     <v-switch v-model="user.role" label="Стать исполнителем" value="false" v-show="user.role=='CUSTOMER'"></v-switch>
     </v-card-text>
 </v-card>
 

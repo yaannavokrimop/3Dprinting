@@ -15,8 +15,13 @@ import java.util.UUID;
 @RequestMapping("/api/equipment")
 public class EquipmentController {
 
+
+    private EquipmentRepo repo;
+
     @Autowired
-    EquipmentRepo repo;
+    public EquipmentController(EquipmentRepo repo) {
+        this.repo = repo;
+    }
 
     @GetMapping
     public List<Equipment> getAllEquip(@RequestParam(required = false) String equipName) {
