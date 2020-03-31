@@ -52,6 +52,8 @@ public class OrderController {
 
     @GetMapping("{id}")
     public Order getOrderById(@PathVariable("id") UUID id) {
+
+        log.info("/////////////////////////////////////////////////OrderController  id="+id);
         Optional<Order> orderData = repo.findById(id);
 
         if (orderData.isPresent()) {

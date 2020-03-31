@@ -9,9 +9,11 @@
                  :class="{ active: index == currentIndex }"
                  :key="index"
                  @click="setActiveOrder(order, index)"
+                 @dblclick="goToOrder(order)"
             >
-<v-list-item>
-      <v-list-item-content>
+
+    <v-list-item>
+      <v-list-item-content three-line>
         <v-list-item-title><strong>Статус:  {{order.status}}</strong></v-list-item-title>
         <v-list-item-subtitle>
          <strong>Описание:   {{order.description}}</strong>
@@ -60,6 +62,10 @@ props:[],
           this.currentOrder = order;
           this.currentIndex = index;
         },
+     goToOrder(order){
+        var s="/orders/"+order.id;
+        this.$router.push(s)
+     }
     }
 }
 </script>

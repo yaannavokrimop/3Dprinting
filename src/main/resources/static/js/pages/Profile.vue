@@ -10,7 +10,7 @@
                    </v-flex>
 
                     <div class="my-2">
-                            <v-btn to="/profile_edit">Normal</v-btn>
+                            <v-btn to="/profile_edit">Редактировать</v-btn>
                     </div>
 
                     <div> {{accessToken}}</div>

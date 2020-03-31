@@ -11,8 +11,9 @@
                  :class="{ active: index == currentIndex }"
                  :key="index"
                  @click="setActiveEquipment(equip, index)"
+                 @dblclick="goToEquipment(equip)"
             >
-            <v-list-item>
+            <v-list-item three-line>
                   <v-list-item-content>
                     <v-list-item-title><strong>Наименование:  {{equip.equipName}}</strong></v-list-item-title>
                     <v-list-item-subtitle>
@@ -33,12 +34,7 @@
         </ul>
     </v-content>
 
-    <v-content>
-        <h4>Equipment</h4>
-                <div v-if="currentEquip">
-                  <label><strong>Equipment Name:</strong></label> {{ currentEquip.equipName }}
-                </div>
-    </v-content>
+
 
 </v-container>
 </template>
@@ -63,11 +59,17 @@ props:[],
 
          }).catch(error => console.log(error));;
     },
+
+
     methods:{
      setActiveEquipment(equip, index) {
           this.currentEquip = equip;
           this.currentIndex = index;
         },
+     goToEquipment(equip){
+     var s="/equipment/"+equip.id;
+             this.$router.push(s)
+     }
     }
 }
 </script>
