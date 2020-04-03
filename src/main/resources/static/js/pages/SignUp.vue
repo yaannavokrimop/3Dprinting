@@ -112,7 +112,7 @@
                 //     this.showAlert();
                 // }
                     else {
-                    var newUser = {
+                    let newUser = {
                         'name': this.$data.name,
                         'surname': this.$data.surname,
                         'email': this.$data.email,
@@ -121,7 +121,7 @@
                         'role': this.$data.role,
                         'information': this.$data.information,
                     };
-                    AXIOS.post('/registration', newUser)
+                    AXIOS.post('/auth/signup', newUser)
                         .then(response => {
                             console.log(response);
                             this.successAlert();

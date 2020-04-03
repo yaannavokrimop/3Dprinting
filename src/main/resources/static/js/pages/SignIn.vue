@@ -27,8 +27,13 @@
 
                 <b-button v-on:click="login" variant="primary">Login</b-button>
 
-                <hr class="my-4" />
-
+                <hr class="my-4"/>
+                <div style=" font-size:85%">
+                    Don't have an account?
+                    <a href="#" @click="goToSignUpPage">
+                        Sign Up Here
+                    </a>
+                </div>
             </b-card>
         </div>
     </div>
@@ -49,15 +54,19 @@
         },
         methods: {
             login() {
+                this.$store.commit('loginStart');
                 AXIOS.post(`/auth/signin`, {'email': this.$data.email, 'password': this.$data.password})
                     .then(response => {
-                        this.$store.dispatch('login', {'token': response.data.accessToken, 'roles': response.data.authorities, 'username': response.data.username});
+                        localStorage.setItem('accessToken', response.data.accessToken);
+                        localStorage.setItem('email', this.$data.email);
+                        this.$store.commit('updateAccessToken', response.data.token);
                         this.$router.push('/profile')
                     }, error => {
                         this.$data.alertMessage = (error.response.data.message.length < 150) ? error.response.data.message : 'Request error. Please, report this error website owners';
                         console.log(error)
                     })
                     .catch(e => {
+                        this.$store.commit('updateAccessToken', null);
                         console.log(e);
                         this.showAlert();
                     })
@@ -68,6 +77,10 @@
             showAlert() {
                 this.dismissCountDown = this.dismissSecs
             },
+            goToSignUpPage(event) {
+                event.preventDefault();
+                this.$router.push("/signup")
+            }
         }
     }
 </script>
@@ -78,3 +91,7 @@
         margin-top: 50px;
     }
 </style>
+
+
+
+

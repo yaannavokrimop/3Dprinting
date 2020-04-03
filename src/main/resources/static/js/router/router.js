@@ -12,7 +12,8 @@ const routes=[
     {path:'/',component:Main},
     {path:'/profile',component:Profile},
     {path:'/register',component:SignUp},
-    {path:'/singin',component:SignIn},
+    {path:'/signin',component:SignIn},
+    {path:'/signup', component: SignUp},
     // {path:'/profile/:id',component:'Profile'},
     // {path:'*',component:'Main'}
 ]
