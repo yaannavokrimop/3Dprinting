@@ -13,16 +13,11 @@ import java.util.Set;
 @NoArgsConstructor
 public class City {
     @Id
-    private int cityId;
+    private int id;
 
     @Column(name = "title")
     private String title;
 
-    @ManyToMany
-    @JoinTable (
-            name = "address",
-            joinColumns = {@JoinColumn(name = "city_id")},
-            inverseJoinColumns = {@JoinColumn(name = "user_id")}
-    )
-    private Set<User> users = new HashSet<>();
+    @OneToMany(mappedBy = "city", cascade = CascadeType.ALL)
+    private Set<Address> cities = new HashSet<>();
 }
