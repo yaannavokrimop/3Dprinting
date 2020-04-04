@@ -4,6 +4,8 @@ import com.netcracker.educ.printing.model.bean.Role;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -34,6 +36,14 @@ public class User {
 
     @Column(length = 500)
     private String information;
+
+    @ManyToMany
+    @JoinTable (
+            name = "address",
+            joinColumns = {@JoinColumn(name = "user_id")},
+            inverseJoinColumns = {@JoinColumn(name = "city_id")}
+    )
+    private Set<City> users = new HashSet<>();
 
    /* public User(String name, String surname, String email, String information, String phone) {
         this.name = name;
