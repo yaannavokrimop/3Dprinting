@@ -5,6 +5,8 @@ import lombok.Data;
 import org.hibernate.annotations.NaturalId;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -38,6 +40,8 @@ public class User {
     @Column(length = 500)
     private String information;
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private Set<Address> users = new HashSet<>();
     public User() { }
 
     public User(String name, String surname, String email, String information, String phone) {
