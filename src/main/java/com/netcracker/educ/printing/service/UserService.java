@@ -1,5 +1,6 @@
 package com.netcracker.educ.printing.service;
 
+import com.netcracker.educ.printing.model.bean.Role;
 import com.netcracker.educ.printing.model.entity.User;
 import com.netcracker.educ.printing.model.repository.UserRepo;
 import lombok.AllArgsConstructor;
@@ -80,5 +81,13 @@ public class UserService {
                     passwordEncoder.encode(password)
             );
         }
+    }
+
+    public User updateUser(User user){
+        return userRepo.save(user);
+    }
+
+    public List<User> findAllExecutors() {
+        return userRepo.findByRole(Role.EXECUTOR);
     }
 }

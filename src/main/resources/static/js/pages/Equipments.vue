@@ -1,10 +1,7 @@
 <template>
 <v-container>
     <v-content>
-    Список исполнителей и карта
-    </v-content>
-    <v-content>
-        <h4>Оборудование</h4>
+        <h4>Моё оборудование:</h4>
         <ul class="list-group">
             <li class="list-group-item"
                  v-for="(equip,index) in equipments"
@@ -32,9 +29,9 @@
         </ul>
 
     </v-content>
-
-
-
+        <v-content>
+        <v-btn  to="/add_equipment">Добавить обарудование</v-btn>
+    </v-content>
 </v-container>
 </template>
 
@@ -74,7 +71,5 @@ props:[],
 </script>
 
 <style scoped>
-
-
 
 </style>

@@ -20,11 +20,11 @@ public class MainController {
         return "index";
     }
 
-    @GetMapping("/main")
-    public List<User> main(
-            @AuthenticationPrincipal User user, Map<String, Object> model
-    ) {
-        model.put("message", user.getName());
-        return userRepo.findAll();
-    }
+//    @GetMapping("/main")
+//    public List<User> main(
+//            @AuthenticationPrincipal User user, Map<String, Object> model
+//    ) {
+//        model.put("message", user.getName());
+//        return userRepo.findAll();
+//    }
 }

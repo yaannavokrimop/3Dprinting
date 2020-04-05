@@ -12,7 +12,7 @@
                 <v-btn icon class="nav-link" to="/profile" v-show="authenticated">
                     <v-icon>mdi-account</v-icon>
                 </v-btn>
-                <v-btn icon href="/">
+                <v-btn icon to="/orders" v-show="authenticated">
                     <v-icon>mdi-email</v-icon>
                 </v-btn>
 
@@ -21,14 +21,12 @@
                 </v-btn>
 
                 <v-btn icon class="nav-link" to="/signin" v-show="!authenticated">
-                    <v-icon>mdi-exit-to-ap</v-icon>
+                    <v-icon>mdi-exit-to-app</v-icon>
                 </v-btn>
             </v-app-bar>
             <v-content>
                 <router-view></router-view>
-                {{accessToken}}
-                {{isAuth}}
-                {{userData}}
+
 
             </v-content>
         </div>
