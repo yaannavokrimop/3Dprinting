@@ -1,7 +1,7 @@
 <template>
 <v-container>
     <v-content>
-        <h4>Моё оборудование:</h4>
+        <h4>Моё оборудование</h4>
         <ul class="list-group">
             <li class="list-group-item"
                  v-for="(equip,index) in equipments"
@@ -30,7 +30,7 @@
 
     </v-content>
         <v-content>
-        <v-btn  to="/add_equipment">Добавить обарудование</v-btn>
+        <v-btn  to="/add_equipment">Добавить оборудование</v-btn>
     </v-content>
 </v-container>
 </template>

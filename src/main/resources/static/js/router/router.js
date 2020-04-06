@@ -16,7 +16,6 @@ Vue.use(VueRouter);
 
 const routes=[
     {path:'/',component:Main},
-
     {path:'/signin',component:SignIn},
     {path:'/signup', component: SignUp},
     {path:'/profile',component:Profile},
@@ -31,6 +30,6 @@ const routes=[
 ]
 
 export default new VueRouter({
-    mode:'history',
+    // mode:'history',
     routes
 })
