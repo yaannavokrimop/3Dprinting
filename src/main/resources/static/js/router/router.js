@@ -8,13 +8,14 @@ import ProfileEdit from 'pages/ProfileEdit.vue'
 import Orders from 'pages/Orders.vue'
 import Order from 'pages/Order.vue'
 import Equipment from 'pages/Equipment.vue'
+import AddEquipment from 'pages/AddEquipment.vue'
+import Equipments from 'pages/Equipments.vue'
 
 
 Vue.use(VueRouter);
 
 const routes=[
     {path:'/',component:Main},
-
     {path:'/signin',component:SignIn},
     {path:'/signup', component: SignUp},
     {path:'/profile',component:Profile},
@@ -22,11 +23,13 @@ const routes=[
     {path:'/orders', component: Orders},
     {path:'/orders/:id', component: Order},
     {path:'/equipment/:id', component: Equipment},
+    {path:'/equipment', component: Equipments},
+    {path:'/add_equipment', component: AddEquipment},
     // {path:'/profile/:id',component:'Profile'},
     // {path:'*',component:'Main'}
 ]
 
 export default new VueRouter({
-    mode:'history',
+    // mode:'history',
     routes
 })
