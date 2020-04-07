@@ -20,12 +20,16 @@ public class Address implements Serializable {
     @EmbeddedId
     private AddressId id;
 
+
+
+    @MapsId("city_id")
     @ManyToOne
-    @MapsId("cityId")
+    @JoinColumn(name = "city_id", referencedColumnName = "id")
     private City city;
 
+    @MapsId("user_id")
     @ManyToOne
-    @MapsId("userId")
+    @JoinColumn(name = "user_id",referencedColumnName = "id")
     private User user;
 
 

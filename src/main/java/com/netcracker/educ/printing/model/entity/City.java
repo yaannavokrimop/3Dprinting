@@ -19,5 +19,7 @@ public class City {
     private String title;
 
     @OneToMany(mappedBy = "city", cascade = CascadeType.ALL)
-    private Set<Address> cities = new HashSet<>();
+    private Set<Address> addresses;
+//    private Set<Address> addresses = new HashSet<>();
+
 }
