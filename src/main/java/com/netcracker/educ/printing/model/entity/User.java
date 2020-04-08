@@ -2,6 +2,7 @@ package com.netcracker.educ.printing.model.entity;
 
 import com.netcracker.educ.printing.model.bean.Role;
 import lombok.Data;
+import org.hibernate.annotations.NaturalId;
 
 import javax.persistence.*;
 import java.util.UUID;
@@ -11,6 +12,7 @@ import java.util.UUID;
 @Data
 public class User {
     @Id
+    @GeneratedValue
     private UUID id;
 
     @Column(nullable = false, length = 45)
@@ -26,6 +28,7 @@ public class User {
     @Column(length = 45)
     private String phone;
 
+    @NaturalId
     @Column(nullable = false, length = 45)
     private String email;
 
@@ -35,11 +38,13 @@ public class User {
     @Column(length = 500)
     private String information;
 
-   /* public User(String name, String surname, String email, String information, String phone) {
+    public User() { }
+
+    public User(String name, String surname, String email, String information, String phone) {
         this.name = name;
         this.surname = surname;
         this.email = email;
         this.information = information;
         this.phone = phone;
-    }*/
+    }
 }

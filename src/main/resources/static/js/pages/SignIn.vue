@@ -57,9 +57,11 @@
                 this.$store.commit('loginStart');
                 AXIOS.post(`/auth/signin`, {'email': this.$data.email, 'password': this.$data.password})
                     .then(response => {
+                        this.$store.commit('loginStart');
                         localStorage.setItem('accessToken', response.data.accessToken);
-                        localStorage.setItem('email', this.$data.email);
-                        this.$store.commit('updateAccessToken', response.data.token);
+                        localStorage.setItem('authority', response.data.authority);
+                        this.$store.commit('updateAccessToken', response.data.accessToken);
+                        this.$store.commit('setUserAuthority', response.data.authority);
                         this.$router.push('/profile')
                     }, error => {
                         this.$data.alertMessage = (error.response.data.message.length < 150) ? error.response.data.message : 'Request error. Please, report this error website owners';

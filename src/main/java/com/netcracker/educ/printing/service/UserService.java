@@ -22,7 +22,6 @@ public class UserService {
         public boolean createUser(User user) {
         User userFromDB = userRepo.findByEmail(user.getEmail());
         if (userFromDB != null) return false;
-        user.setId(UUID.randomUUID());
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepo.save(user);
         return true;

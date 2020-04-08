@@ -26,8 +26,6 @@
             </v-app-bar>
             <v-content>
                 <router-view></router-view>
-
-
             </v-content>
         </div>
 
@@ -40,13 +38,6 @@
     import router from "../router/router";
 
     export default {
-        data() {
-            return {
-                accessToken: localStorage.getItem('accessToken'),
-                isAuth: this.$store.getters.authenticated,
-                userData: this.$store.getters.userData
-            }
-        },
         methods: {
             ...mapActions([
                 'fetchAccessToken',

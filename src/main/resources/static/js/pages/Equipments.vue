@@ -46,15 +46,20 @@ props:[],
     currentIndex:-1,
 
 
- }
- },
-    created:function(){
-         AXIOS.get('/equipment').then((responce) =>{
-             this.equipments = responce.data;
-             console.log(response.data);
+            }
+        },
+        created: function () {
+            AXIOS.get('/equipment/my').then((responce) => {
+                this.equipments = responce.data;
+                console.log(responce.data);
+            }).catch(error => console.log(error));
 
-         }).catch(error => console.log(error));;
-    },
+            /*AXIOS.get('/equipment').then((responce) => {
+                this.equipments = responce.data;
+                console.log(response.data);
+
+            }).catch(error => console.log(error));*/
+        },
 
 
     methods:{

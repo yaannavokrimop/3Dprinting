@@ -13,9 +13,9 @@
                             <v-btn to="/profile_edit">Редактировать</v-btn>
                     </div>
 
-                    <div class="my-2">
-                            <v-btn to="/equipment">Моё оборудование</v-btn>
-                    </div>
+            <div class="my-2">
+                <v-btn to="/equipment" v-show="role === 'EXECUTOR'">Моё оборудование</v-btn>
+            </div>
 
                     <div> {{accessToken}}</div>
                 </v-layout>
@@ -43,8 +43,9 @@ name: "Profile",
                  role:'',
                  surname:'',
 
-            },
-             accessToken: localStorage.getItem('accessToken'),
+                },
+                accessToken: localStorage.getItem('accessToken'),
+                role: localStorage.getItem('authority'),
             }
           },
 

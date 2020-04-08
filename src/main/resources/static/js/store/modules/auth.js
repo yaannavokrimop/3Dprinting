@@ -1,14 +1,16 @@
-import router from "../router/router";
+import router from "router/router";
 
 export default {
     state: {
         authenticated: false,
         accessToken: null,
+        authority: null,
         userData: []
     },
     getters: {
         authenticated: state => state.authenticated,
-        userData: state => state.userData
+        userData: state => state.userData,
+        authority: state => state.authority
     },
     mutations: {
         loginStart: state => {
@@ -21,6 +23,10 @@ export default {
         logout: (state) => {
             state.accessToken = null;
             state.authenticated = false;
+            state.authority = null;
+        },
+        setUserAuthority: (state, authority) => {
+            state.authority = authority;
         },
         setUserData: (state, payload) => {
             state.userData = payload;
@@ -32,7 +38,7 @@ export default {
         },
         doLogout({commit}) {
             localStorage.removeItem('accessToken');
-            localStorage.removeItem('email');
+            localStorage.removeItem('authority');
             commit('logout');
             router.push('/signin');
         }
