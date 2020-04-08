@@ -1,17 +1,17 @@
 package com.netcracker.educ.printing.service;
 
 import com.netcracker.educ.printing.model.bean.Role;
+import com.netcracker.educ.printing.model.entity.Address;
 import com.netcracker.educ.printing.model.entity.User;
 import com.netcracker.educ.printing.model.repository.UserRepo;
+import com.netcracker.educ.printing.model.representationModel.AddressRepresent;
+import com.netcracker.educ.printing.model.representationModel.UserRepresent;
 import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @AllArgsConstructor
@@ -86,7 +86,36 @@ public class UserService {
         return userRepo.save(user);
     }
 
-    public List<User> findAllExecutors() {
-        return userRepo.findByRole(Role.EXECUTOR);
+    public List<UserRepresent> findAllExecutors() {
+        List<User> executors=userRepo.findByRole(Role.EXECUTOR);
+        return usersToUserRepresents(executors);
+    }
+
+    public List<UserRepresent> findExecutorsByAddresses() {
+        List<User> executors=userRepo.findByRole(Role.EXECUTOR);
+        return usersToUserRepresents(executors);
+    }
+
+    public List<UserRepresent> usersToUserRepresents(List<User> users){
+        List<UserRepresent> userRepresents=new ArrayList<>();
+        User user;
+        Iterator<User> iter=users.iterator();
+        while (iter.hasNext()){
+            user=iter.next();
+            userRepresents.add(new UserRepresent(user.getId(),user.getName(),user.getSurname(),user.getRole(),user.getPhone(),user.getEmail(),user.getInformation(),addressToAddressRepresent(user.getAddresses())));
+
+        }
+        return userRepresents;
+    }
+
+    public List<AddressRepresent> addressToAddressRepresent(List<Address> addresses){
+            List<AddressRepresent> addressRepresents=new ArrayList<>();
+            Iterator<Address> iterator=addresses.iterator();
+            Address addr;
+            while(iterator.hasNext()){
+                addr=iterator.next();
+                addressRepresents.add(new AddressRepresent(addr.getCity().getTitle(),addr.getDescription(),addr.getUser().getId()));
+            }
+            return addressRepresents;
     }
 }
