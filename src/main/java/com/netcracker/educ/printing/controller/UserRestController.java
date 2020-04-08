@@ -2,6 +2,7 @@ package com.netcracker.educ.printing.controller;
 
 import com.netcracker.educ.printing.model.entity.User;
 import com.netcracker.educ.printing.model.repository.UserRepo;
+import com.netcracker.educ.printing.model.representationModel.UserRepresent;
 import com.netcracker.educ.printing.security.UserDetailsImpl;
 import com.netcracker.educ.printing.service.UserService;
 import lombok.extern.slf4j.Slf4j;
@@ -47,7 +48,7 @@ public class UserRestController {
 
     //Возвращает всех Исполнителей
     @GetMapping("/executors")
-    public List<User> listExecutors(){
+    public List<UserRepresent> listExecutors(){
         return userService.findAllExecutors();
     }
 

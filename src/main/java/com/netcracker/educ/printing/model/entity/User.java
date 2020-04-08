@@ -1,10 +1,14 @@
 package com.netcracker.educ.printing.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import com.netcracker.educ.printing.model.bean.Role;
 import lombok.Data;
 
 import javax.persistence.*;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -38,7 +42,8 @@ public class User {
     private String information;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private Set<Address> addresses;
+    @JsonIgnore
+    private List<Address> addresses;
 //    private Set<Address> users = new HashSet<>();
 
    /* public User(String name, String surname, String email, String information, String phone) {

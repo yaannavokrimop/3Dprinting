@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/address")
+    @RequestMapping("/api/address")
 @AllArgsConstructor
 public class AddressController {
 
@@ -30,7 +30,7 @@ public class AddressController {
     }
 
     @GetMapping("/city")
-    public List<Address> getAddressByCity(@RequestParam Integer cityId) {
+    public List<Address> getAddressByCity(@RequestParam Long cityId) {
         City city = cityRepo.findAllById(cityId);
         return addressRepo.findAllByCity(city);
     }
