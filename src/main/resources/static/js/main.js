@@ -7,7 +7,7 @@ import 'vuetify/dist/vuetify.min.css'
 import BootstrapVue from 'bootstrap-vue'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
-import store from "store/store";
+import store from "./store";
 // import Axios from 'axios'
 
 // Vue.use(Vuetify)
