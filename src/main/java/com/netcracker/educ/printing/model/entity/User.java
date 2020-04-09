@@ -46,8 +46,8 @@ public class User {
     @Column(length = 500)
     private String information;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private Set<Address> users = new HashSet<>();
+   /* @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private Set<Address> users = new HashSet<>();*/
     public User() { }
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
