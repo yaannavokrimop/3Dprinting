@@ -1,19 +1,29 @@
-
 const path = require('path');
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
+const HtmlWebpackPlugin=require('html-webpack-plugin');
+
 
 module.exports = {
     mode: 'development',
     devtool: 'source-map',
     entry: path.join(__dirname, 'src', 'main', 'resources', 'static', 'js', 'main.js'),
-    devServer: {
-        contentBase: './dist',
-        compress: true,
-        port: 8000,
-        allowedHosts: [
-            'localhost:8080'
-        ]
+
+    // devServer: {
+    //     contentBase: './dist',
+    //     compress: true,
+    //     port: 8000,
+    //     allowedHosts: [
+    //         'localhost:8080'
+    //     ]
+    // },
+
+    output: {
+        filename: 'main.js',
+        path: path.resolve(__dirname, 'src', 'main', 'resources','static', 'outjs'),
+        publicPath: "/"
     },
+
+
     module: {
         rules: [
             {
@@ -40,7 +50,13 @@ module.exports = {
         ]
     },
     plugins: [
-        new VueLoaderPlugin()
+        new VueLoaderPlugin(),
+        new HtmlWebpackPlugin({
+            template: "./src/main/resources/templates/index.html"
+        }),
+        // new CleanWebpackPlugin([
+        //         "./src/main/resources/static/outjs/*.*"
+        // ])
     ],
     resolve: {
         modules: [

@@ -8,6 +8,16 @@
                    <v-flex xs6>
                         <user-data v-bind:user='user'></user-data>
                    </v-flex>
+
+                    <div class="my-2">
+                            <v-btn to="/profile_edit">Редактировать</v-btn>
+                    </div>
+
+                    <div class="my-2">
+                            <v-btn to="/equipment">Моё оборудование</v-btn>
+                    </div>
+
+                    <div> {{accessToken}}</div>
                 </v-layout>
             </v-container>
 
@@ -18,6 +28,7 @@
 import UserData from 'components/UserData.vue'
 
 export default {
+name: "Profile",
     components:{
         UserData
     },
@@ -32,7 +43,8 @@ export default {
                  role:'',
                  surname:'',
 
-            }
+            },
+             accessToken: localStorage.getItem('accessToken'),
             }
           },
 
