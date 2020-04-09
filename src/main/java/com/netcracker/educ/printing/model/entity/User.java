@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import com.netcracker.educ.printing.model.bean.Role;
 import lombok.Data;
+import org.hibernate.annotations.NaturalId;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -49,17 +50,17 @@ public class User {
     private Set<Address> users = new HashSet<>();
     public User() { }
 
-    public User(String name, String surname, String email, String information, String phone) {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Address> addresses;
 //    private Set<Address> users = new HashSet<>();
 
-   /* public User(String name, String surname, String email, String information, String phone) {
+    public User(String name, String surname, String email, String information, String phone) {
         this.name = name;
         this.surname = surname;
         this.email = email;
         this.information = information;
         this.phone = phone;
-    }*/
+    }
+
 }
