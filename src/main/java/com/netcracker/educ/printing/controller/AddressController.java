@@ -7,27 +7,31 @@ import com.netcracker.educ.printing.model.repository.AddressRepo;
 import com.netcracker.educ.printing.model.repository.CityRepo;
 import com.netcracker.educ.printing.model.repository.UserRepo;
 import com.netcracker.educ.printing.security.UserDetailsImpl;
+import com.netcracker.educ.printing.service.AddressService;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
-    @RequestMapping("/api/address")
+@RequestMapping("/api/address")
 @AllArgsConstructor
 public class AddressController {
 
     private AddressRepo addressRepo;
     private UserRepo userRepo;
     private CityRepo cityRepo;
+    private final AddressService addressService;
 
     @GetMapping("/user")
     public List<Address> getAddressByUser() {
         UserDetailsImpl principal = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        User user = userRepo.findByName(principal.getUsername());
+        User user = userRepo.findByEmail(principal.getEmail());
         return addressRepo.findAllByUser(user);
     }
+
 
     @GetMapping("/city")
     public List<Address> getAddressByCity(@RequestParam Long cityId) {
@@ -43,4 +47,10 @@ public class AddressController {
 //        Address address = new Address(city, user, description);
 //        return addressRepo.save(address);
 //    }
+
+    @PostMapping
+    public Address addAddress(@RequestBody Map<String, String> address) {
+        UserDetailsImpl principal = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return addressService.add(principal.getEmail(), address.get("cityTitle"), address.get("description"));
+    }
 }

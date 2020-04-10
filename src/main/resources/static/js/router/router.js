@@ -13,23 +13,31 @@ import Equipments from 'pages/Equipments.vue'
 
 
 Vue.use(VueRouter);
-
-const routes=[
-    {path:'/',component:Main},
-    {path:'/signin',component:SignIn},
-    {path:'/signup', component: SignUp},
-    {path:'/profile',component:Profile},
-    {path:'/profile_edit', component: ProfileEdit},
-    {path:'/orders', component: Orders},
-    {path:'/orders/:id', component: Order},
-    {path:'/equipment/:id', component: Equipment},
-    {path:'/equipment', component: Equipments},
-    {path:'/add_equipment', component: AddEquipment},
-    // {path:'/profile/:id',component:'Profile'},
-    // {path:'*',component:'Main'}
-]
-
-export default new VueRouter({
-    // mode:'history',
-    routes
+let router = new VueRouter({
+    routes: [
+        {path: '/', component: Main},
+        {path: '/signin', component: SignIn},
+        {path: '/signup', component: SignUp},
+        {path: '/profile', component: Profile},
+        {path: '/profile_edit', component: ProfileEdit},
+        {path: '/orders', component: Orders},
+        {path: '/orders/:id', component: Order},
+        {path: '/equipment/:id', component: Equipment},
+        {path: '/equipment', component: Equipments},
+        {path: '/add_equipment', component: AddEquipment, meta: {isExecutor: true}},
+        // {path:'/profile/:id',component:'Profile'},
+        // {path:'*',component:'Main'}
+    ]
 })
+router.beforeEach((to, from, next) => {
+    if (to.matched.some(record => record.meta.isExecutor)) {
+        if (localStorage.getItem('authority') === 'EXECUTOR') {
+            next()
+            return
+        }
+        next('/')
+    } else {
+        next()
+    }
+})
+export default router

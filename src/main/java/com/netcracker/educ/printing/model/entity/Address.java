@@ -1,11 +1,9 @@
 package com.netcracker.educ.printing.model.entity;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonUnwrapped;
+import com.netcracker.educ.printing.model.repository.CityRepo;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
@@ -19,23 +17,31 @@ import java.util.UUID;
 @AllArgsConstructor
 public class Address implements Serializable {
 
-    @EmbeddedId
-    private AddressId id;
+    @Id
+    @GeneratedValue
+    private UUID id;
 
-
-
-    @MapsId("city_id")
     @ManyToOne
     @JoinColumn(name = "city_id", referencedColumnName = "id")
     @JsonIgnore
     private City city;
 
-    @MapsId("user_id")
     @ManyToOne
-    @JoinColumn(name = "user_id",referencedColumnName = "id")
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
     @JsonIgnore
     private User user;
 
-
     private String description;
+
+    public Address(User user, City city, String description) {
+        this.city = city;
+        this.user = user;
+        this.description = description;
+    }
+
+    public Address(User user, String cityName, String description){
+        this.user=user;
+        this.description=description;
+
+    }
 }
