@@ -27,13 +27,17 @@
             </li>
         </ul>
 
-        <h4>Equipment</h4>
                 <div v-if="currentOrder">
                   <label><strong>Current order:</strong></label> {{ currentOrder.description }}
                 </div>
     </v-card>
 
+    <v-content>
+        <div class="mt-2"></div>
+        <v-btn  to="/order/create">Разместить заказ</v-btn>
+    </v-content>
 </v-container>
+
 </template>
 
 <script>
