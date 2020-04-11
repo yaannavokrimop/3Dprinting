@@ -6,10 +6,13 @@ import com.netcracker.educ.printing.model.entity.User;
 import com.netcracker.educ.printing.model.repository.AddressRepo;
 import com.netcracker.educ.printing.model.repository.CityRepo;
 import com.netcracker.educ.printing.model.repository.UserRepo;
+import com.netcracker.educ.printing.model.representationModel.AddressRepresent;
+import com.netcracker.educ.printing.security.UserDetailsImpl;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 @Service
 @Transactional
@@ -18,14 +21,21 @@ public class AddressService {
     private final AddressRepo addressRepo;
     private final UserRepo userRepo;
     private final CityRepo cityRepo;
+    private final UserService userService;
+
 
     public Address add(String userEmail, String cityName, String description) {
         User user = userRepo.findByEmail(userEmail);
         City city = cityRepo.findAllByTitle(cityName);
         Address address = new Address(user, city, description);
         addressRepo.save(address);
-        city.getAddresses().add(address);
-        user.getAddresses().add(address);
+//        city.getAddresses().add(address);
+//        user.getAddresses().add(address);
         return address;
+    }
+
+    public List<AddressRepresent> getAddressesByUser(UserDetailsImpl principal){
+        User user=userRepo.findByEmail(principal.getEmail());
+           return userService.addressToAddressRepresent(user.getAddresses());
     }
 }

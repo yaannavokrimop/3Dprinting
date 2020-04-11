@@ -54,6 +54,13 @@
                     <input type="radio" value="EXECUTOR" v-model="role">
                     <label>Исполнитель</label>
 
+                    <b-form-input type="text" placeholder="City" v-model="cityTitle" />
+                    <div class="mt-2"></div>
+
+                    <b-form-input type="text" placeholder="Address" v-model="description" />
+                    <div class="mt-2"></div>
+
+
                     <!--<b-form-input type="password" placeholder="Confirm Password" v-model="confirmpassword" />
                     <div class="mt-2"></div>-->
                 </div>
@@ -82,7 +89,10 @@
                 dismissSecs: 5,
                 dismissCountDown: 0,
                 alertMessage: '',
-                successfullyRegistered: false
+                successfullyRegistered: false,
+                cityTitle:'',
+                description:''
+
             }
         },
         methods: {
@@ -120,7 +130,9 @@
                         'password': this.$data.password,
                         'phone': this.$data.phone,
                         'role': this.$data.role,
-                        'information': this.$data.information
+                        'information': this.$data.information,
+                        'cityTitle':this.$data.cityTitle,
+                        'description':this.$data.description
                     })
                         .then(response => {
                             console.log(response);
@@ -150,6 +162,8 @@
                 this.role = '';
                 this.phone = '';
                 this.information = '';
+                this.description='';
+                this.cityTitle='';
                 this.successfullyRegistered = true;
             }
         }

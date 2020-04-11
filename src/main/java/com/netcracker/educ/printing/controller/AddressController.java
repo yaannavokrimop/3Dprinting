@@ -6,9 +6,11 @@ import com.netcracker.educ.printing.model.entity.User;
 import com.netcracker.educ.printing.model.repository.AddressRepo;
 import com.netcracker.educ.printing.model.repository.CityRepo;
 import com.netcracker.educ.printing.model.repository.UserRepo;
+import com.netcracker.educ.printing.model.representationModel.AddressRepresent;
 import com.netcracker.educ.printing.security.UserDetailsImpl;
 import com.netcracker.educ.printing.service.AddressService;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,6 +20,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/address")
 @AllArgsConstructor
+@Slf4j
 public class AddressController {
 
     private AddressRepo addressRepo;
@@ -26,10 +29,10 @@ public class AddressController {
     private final AddressService addressService;
 
     @GetMapping("/user")
-    public List<Address> getAddressByUser() {
+    public List<AddressRepresent> getAddressByUser() {
         UserDetailsImpl principal = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        User user = userRepo.findByEmail(principal.getEmail());
-        return addressRepo.findAllByUser(user);
+
+        return addressService.getAddressesByUser(principal);
     }
 
 
