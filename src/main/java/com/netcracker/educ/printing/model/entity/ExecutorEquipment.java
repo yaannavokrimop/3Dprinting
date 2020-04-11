@@ -11,8 +11,8 @@ import java.util.UUID;
 @Data
 public class ExecutorEquipment {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+    @GeneratedValue
+    private UUID id;
 
     @Column(nullable = false)
     private boolean ready = true;

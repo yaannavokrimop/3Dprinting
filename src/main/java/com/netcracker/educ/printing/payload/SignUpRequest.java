@@ -17,12 +17,12 @@ public class SignUpRequest {
     private String surname;
 
     @NotBlank
-    private String role;
-
-    @NotBlank
     @Size(min=1, max = 45)
     @Email
     private String email;
+
+    @NotBlank
+    private String role;
 
     @NotBlank
     private String password;
@@ -32,4 +32,8 @@ public class SignUpRequest {
 
     @Size(max=500)
     private String information;
+
+    private String cityTitle;
+
+    private String description;
 }

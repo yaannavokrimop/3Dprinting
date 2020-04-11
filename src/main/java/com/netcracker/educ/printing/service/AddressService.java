@@ -29,8 +29,6 @@ public class AddressService {
         City city = cityRepo.findAllByTitle(cityName);
         Address address = new Address(user, city, description);
         addressRepo.save(address);
-//        city.getAddresses().add(address);
-//        user.getAddresses().add(address);
         return address;
     }
 

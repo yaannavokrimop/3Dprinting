@@ -8,6 +8,6 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-public interface ExecutorEquipmentRepo extends JpaRepository<ExecutorEquipment, Long> {
+public interface ExecutorEquipmentRepo extends JpaRepository<ExecutorEquipment, UUID> {
     List<ExecutorEquipment> findAllByExecutorId(UUID executorId);
 }

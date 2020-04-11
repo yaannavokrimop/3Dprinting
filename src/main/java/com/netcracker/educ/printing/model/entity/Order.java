@@ -16,9 +16,9 @@ public class Order {
     @Id
     private UUID id;
 
-    @NonNull
-    @Column(nullable = false)
-    private UUID userId;
+    @ManyToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private User user;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
@@ -26,7 +26,7 @@ public class Order {
 
     @NonNull
     @Column(nullable = false)
-    private int sum;
+    private float sum;
 
     @Column(nullable = false)
     private Date date;

@@ -38,10 +38,4 @@ public class Address implements Serializable {
         this.user = user;
         this.description = description;
     }
-
-    public Address(User user, String cityName, String description){
-        this.user=user;
-        this.description=description;
-
-    }
 }

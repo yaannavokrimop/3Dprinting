@@ -9,6 +9,7 @@ import com.netcracker.educ.printing.payload.SignUpRequest;
 import com.netcracker.educ.printing.payload.SignupResponce;
 import com.netcracker.educ.printing.security.UserDetailsImpl;
 import com.netcracker.educ.printing.security.jwt.TokenProvider;
+import com.netcracker.educ.printing.service.AddressService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -39,6 +40,7 @@ public class AuthController {
     private final AuthenticationManager authenticationManager;
     private final UserRepo userRepo;
     private final PasswordEncoder passwordEncoder;
+    private final AddressService addressService;
 
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
@@ -75,6 +77,7 @@ public class AuthController {
         Role role = Role.valueOf(signUpRequest.getRole());
         user.setRole(role);
         User result = userRepo.save(user);
+        if (signUpRequest.getCityTitle() != null && !signUpRequest.getCityTitle().isEmpty()) addressService.add(user.getEmail(), signUpRequest.getCityTitle(), signUpRequest.getDescription());
         URI location = ServletUriComponentsBuilder
                 .fromCurrentContextPath().path("/signup")
                 .buildAndExpand(result.getEmail()).toUri();

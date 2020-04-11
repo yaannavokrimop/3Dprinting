@@ -33,7 +33,7 @@ public class OrderController {
     @GetMapping("/user")
     public List<Order> getOrderByUserId() {
         UserDetailsImpl principal = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        User user = userRepo.findByName(principal.getUsername());
+        User user = userRepo.findByEmail(principal.getEmail());
         return repo.findByUserId(user.getId());
 
     }
@@ -71,7 +71,7 @@ public class OrderController {
         UserDetailsImpl principal = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User user = userRepo.findByEmail(principal.getEmail());
 
-        inputOrder.setUserId(user.getId());
+        inputOrder.setUser(user);
         inputOrder.setId(UUID.randomUUID());
         inputOrder.setStatus(OrderStatus.NO_PAY);
         inputOrder.setDate(new Date());
@@ -86,7 +86,7 @@ public class OrderController {
         UserDetailsImpl principal = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User user = userRepo.findByEmail(principal.getEmail());
 
-        inputOrder.setUserId(user.getId());
+        inputOrder.setUser(user);
         inputOrder.setId(UUID.randomUUID());
         inputOrder.setStatus(OrderStatus.DRAFT);
         inputOrder.setDate(new Date());
