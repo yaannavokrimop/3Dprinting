@@ -1,7 +1,7 @@
 <template>
     <v-container>
         <b-card
-             title="Регистрация Обарудования"
+             title="Регистрация Оборудования"
              tag="article"
              style="max-width: 20rem;"
              class="mb-2"
@@ -17,7 +17,7 @@
                 <b-form-input type="text" placeholder="Допустимая высота" v-model="height" />
                 <div class="mt-2"></div>
 
-                <b-form-input type="text" placeholder="Добустимая ширина" v-model="width" />
+                <b-form-input type="text" placeholder="Допустимая ширина" v-model="width" />
                 <div class="mt-2"></div>
 
                  <b-form-input type="text" placeholder="Допустимая длина" v-model="length" />

@@ -1,14 +1,15 @@
 package com.netcracker.educ.printing.controller;
 
 import com.netcracker.educ.printing.exception.NotFoundException;
+import com.netcracker.educ.printing.model.bean.OrderStatus;
 import com.netcracker.educ.printing.model.entity.Order;
 import com.netcracker.educ.printing.model.entity.User;
 import com.netcracker.educ.printing.model.repository.OrderRepo;
 import com.netcracker.educ.printing.model.repository.UserRepo;
 import com.netcracker.educ.printing.security.UserDetailsImpl;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
@@ -65,45 +66,43 @@ public class OrderController {
 
     @PostMapping
     public Order createOrder(
-            @RequestBody Order inputOrder,
-            @AuthenticationPrincipal User user
+            @RequestBody Order inputOrder
     ) {
+        UserDetailsImpl principal = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = userRepo.findByEmail(principal.getEmail());
 
-        Order order = new Order(
-                user.getId(),
-                inputOrder.getStatus(),
-                inputOrder.getSum(),
-                inputOrder.getHeight(),
-                inputOrder.getWidth(),
-                inputOrder.getLength(),
-                inputOrder.getDescription()
-        );
+        inputOrder.setUserId(user.getId());
+        inputOrder.setId(UUID.randomUUID());
+        inputOrder.setStatus(OrderStatus.NO_PAY);
+        inputOrder.setDate(new Date());
 
-        order.setId(UUID.randomUUID());
-        order.setDate(new Date());
+        return repo.save(inputOrder);
+    }
 
-        return repo.save(order);
+    @PostMapping("draft")
+    public Order createDraft(
+            @RequestBody Order inputOrder
+    ) {
+        UserDetailsImpl principal = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = userRepo.findByEmail(principal.getEmail());
+
+        inputOrder.setUserId(user.getId());
+        inputOrder.setId(UUID.randomUUID());
+        inputOrder.setStatus(OrderStatus.DRAFT);
+        inputOrder.setDate(new Date());
+
+        return repo.save(inputOrder);
     }
 
     @PutMapping("{id}")
     public Order updateOrder(
-            @PathVariable("id") UUID id,
-            @RequestBody Order inputOrder
+            @RequestBody Order inputOrder,
+            @PathVariable("id") Order dbOrder
     ) {
-        Optional<Order> orderData = repo.findById(id);
+        log.info("User: "+inputOrder.toString()+";    dbUser: "+dbOrder.toString());
 
-        if (orderData.isPresent()) {
-            Order order = orderData.get();
-            order.setStatus(inputOrder.getStatus());
-            order.setSum(inputOrder.getSum());
-            order.setHeight(inputOrder.getHeight());
-            order.setWidth(inputOrder.getWidth());
-            order.setLength(inputOrder.getLength());
-            order.setDescription(inputOrder.getDescription());
-            return repo.save(order);
-        } else {
-            throw new NotFoundException();
-        }
+        BeanUtils.copyProperties(inputOrder,dbOrder,"id");
+        return repo.save(dbOrder);
     }
 
     @DeleteMapping("{id}")
