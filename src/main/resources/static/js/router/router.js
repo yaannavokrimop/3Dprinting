@@ -10,6 +10,7 @@ import Order from 'pages/Order.vue'
 import Equipment from 'pages/Equipment.vue'
 import AddEquipment from 'pages/AddEquipment.vue'
 import Equipments from 'pages/Equipments.vue'
+import Addresses from 'pages/Addresses.vue'
 
 
 Vue.use(VueRouter);
@@ -25,6 +26,7 @@ let router = new VueRouter({
         {path: '/equipment/:id', component: Equipment},
         {path: '/equipment', component: Equipments},
         {path: '/add_equipment', component: AddEquipment, meta: {isExecutor: true}},
+        {path: '/address', component: Addresses}
         // {path:'/profile/:id',component:'Profile'},
         // {path:'*',component:'Main'}
     ]

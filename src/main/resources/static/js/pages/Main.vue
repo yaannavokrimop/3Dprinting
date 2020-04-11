@@ -35,7 +35,7 @@
                             <v-list-item-title><strong> {{executor.name+'  '+executor.surname}}</strong></v-list-item-title>
                             <v-list-item-subtitle>
                                 <strong>Адреса: <ul class="demo">
-                                                     <li v-for="address in executor.addresses">
+                                                     <li v-for="address of executor.addresses">
                                                    {{ address.city }},  {{address.description}}
                                                     </li>
                                                 </ul>  </strong>
@@ -66,7 +66,8 @@ props:[],
     AXIOS.get('/user/executors').then((responce) =>{
         this.executors = responce.data;
         this.executorsFilter=this.executors;
-
+        console.log("Данные проверка2");
+        console.log(responce.data);
     }).catch(error => console.log(error));
 
 
@@ -99,7 +100,7 @@ props:[],
 <style scoped>
 .list {
   text-align: left;
-  max-width: 750px;
+  max-width: 900px;
   margin: auto;
 }
 </style>

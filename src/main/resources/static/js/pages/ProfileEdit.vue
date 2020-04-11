@@ -5,9 +5,14 @@
                 <v-layout justify-space-around column>
                     <div class="title">Редактирование</div>
 
-                   <v-flex xs6>
+                   <v-layout row>
                         <user-data-edit v-bind:user='user'></user-data-edit>
+                   </v-layout>
+
+                   <v-flex xs6>
+                   <add-address></add-address>
                    </v-flex>
+
                    <div class="my-2">
                            <v-btn  large color="primary" @click="edit">Сохранить изменения</v-btn>
                    </div>
@@ -19,10 +24,12 @@
 
 <script>
 import UserDataEdit from 'components/UserDataEdit.vue'
+import AddAddress from 'pages/AddAddress.vue'
 import {AXIOS} from "../pages/http-common";
 export default {
     components:{
-        UserDataEdit
+        UserDataEdit,
+        AddAddress
     },
     data(){
         return{
@@ -34,23 +41,24 @@ export default {
                  phone:'',
                  role:'',
                  surname:'',
-                 password:''
-            }
+                 addresses:[]
+            },
+            testUserRole:''
+
             }
           },
     methods:{
         edit:function(){
         var user=this.user;
         var id=this.user.id;
-        AXIOS.post('/user/update/'+id,{
+        AXIOS.put('/user/update/'+id,{
             id:user.id,
             email:user.email,
             information:user.information,
             name:user.name,
             phone:user.phone,
             role:user.role,
-            surname:user.surname,
-            password:user.password
+            surname:user.surname
         });
 
             console.log(user);
