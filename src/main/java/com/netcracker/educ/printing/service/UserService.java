@@ -6,7 +6,10 @@ import com.netcracker.educ.printing.model.entity.User;
 import com.netcracker.educ.printing.model.repository.UserRepo;
 import com.netcracker.educ.printing.model.representationModel.AddressRepresent;
 import com.netcracker.educ.printing.model.representationModel.UserRepresent;
+import com.netcracker.educ.printing.security.UserDetailsImpl;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +18,7 @@ import java.util.*;
 
 @Service
 @AllArgsConstructor
+@Slf4j
 public class UserService {
     private final UserRepo userRepo;
     private final PasswordEncoder passwordEncoder;
@@ -82,8 +86,11 @@ public class UserService {
         }
     }
 
-    public User updateUser(User user){
-        return userRepo.save(user);
+    public UserRepresent updateUser(UserRepresent user){
+        User dbUser=userRepo.findById(user.getId()).get();
+        User updateUser=new User(user.getName(),user.getSurname(),user.getEmail(),user.getInformation(),user.getPhone(),user.getRole());
+        BeanUtils.copyProperties(updateUser,dbUser,"id","password","addresses");
+        return userToUserRepresent(userRepo.save(dbUser));
     }
 
     public List<UserRepresent> findAllExecutors() {
@@ -102,10 +109,20 @@ public class UserService {
         Iterator<User> iter=users.iterator();
         while (iter.hasNext()){
             user=iter.next();
-            userRepresents.add(new UserRepresent(user.getId(),user.getName(),user.getSurname(),user.getRole(),user.getPhone(),user.getEmail(),user.getInformation(),addressToAddressRepresent(user.getAddresses())));
-
+            userRepresents.add(userToUserRepresent(user));
         }
         return userRepresents;
+    }
+
+    public UserRepresent userToUserRepresent(User user) {
+        return new UserRepresent(user.getId(),
+                user.getName(),
+                user.getSurname(),
+                user.getRole(),
+                user.getPhone(),
+                user.getEmail(),
+                user.getInformation(),
+                addressToAddressRepresent(user.getAddresses()));
     }
 
     public List<AddressRepresent> addressToAddressRepresent(List<Address> addresses){
@@ -117,5 +134,19 @@ public class UserService {
                 addressRepresents.add(new AddressRepresent(addr.getCity().getTitle(),addr.getDescription(),addr.getUser().getId()));
             }
             return addressRepresents;
+    }
+
+    public UserRepresent getCurrentUser(UserDetailsImpl principal) {
+        UserRepresent user=userToUserRepresent(userRepo.findByEmail(principal.getEmail()));
+        log.info("This user "+user.getEmail()+" in his profile");
+        return user;
+
+
+    }
+
+    public Boolean checkUserRole(UserDetailsImpl principal) {
+        User user=userRepo.findByEmail(principal.getEmail());
+        return user.getRole().toString().equals("CUSTOMER");
+
     }
 }

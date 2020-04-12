@@ -80,7 +80,6 @@
 			<version>${jjwt.version}</version>
 		</dependency>
 
-
 		<!--Mustache-->
 
 		<dependency>

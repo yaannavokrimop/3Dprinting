@@ -29,10 +29,19 @@
           label="Information">
      </v-text-field>
      <v-text-field
-          Смена роли(пока не реализовано)
+          СТАТЬ ИСПОЛНИТЕЛЕМ
      </v-text-field>
-     <v-switch v-model="user.role" label="Стать исполнителем" value="false" v-show="user.role=='CUSTOMER'"></v-switch>
+     <v-switch v-model="user.role" label="Стать исполнителем" value="EXECUTOR" v-show="user.role=='CUSTOMER'&&testRoleResult"></v-switch>
     </v-card-text>
+
+    <div>
+    <h3>Адреса</h3>
+    <ul>
+      <li v-for="address in user.addresses">
+        Город: {{ address.city}}  Адрес:{{address.description}}
+      </li>
+    </ul>
+    </div>
 </v-card>
 
 </v-layout>
@@ -45,6 +54,11 @@ import {AXIOS} from "../pages/http-common";
 
 export default {
     props:['user'],
+    data(){
+        return{
+        testRoleResult:false
+        }
+    },
     created:function(){
          AXIOS.get('/user').then((responce) =>{
              this.user.id = responce.data.id;
@@ -54,8 +68,18 @@ export default {
              this.user.phone = responce.data.phone;
              this.user.role = responce.data.role;
              this.user.surname = responce.data.surname;
-             this.user.password = responce.data.password;
+             this.user.addresses = responce.data.addresses;
          }).catch(error => console.log(error));
+         this.checkRole();
+    },
+    methods:{
+        checkRole(){
+            AXIOS.get('/user/role').then((response) =>{
+                this.$data.testRoleResult=response.data;
+
+            })
+
+        }
     }
 }
 </script>

@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface CityRepo extends JpaRepository<City, Integer> {
+public interface CityRepo extends JpaRepository<City, Long> {
     City findAllByTitle(String title);
     City findAllById(Long id);
 }

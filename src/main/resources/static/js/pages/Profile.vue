@@ -1,26 +1,11 @@
 <template>
+        <v-container>
+        <v-flex>
+        <user-data v-bind:user='user'></user-data>
+        </v-flex>
 
 
-            <v-container>
-                <v-layout justify-space-around column>
-                    <div class="title">Профиль</div>
-
-                   <v-flex xs6>
-                        <user-data v-bind:user='user'></user-data>
-                   </v-flex>
-
-                    <div class="my-2">
-                            <v-btn to="/profile_edit">Редактировать</v-btn>
-                    </div>
-
-            <div class="my-2">
-                <v-btn to="/equipment" v-show="role === 'EXECUTOR'">Моё оборудование</v-btn>
-            </div>
-
-                    <div> {{accessToken}}</div>
-                </v-layout>
-            </v-container>
-
+         </v-container>
 
 </template>
 
@@ -42,6 +27,7 @@ name: "Profile",
                  phone:'',
                  role:'',
                  surname:'',
+                 addresses:[]
 
                 },
                 accessToken: localStorage.getItem('accessToken'),

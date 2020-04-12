@@ -16,18 +16,17 @@ public class Order {
     @Id
     private UUID id;
 
-    @NonNull
-    @Column(nullable = false)
-    private UUID userId;
+    @ManyToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private User user;
 
-    @NonNull
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private OrderStatus status;
 
     @NonNull
     @Column(nullable = false)
-    private int sum;
+    private float sum;
 
     @Column(nullable = false)
     private Date date;

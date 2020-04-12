@@ -47,8 +47,15 @@
         </v-list-item>
 
 
-
     </v-card>
+    <v-content>
+        <div class="mt-2">
+            <v-btn  to="/orders">К заказам</v-btn>
+            <v-btn  to="/order/edit">Редактировать заказ</v-btn>
+            <v-btn class="red--text" @click="deleteOrder">Удалить заказ</v-btn>
+        </div>
+
+    </v-content>
 
 </v-container>
 </template>
@@ -91,10 +98,13 @@ props:[],
              this.order.file = responce.data.file;
              this.order.description = responce.data.description;
 
-         }).catch(error => console.log(error));;
+         }).catch(error => console.log(error));
     },
     methods:{
-
+        deleteOrder:function () {
+            var id = this.order.id;
+            AXIOS.delete('order/'+id);
+        }
     }
 }
 </script>
