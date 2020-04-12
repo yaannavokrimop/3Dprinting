@@ -60,7 +60,7 @@ export default {
             role:user.role,
             surname:user.surname
         });
-
+            this.$router.push('/profile');
             console.log(user);
 
         }

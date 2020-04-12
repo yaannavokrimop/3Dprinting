@@ -21,6 +21,7 @@
         <v-list-item-subtitle>
          <strong>Сумма:   {{order.sum}}</strong>
         </v-list-item-subtitle>
+
       </v-list-item-content>
     </v-list-item>
 
@@ -28,13 +29,25 @@
         </ul>
 
                 <div v-if="currentOrder">
+                    <div class="mt-2"></div>
                   <label><strong>Current order:</strong></label> {{ currentOrder.description }}
+
+
+
+
+
                 </div>
     </v-card>
 
     <v-content>
-        <div class="mt-2"></div>
-        <v-btn  to="/order/create">Разместить заказ</v-btn>
+        <div class="mt-2">
+            <v-btn  to="/order/create">Разместить заказ</v-btn>
+            <div v-if="currentOrder">
+                <div class="mt-2"></div>
+                <v-btn class="red--text" @click="selectExecutor">Выбрать исполнителя для заказа</v-btn>
+            </div>
+        </div>
+
     </v-content>
 </v-container>
 
@@ -69,6 +82,10 @@ props:[],
      goToOrder(order){
         var s="/orders/"+order.id;
         this.$router.push(s)
+     },
+     selectExecutor() {
+         localStorage.setItem('currentOrder', this.currentOrder.id);
+         this.$router.push('/')
      }
     }
 }

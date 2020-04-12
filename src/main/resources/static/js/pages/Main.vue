@@ -45,6 +45,15 @@
                 </li>
             </ul>
         </v-content>
+        <v-content>
+            <div v-if="currentExecutor">
+                <div class="mt-2"></div>
+                <label><strong>Current executor:</strong></label> {{ currentExecutor.name }}
+                <div class="mt-2"></div>
+                <v-btn class="red--text" to="/orders">Предложить заказ исполнителю</v-btn>
+            </div>
+        </v-content>
+
     </v-container>
 </template>
 
