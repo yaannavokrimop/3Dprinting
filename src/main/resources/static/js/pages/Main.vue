@@ -50,7 +50,7 @@
                 <div class="mt-2"></div>
                 <label><strong>Current executor:</strong></label> {{ currentExecutor.name }}
                 <div class="mt-2"></div>
-                <v-btn class="red--text" to="/orders">Предложить заказ исполнителю</v-btn>
+                <v-btn class="red--text" @click="sendResponse">Предложить заказ исполнителю</v-btn>
             </div>
         </v-content>
 
@@ -101,8 +101,20 @@ props:[],
      },
      showAll(){
      this.executorsFilter=this.$data.executors;
-     }
+     },
+        sendResponse() {
+         AXIOS.post("/response", {
+             'executorId': this.currentExecutor.id,
+             'orderId' : localStorage.getItem('currentOrder')
+         }).then ((response) =>  {
+             console.log(response);
+             localStorage.removeItem('currentOrder');
+             this.$router.push('/orders');
+         }).catch(error => console.log(error));
+
+         },
     }
+
 }
 </script>
 
