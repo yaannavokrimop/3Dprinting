@@ -97,7 +97,7 @@ public class UserService {
         List<User> executors=userRepo.findByRole(Role.EXECUTOR);
         return usersToUserRepresents(executors);
     }
-
+//Удалить
     public List<UserRepresent> findExecutorsByAddresses() {
         List<User> executors=userRepo.findByRole(Role.EXECUTOR);
         return usersToUserRepresents(executors);
