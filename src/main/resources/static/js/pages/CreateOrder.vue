@@ -66,6 +66,8 @@ export default {
                 console.log(response);
                 this.successAlert();
             }).catch(error => console.log(error));
+            this.$router.push('/orders');
+            location.reload()
         },
        addDraft() {
            let newOrder = {
@@ -82,6 +84,10 @@ export default {
                    console.log(response);
                    this.successAlert();
                }).catch(error => console.log(error));
+
+           this.$router.push('/orders');
+           location.reload()
+
        },
        successAlert() {
            this.sum = '';

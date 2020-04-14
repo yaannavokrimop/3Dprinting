@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/address")
@@ -55,5 +56,12 @@ public class AddressController {
     public Address addAddress(@RequestBody Map<String, String> address) {
         UserDetailsImpl principal = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return addressService.add(principal.getEmail(), address.get("cityTitle"), address.get("description"));
+    }
+
+    @DeleteMapping("{id}")
+    public UUID deleteAddress(@PathVariable("id") UUID id) {
+        addressRepo.deleteById(id);
+
+        return id;
     }
 }
