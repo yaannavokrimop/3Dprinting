@@ -158,11 +158,6 @@
                   console.log("Данные проверка3");
                   console.log(responce.data);
               }).catch(error => console.log(error));
-
-
-
-
-
      },
      searchByAddressBack(){
           var w=this.$data.city;
@@ -172,8 +167,6 @@
                   console.log("Данные проверка2");
                   console.log(responce.data);
               }).catch(error => console.log(error));
-
-         });
 
             },
             showAll() {
@@ -187,7 +180,7 @@
 
                 AXIOS.post("/response", {
                     'executorId': this.currentExecutor.id,
-                    'orderId': localStorage.getItem('currentOrder'),
+                    'orderId': this.currentOrder.id,
                     'sum': this.sum
                 }).then((response) => {
                     console.log(response);
