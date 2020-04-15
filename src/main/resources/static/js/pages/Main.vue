@@ -6,7 +6,7 @@
                     <input type="text" class="form-control" placeholder="Search by address" v-model="city"/>
                     <div class="input-group-append">
                         <button class="btn btn-outline-secondary" type="button"
-                        @click="searchByAddress"
+                        @click="searchByAddressBack"
                         >
                             Search
                         </button>
@@ -82,14 +82,29 @@ props:[],
      console.log('пока не реализовано');
      },
      searchByAddress(){
-     var w=this.$data.city;
-     console.log("search by address start.............."+w)
-      this.executorsFilter=this.executors.filter(function (executor) {
-            if(executor.addresses.find(item => item.city === w)!=null){return executor;}
+            var test=["Москва","Тюмень"];
+          AXIOS.post('/search/cityList',{city:test}).then((responce) =>{
+                  this.executorsFilter=responce.data;
+                  console.log("Данные проверка3");
+                  console.log(responce.data);
+              }).catch(error => console.log(error));
 
-         });
+
+
+
 
      },
+     searchByAddressBack(){
+          var w=this.$data.city;
+          console.log("search by address start.............."+w)
+          AXIOS.get('/search/'+w).then((responce) =>{
+                  this.executorsFilter=responce.data;;
+                  console.log("Данные проверка2");
+                  console.log(responce.data);
+              }).catch(error => console.log(error));
+
+
+          },
      showAll(){
      this.executorsFilter=this.$data.executors;
      }
