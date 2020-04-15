@@ -1,11 +1,10 @@
 package com.netcracker.educ.printing.controller;
 
-import com.netcracker.educ.printing.model.entity.City;
+import com.netcracker.educ.printing.model.entity.Order;
 import com.netcracker.educ.printing.model.representationModel.UserRepresent;
 import com.netcracker.educ.printing.service.SearchService;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -29,7 +28,8 @@ public class SearchController {
         return searchService.searchExecutorsByAddresses(city);
     }
 
-
-
-
+    @PostMapping("/orderParam")
+    public List<UserRepresent> searchExecutorByOrderParams(@RequestBody Order order) {
+        return searchService.searchExecutorsByOrderParameters(order);
+    }
 }

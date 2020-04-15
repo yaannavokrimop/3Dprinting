@@ -14,7 +14,6 @@ import java.util.UUID;
 @Repository
 public interface UserRepo extends JpaRepository<User, UUID> {
     User findByEmail(String email);
-    User findByName(String name);
 
     List<User> findByRole(Role role);
     Boolean existsByEmail(String email);
@@ -26,4 +25,9 @@ public interface UserRepo extends JpaRepository<User, UUID> {
 
   @Query("SELECT distinct ex from User ex join ex.addresses addr join addr.city city where city in (:cityList) and ex.role=:role")
     List<User>findByRoleAndAddressesCityNames(@Param(value = "cityList") List<City> cityList, @Param(value = "role") Role role);
+
+  @Query("SELECT distinct ex from User ex join ExecutorEquipment equipments on ex = equipments.executor join equipments.equipment equipment " +
+          "where equipment.height >= :height and equipment.width >= :width and equipment.length >= :length and ex.role = :role")
+    List<User> findByRoleAndEquipmentsParameters(@Param(value = "height")int height, @Param(value = "width") int width,
+                                                 @Param(value = "length") int length, @Param(value = "role") Role role);
 }
