@@ -23,4 +23,7 @@ public interface UserRepo extends JpaRepository<User, UUID> {
 //    List<User>findByRoleAndAddressesCityName(@Param(value = "role") Role role);
   @Query("SELECT distinct ex from User ex join ex.addresses addr join addr.city city where city=:title and ex.role=:role")
     List<User>findByRoleAndAddressesCityName(@Param(value = "title") City title, @Param(value = "role") Role role);
+
+  @Query("SELECT distinct ex from User ex join ex.addresses addr join addr.city city where city in (:cityList) and ex.role=:role")
+    List<User>findByRoleAndAddressesCityNames(@Param(value = "cityList") List<City> cityList, @Param(value = "role") Role role);
 }

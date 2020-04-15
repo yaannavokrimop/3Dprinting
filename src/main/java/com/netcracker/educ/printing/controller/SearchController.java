@@ -3,11 +3,9 @@ package com.netcracker.educ.printing.controller;
 import com.netcracker.educ.printing.model.entity.City;
 import com.netcracker.educ.printing.model.representationModel.UserRepresent;
 import com.netcracker.educ.printing.service.SearchService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -25,6 +23,13 @@ public class SearchController {
     public List<UserRepresent> searchExecutorsByAddress(@PathVariable("city")String city){
      return searchService.searchExecutorsByAddress(city);
     }
+
+    @PostMapping("/cityList")
+    public List<UserRepresent> searchExecutorsByAddresses(@RequestBody List<String> city){
+        return searchService.searchExecutorsByAddresses(city);
+    }
+
+
 
 
 }

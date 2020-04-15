@@ -82,12 +82,16 @@ props:[],
      console.log('пока не реализовано');
      },
      searchByAddress(){
-     var w=this.$data.city;
-     console.log("search by address start.............."+w)
-      this.executorsFilter=this.executors.filter(function (executor) {
-            if(executor.addresses.find(item => item.city === w)!=null){return executor;}
+            var test=["Москва","Тюмень"];
+          AXIOS.post('/search/cityList',{city:test}).then((responce) =>{
+                  this.executorsFilter=responce.data;
+                  console.log("Данные проверка3");
+                  console.log(responce.data);
+              }).catch(error => console.log(error));
 
-         });
+
+
+
 
      },
      searchByAddressBack(){

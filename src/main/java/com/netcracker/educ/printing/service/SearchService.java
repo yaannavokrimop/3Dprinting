@@ -32,12 +32,15 @@ public class SearchService {
 
 
     public List<UserRepresent> searchExecutorsByAddress(String city) {
-
         List<User> users=userRepo.findByRoleAndAddressesCityName(cityRepo.findAllByTitle(city),Role.EXECUTOR);
         return userService.usersToUserRepresents(users);
-
     }
 
+
+    public List<UserRepresent> searchExecutorsByAddresses(List<String> city) {
+        List<User> users=userRepo.findByRoleAndAddressesCityNames(cityRepo.findAllByTitleIn(city),Role.EXECUTOR);
+        return userService.usersToUserRepresents(users);
+    }
 
 
 
