@@ -28,7 +28,7 @@ const routes=[
     {path:'/equipment', component: Equipments},
     {path:'/add_equipment', component: AddEquipment},
     {path:'/order/create', component: CreateOrder},
-    {path:'/order/edit', component: OrderEdit}
+    {path:'/order/edit/:id', component: OrderEdit}
     // {path:'/profile/:id',component:'Profile'},
     // {path:'*',component:'Main'}
 ]

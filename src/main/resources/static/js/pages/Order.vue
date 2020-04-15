@@ -51,7 +51,7 @@
     <v-content>
         <div class="mt-2">
             <v-btn  to="/orders">К заказам</v-btn>
-            <v-btn  to="/order/edit">Редактировать заказ</v-btn>
+            <v-btn  @click="goToEditOrder">Редактировать заказ</v-btn>
             <v-btn class="red--text" @click="deleteOrder">Удалить заказ</v-btn>
         </div>
 
@@ -104,7 +104,13 @@ props:[],
         deleteOrder:function () {
             var id = this.order.id;
             AXIOS.delete('order/'+id);
+        },
+
+        goToEditOrder(){
+            var s='/order/edit/'+this.order.id;
+            this.$router.push(s)
         }
+
     }
 }
 </script>
