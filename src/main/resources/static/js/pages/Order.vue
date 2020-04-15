@@ -104,6 +104,8 @@ props:[],
         deleteOrder:function () {
             var id = this.order.id;
             AXIOS.delete('order/'+id);
+            this.$router.push('/orders');
+            location.reload()
         }
     }
 }

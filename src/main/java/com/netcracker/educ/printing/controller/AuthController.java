@@ -4,9 +4,9 @@ import com.netcracker.educ.printing.model.bean.Role;
 import com.netcracker.educ.printing.model.entity.User;
 import com.netcracker.educ.printing.model.repository.UserRepo;
 import com.netcracker.educ.printing.payload.LoginRequest;
-import com.netcracker.educ.printing.payload.LoginResponce;
+import com.netcracker.educ.printing.payload.LoginResponse;
 import com.netcracker.educ.printing.payload.SignUpRequest;
-import com.netcracker.educ.printing.payload.SignupResponce;
+import com.netcracker.educ.printing.payload.SignupResponse;
 import com.netcracker.educ.printing.security.UserDetailsImpl;
 import com.netcracker.educ.printing.security.jwt.TokenProvider;
 import com.netcracker.educ.printing.service.AddressService;
@@ -28,7 +28,6 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @RestController
@@ -61,13 +60,13 @@ public class AuthController {
                 .collect(Collectors.toList());
         log.info("User " + userDetails.getId() + " logged in! ");
 
-        return ResponseEntity.ok(new LoginResponce(jwt, roles));
+        return ResponseEntity.ok(new LoginResponse(jwt, roles));
     }
 
     @PostMapping("/signup")
     public ResponseEntity<?> registration(@Valid @RequestBody SignUpRequest signUpRequest) {
         if(userRepo.existsByEmail(signUpRequest.getEmail())) {
-            return new ResponseEntity(new SignupResponce( false, "Email is already taken!"),
+            return new ResponseEntity(new SignupResponse( false, "Email is already taken!"),
                     HttpStatus.BAD_REQUEST);
         }
 
@@ -81,6 +80,6 @@ public class AuthController {
         URI location = ServletUriComponentsBuilder
                 .fromCurrentContextPath().path("/signup")
                 .buildAndExpand(result.getEmail()).toUri();
-        return ResponseEntity.created(location).body(new SignupResponce(true, "User registered successfully"));
+        return ResponseEntity.created(location).body(new SignupResponse(true, "User registered successfully"));
     }
 }

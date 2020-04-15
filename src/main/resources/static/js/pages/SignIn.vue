@@ -2,7 +2,7 @@
     <div div="signin">
         <div class="login-form">
             <b-card
-                    title="Login"
+                    title="Вход"
                     tag="article"
                     style="max-width: 20rem;"
                     class="mb-2"
@@ -18,20 +18,20 @@
                     </b-alert>
                 </div>
                 <div>
-                    <b-form-input type="email" placeholder="Email" v-model="email" />
+                    <b-form-input type="email" placeholder="Email" v-model="email"/>
                     <div class="mt-2"></div>
 
-                    <b-form-input type="password" placeholder="Password" v-model="password" />
+                    <b-form-input type="password" placeholder="Пароль" v-model="password"/>
                     <div class="mt-2"></div>
                 </div>
 
-                <b-button v-on:click="login" variant="primary">Login</b-button>
+                <b-button v-on:click="login" variant="primary">Войти</b-button>
 
                 <hr class="my-4"/>
                 <div style=" font-size:85%">
-                    Don't have an account?
+                    Нет аккаунта?
                     <a href="#" @click="goToSignUpPage">
-                        Sign Up Here
+                        Зарегистрируйтесь
                     </a>
                 </div>
             </b-card>
@@ -41,6 +41,7 @@
 
 <script>
     import {AXIOS} from './http-common'
+
     export default {
         name: 'SignIn',
         data() {

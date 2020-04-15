@@ -2,7 +2,7 @@
     <div div="signup">
         <div class="login-form">
             <b-card
-                    title="Register"
+                    title="Регистрация"
                     tag="article"
                     style="max-width: 20rem;"
                     class="mb-2"
@@ -19,10 +19,10 @@
                 </div>
                 <div>
                     <b-alert variant="success" :show="successfullyRegistered">
-                        You have been successfully registered! Now you can login with your credentials
+                        Поздравляем, Вы зарегистрировались! Можете авторизоваться, используя свои данные.
                         <hr/>
                         <router-link to="/signin">
-                            <b-button variant="primary">Login</b-button>
+                            <b-button variant="primary">Вход</b-button>
                         </router-link>
                     </b-alert>
                 </div>
@@ -30,34 +30,33 @@
 <!--                    <b-form-input type="text" placeholder="Username" v-model="username" />-->
 <!--                    <div class="mt-2"></div>-->
 
-                    <b-form-input type="text" placeholder="First Name" v-model="name" />
+                    <b-form-input type="text" placeholder="Имя" v-model="name" />
                     <div class="mt-2"></div>
 
-                    <b-form-input type="text" placeholder="Last name" v-model="surname" />
+                    <b-form-input type="text" placeholder="Фамилия" v-model="surname" />
                     <div class="mt-2"></div>
 
                     <b-form-input type="text" placeholder="Email" v-model="email" />
                     <div class="mt-2"></div>
 
-                    <b-form-input type="password" placeholder="Password" v-model="password" />
+                    <b-form-input type="password" placeholder="Пароль" v-model="password" />
                     <div class="mt-2"></div>
 
-                    <b-form-input type="text" placeholder="Phone number" v-model="phone" />
+                    <b-form-input type="text" placeholder="Номер телефона" v-model="phone" />
                     <div class="mt-2"></div>
 
-                    <b-form-input type="text" placeholder="Information" v-model="information" />
+                    <b-form-input type="text" placeholder="О себе" v-model="information" />
                     <div class="mt-2"></div>
 
-                    <input type="radio" value="CUSTOMER" v-model="role">
-                    <label>Заказчик</label>
+                    <b-form-group label="Выберите роль">
+                        <b-form-radio v-model="role" name="some-radios" value="CUSTOMER">Заказчик</b-form-radio>
+                        <b-form-radio v-model="role" name="some-radios" value="EXECUTOR">Исполнитель</b-form-radio>
+                    </b-form-group>
 
-                    <input type="radio" value="EXECUTOR" v-model="role">
-                    <label>Исполнитель</label>
-
-                    <b-form-input type="text" placeholder="City" v-model="cityTitle" />
+                    <b-form-input type="text" placeholder="Город" v-model="cityTitle" />
                     <div class="mt-2"></div>
 
-                    <b-form-input type="text" placeholder="Address" v-model="description" />
+                    <b-form-input type="text" placeholder="Адрес" v-model="description" />
                     <div class="mt-2"></div>
 
 
@@ -65,7 +64,7 @@
                     <div class="mt-2"></div>-->
                 </div>
 
-                <b-button v-on:click="register" variant="primary">Register</b-button>
+                <b-button v-on:click="register" variant="primary">Зарегистрироваться</b-button>
 
             </b-card>
         </div>

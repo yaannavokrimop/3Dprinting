@@ -10,6 +10,7 @@
     "build": "webpack --webpack.config.js"
   },
   "dependencies": {
+    "@innologica/vue-stackable-modal": "^0.1.9",
     "axios": "^0.19.2",
     "bootstrap": "^4.4.1",
     "bootstrap-vue": "^2.8.0",

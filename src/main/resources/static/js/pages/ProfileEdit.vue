@@ -8,7 +8,7 @@
                    <v-layout row>
                         <user-data-edit v-bind:user='user'></user-data-edit>
                    </v-layout>
-
+                    <div class="mt-2"></div>
                    <v-flex xs6>
                    <add-address></add-address>
                    </v-flex>
@@ -61,6 +61,8 @@ export default {
             surname:user.surname
         });
 
+            this.$router.push('/profile');
+            location.reload();
             console.log(user);
 
         }

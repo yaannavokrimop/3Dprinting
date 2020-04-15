@@ -27,8 +27,23 @@
             </v-list-item>
             </li>
         </ul>
+        <div v-if="currentEquip">
+            <div class="mt-2"></div>
+            <label><strong>Current equip:</strong></label> {{ currentEquip.equipDesc }}
+            <label><strong>Current id:</strong></label> {{ currentEquip.id }}
+            <div class="mt-2"></div>
+            <b-button variant="danger" @click="showModal">Удалить оборудование</b-button>
+
+            <b-modal ref="my-modal" hide-footer title="Подтверждение">
+                <div class="d-block text-center">
+                    <h3>Удалить оборудование?</h3>
+                </div>
+                <b-button class="mt-3" variant="outline-danger" block @click="deleteEquip">Удалить</b-button>
+            </b-modal>
+        </div>
 
     </v-content>
+    <div class="mt-2"></div>
         <v-content>
         <v-btn  to="/add_equipment">Добавить оборудование</v-btn>
     </v-content>
@@ -67,10 +82,17 @@ props:[],
           this.currentEquip = equip;
           this.currentIndex = index;
         },
+        showModal() {
+            this.$refs['my-modal'].show()
+        },
      goToEquipment(equip){
      var s="/equipment/"+equip.id;
              this.$router.push(s)
-     }
+     },
+        deleteEquip() {
+            AXIOS.delete('/equipment/' + this.currentEquip.id);
+            location.reload()
+        }
     }
 }
 </script>
