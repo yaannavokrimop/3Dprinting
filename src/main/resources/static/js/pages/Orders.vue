@@ -184,7 +184,7 @@
                 this.$router.push(s)
             },
             selectExecutor() {
-                localStorage.setItem('currentOrder', this.currentOrder.id);
+                localStorage.setItem('currentOrder', JSON.stringify(this.currentOrder));
                 this.$router.push('/')
             },
             clearExecutor() {

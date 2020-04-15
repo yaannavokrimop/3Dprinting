@@ -23,7 +23,8 @@
         </v-content>
         <div v-if="currentOrder">
             <b-alert show dismissible fade>
-                Вы выбираете заказчика для заказа № {{currentOrder}}
+                Вы выбираете заказчика для заказа № {{currentOrder.id}}  <br>
+                Ширина {{currentOrder.width}}, длина {{currentOrder.length}}, высота {{currentOrder.height}}
                 <b-button class="mt-3" variant="outline-danger" block @click="clearOrder">
                     Очистить
                 </b-button>
@@ -130,7 +131,8 @@
                 currentExecutor: null,
                 currentIndex: -1,
                 city: '',
-                currentOrder: localStorage.getItem("currentOrder")
+                currentOrder: JSON.parse(localStorage.getItem("currentOrder")),
+
             }
         },
         created: function () {
