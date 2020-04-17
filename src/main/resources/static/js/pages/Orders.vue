@@ -23,17 +23,10 @@
                     dismissible
                     fade
                     variant="warning">
-                <!--                        @dismiss-count-down="countDownChanged"-->
 
                 This alert will dismiss after {{ dismissCountDown }} seconds...
             </b-alert>
 
-            <!--                <b-button @click="showAlert" variant="info" class="m-1">-->
-            <!--                    Show alert with count-down timer-->
-            <!--                </b-button>-->
-            <!--<b-button @click="showDismissibleAlert=true" variant="info" class="m-1">
-                Show dismissible alert ({{ showDismissibleAlert ? 'visible' : 'hidden' }})
-            </b-button>-->
         </div>
         <div v-if="!currentOrder">
             <b-alert show dismissible fade>Выберите заказ.</b-alert>
@@ -78,7 +71,7 @@
 
             <div v-if="currentOrder">
                 <div class="mt-2"></div>
-                <label><strong>Current order:</strong></label> {{ currentOrder.description }}
+                <label><strong>Текущий заказ:</strong></label> {{ currentOrder.description }}
             </div>
         </v-card>
 
@@ -86,10 +79,7 @@
 
             <div class="mt-2">
                 <v-btn to="/order/create">Разместить заказ</v-btn>
-                <!--<div v-if="currentOrder">
-                    <div class="mt-2"></div>
-                    <v-btn class="red&#45;&#45;text" @click="selectExecutor">Выбрать исполнителя для заказа</v-btn>
-                </div>-->
+
                 <div class="mt-2"></div>
                 <div v-if="currentStatus === 'DRAFT'">
                     <b-button variant="danger" @click="showModal">Удалить заказ</b-button>
@@ -192,6 +182,12 @@
                 location.reload()
             },
             sendResponse() {
+                AXIOS.post("/chat", {
+                    'executorId': this.currentExecutor,
+                    'customerId': this.currentOrder.user.id
+                }).then((response) => {
+                    console.log(response);
+                }).catch(error => console.log(error));
 
                 AXIOS.post("/response", {
                     'orderId': this.currentOrder.id,

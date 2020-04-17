@@ -22,7 +22,7 @@
         </v-content>
         <div v-if="currentOrder">
             <b-alert show dismissible fade>
-                Вы выбираете исполнителя для заказа № {{currentOrder.id}}  <br>
+                Вы выбираете исполнителя для заказа № {{currentOrder.description}}  <br>
                 Ширина {{currentOrder.width}}, длина {{currentOrder.length}}, высота {{currentOrder.height}}
                 <b-button class="mt-3" variant="outline-danger" block @click="clearOrder">
                     Очистить
@@ -81,7 +81,7 @@
         <v-content>
             <div v-if="currentExecutor">
                 <div class="mt-2"></div>
-                <label><strong>Current executor:</strong></label> {{ currentExecutor.name }}
+                <label><strong>Текущий исполнитель:</strong></label> {{ currentExecutor.name }}
                 <div class="mt-2"></div>
 
                <div v-if="currentOrder">
@@ -169,6 +169,12 @@
                 location.reload()
             },
             sendResponse() {
+                AXIOS.post("/chat", {
+                    'executorId': this.currentExecutor.id,
+                    'customerId': this.currentOrder.user.id
+                }).then((response) => {
+                    console.log(response);
+                }).catch(error => console.log(error));
 
                 AXIOS.post("/response", {
                     'executorId': this.currentExecutor.id,
@@ -176,9 +182,10 @@
                     'sum': this.sum
                 }).then((response) => {
                     console.log(response);
-                    localStorage.removeItem('currentOrder');
-                    this.$router.push('/orders');
                 }).catch(error => console.log(error));
+
+                localStorage.removeItem('currentOrder');
+                this.$router.push('/orders');
 
             },
             selectOrder() {
