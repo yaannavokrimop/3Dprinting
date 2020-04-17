@@ -22,7 +22,7 @@
         </v-content>
         <div v-if="currentOrder">
             <b-alert show dismissible fade>
-                Вы выбираете заказчика для заказа № {{currentOrder.id}}  <br>
+                Вы выбираете исполнителя для заказа № {{currentOrder.id}}  <br>
                 Ширина {{currentOrder.width}}, длина {{currentOrder.length}}, высота {{currentOrder.height}}
                 <b-button class="mt-3" variant="outline-danger" block @click="clearOrder">
                     Очистить
@@ -44,17 +44,9 @@
                     dismissible
                     fade
                     variant="warning">
-                <!--                        @dismiss-count-down="countDownChanged"-->
 
                 This alert will dismiss after {{ dismissCountDown }} seconds...
             </b-alert>
-
-            <!--                <b-button @click="showAlert" variant="info" class="m-1">-->
-            <!--                    Show alert with count-down timer-->
-            <!--                </b-button>-->
-            <!--<b-button @click="showDismissibleAlert=true" variant="info" class="m-1">
-                Show dismissible alert ({{ showDismissibleAlert ? 'visible' : 'hidden' }})
-            </b-button>-->
         </div>
         <div class="mt-2"></div>
         <v-content>

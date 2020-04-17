@@ -25,7 +25,7 @@
                 <label><strong>Текущий адрес:</strong></label> {{ this.currentAddr.description }}
                 <label><strong>Текущий id:</strong></label> {{ this.currentAddr.id }}
                 <div class="mt-2"></div>
-                <b-button variant="danger" @click="showModal">Удалить заказ</b-button>
+                <b-button variant="danger" @click="showModal">Удалить адрес</b-button>
 
                 <b-modal ref="my-modal" hide-footer title="Подтверждение">
                     <div class="d-block text-center">
