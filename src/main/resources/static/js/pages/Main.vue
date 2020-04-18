@@ -3,10 +3,22 @@
         <v-content>
             <div class="col-md-8">
                 <div class="input-group mb-3">
-                    <input type="text" class="form-control" placeholder="Search by address" v-model="city"/>
+                                    <v-autocomplete
+                                          v-model="selectCity"
+                                          :loading="loading"
+                                          :items="items"
+                                          :search-input.sync="search"
+                                          cache-items
+                                          hide-no-data
+                                          hide-details
+                                          label="Название города"
+                                          multiple
+                                          chips
+
+                                        ></v-autocomplete>
                     <div class="input-group-append">
                         <button class="btn btn-outline-secondary" type="button"
-                        @click="searchByAddressBack"
+                        @click="searchByAddress"
                         >
                             Search
                         </button>
@@ -16,7 +28,9 @@
                             Показать Всех
                         </button>
                     </div>
+
                 </div>
+
             </div>
 
         </v-content>
@@ -121,6 +135,10 @@
                 currentIndex: -1,
                 city: '',
                 currentOrder: JSON.parse(localStorage.getItem("currentOrder")),
+                loading: false,
+                items: [],
+                search: null,
+                selectCity: null,
 
             }
         },
@@ -134,7 +152,15 @@
 
 
         },
+         watch: {
+              search (val) {
+              console.log(val);
 
+                val && val !== this.selectCity && this.querySelections(val)
+
+
+              },
+         },
     methods:{
      setActiveExecutor(executor, index) {
           this.currentExecutor = executor;
@@ -144,15 +170,15 @@
      console.log('пока не реализовано');
      },
      searchByAddress(){
-            var test=["Москва","Тюмень"];
-          AXIOS.post('/search/cityList',{city:test}).then((responce) =>{
+            var w=this.$data.selectCity;
+          AXIOS.post('/search/executorsByCities',{w}).then((responce) =>{
                   this.executorsFilter=responce.data;
                   console.log("Данные проверка3");
                   console.log(responce.data);
               }).catch(error => console.log(error));
      },
      searchByAddressBack(){
-          var w=this.$data.city;
+          var w=this.$data.selectCity;
           console.log("search by address start.............."+w)
           AXIOS.get('/search/'+w).then((responce) =>{
                   this.executorsFilter=responce.data;;
@@ -184,7 +210,23 @@
             selectOrder() {
                 localStorage.setItem('currentExecutor', this.currentExecutor.id);
                 this.$router.push('/orders');
-            }
+            },
+
+                  querySelections (cityPartName) {
+
+                    setTimeout(()=>{
+                    if(cityPartName==this.$data.search){
+                    this.loading = true
+                      AXIOS.post('/search/cityList',{cityPartName}).then((response) =>{
+
+                            this.items=response.data;
+                                    }).catch(error => console.log(error));
+                      this.loading = false
+
+                      }},2000)
+
+                  },
+
         }
 
     }

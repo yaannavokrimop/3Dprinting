@@ -1,6 +1,7 @@
 package com.netcracker.educ.printing.service;
 
 import com.netcracker.educ.printing.model.bean.Role;
+import com.netcracker.educ.printing.model.entity.City;
 import com.netcracker.educ.printing.model.entity.Order;
 import com.netcracker.educ.printing.model.entity.User;
 import com.netcracker.educ.printing.model.repository.AddressRepo;
@@ -8,11 +9,14 @@ import com.netcracker.educ.printing.model.repository.CityRepo;
 import com.netcracker.educ.printing.model.repository.OrderRepo;
 import com.netcracker.educ.printing.model.repository.UserRepo;
 import com.netcracker.educ.printing.model.representationModel.UserRepresent;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@Slf4j
 public class SearchService {
 
     private UserService userService;
@@ -45,5 +49,11 @@ public class SearchService {
         Order orderParam = orderRepo.findById(order.getId()).orElse(new Order());
         List<User> users = userRepo.findByRoleAndEquipmentsParameters(orderParam.getHeight(), orderParam.getWidth(), orderParam.getLength(), Role.EXECUTOR);
         return userService.usersToUserRepresents(users);
+    }
+
+    public List<String> getCitiesByTitlePart(String cityTitlePart) {
+        return cityRepo.findTitleByTitleContaining(cityTitlePart);
+
+
     }
 }
