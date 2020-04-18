@@ -5,6 +5,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -49,4 +50,12 @@ public class Order {
     @NonNull
     @Column
     private String description;
+
+    @ManyToMany
+    @JoinTable(
+            name = "mat_order",
+            joinColumns = @JoinColumn(name = "order_id"),
+            inverseJoinColumns = @JoinColumn(name = "mat_id")
+    )
+    Set<Material> materials;
 }
