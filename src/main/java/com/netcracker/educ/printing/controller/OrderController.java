@@ -101,7 +101,7 @@ public class OrderController {
     ) {
         log.info("User: "+inputOrder.toString()+";    dbUser: "+dbOrder.toString());
 
-        BeanUtils.copyProperties(inputOrder,dbOrder,"id");
+        BeanUtils.copyProperties(inputOrder,dbOrder,"user");
         return repo.save(dbOrder);
     }
 

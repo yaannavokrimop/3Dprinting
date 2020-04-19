@@ -56,6 +56,8 @@
 
             console.log(order);
 
+            this.$router.push("/orders");
+            location.reload()
         }
     }
     }
