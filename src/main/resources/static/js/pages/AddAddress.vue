@@ -69,11 +69,7 @@ export default {
             this.$data.dialog=false;
 
         },
-        cleanAndRefresh(){
-                      this.$data.selectCity='',
-                      this.$data.description=''
-                      location.reload()
-                  },
+
         querySelections (cityPartName) {
 
             setTimeout(()=>{

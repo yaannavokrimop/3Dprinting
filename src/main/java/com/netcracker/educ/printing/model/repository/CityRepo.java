@@ -16,6 +16,6 @@ public interface CityRepo extends JpaRepository<City, Long> {
     List<City> findAllByTitleIn(List<String> title);
     City findAllById(Long id);
 
-    @Query("select c.title from City c where c.title like concat('%',:title,'%')")
+    @Query("select c.title from City c where lower(c.title) like lower(concat('%',:title,'%'))")
        List<String> findTitleByTitleContaining(@Param(value = "title") String titlePart);
 }
