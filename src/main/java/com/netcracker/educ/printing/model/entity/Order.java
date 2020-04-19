@@ -72,16 +72,29 @@ public class Order {
                 width == order.width &&
                 length == order.length &&
                 Objects.equals(id, order.id) &&
-                Objects.equals(user, order.user) &&
                 status == order.status &&
                 Objects.equals(date, order.date) &&
                 Objects.equals(file, order.file) &&
-                Objects.equals(description, order.description) &&
-                Objects.equals(materials, order.materials);
+                Objects.equals(description, order.description);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, user, status, sum, date, height, width, length, file, description);
+        return Objects.hash(id, status, sum, date, height, width, length, file, description);
+    }
+
+    @Override
+    public String toString() {
+        return "Order{" +
+                "id=" + id +
+                ", status=" + status +
+                ", sum=" + sum +
+                ", date=" + date +
+                ", height=" + height +
+                ", width=" + width +
+                ", length=" + length +
+                ", file='" + file + '\'' +
+                ", description='" + description + '\'' +
+                '}';
     }
 }

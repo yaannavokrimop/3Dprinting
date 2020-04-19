@@ -100,9 +100,9 @@ public class OrderController {
             @RequestBody Order inputOrder,
             @PathVariable("id") Order dbOrder
     ) {
-        log.info("User: "+inputOrder.toString()+";    dbUser: "+dbOrder.toString());
+        log.info("Order: "+inputOrder.toString()+";    dbOrder: "+dbOrder.toString());
 
-        BeanUtils.copyProperties(inputOrder,dbOrder,"user");
+        BeanUtils.copyProperties(inputOrder,dbOrder,"user", "materials");
         return repo.save(dbOrder);
     }
 

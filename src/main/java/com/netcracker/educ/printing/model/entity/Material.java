@@ -46,13 +46,20 @@ public class Material {
         Material material = (Material) o;
         return Objects.equals(id, material.id) &&
                 Objects.equals(matTitle, material.matTitle) &&
-                type == material.type &&
-                Objects.equals(equips, material.equips) &&
-                Objects.equals(orders, material.orders);
+                type == material.type;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, matTitle, type, equips);
+        return Objects.hash(id, matTitle, type);
+    }
+
+    @Override
+    public String toString() {
+        return "Material{" +
+                "id=" + id +
+                ", matTitle='" + matTitle + '\'' +
+                ", type=" + type +
+                '}';
     }
 }
