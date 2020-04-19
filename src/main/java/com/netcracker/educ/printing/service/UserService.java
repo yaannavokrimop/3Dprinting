@@ -131,7 +131,7 @@ public class UserService {
             Address addr;
             while(iterator.hasNext()){
                 addr=iterator.next();
-                addressRepresents.add(new AddressRepresent(addr.getCity().getTitle(),addr.getDescription(),addr.getUser().getId()));
+                addressRepresents.add(new AddressRepresent(addr.getCity().getTitle(),addr.getDescription(),addr.getUser().getId(),addr.getId()));
             }
             return addressRepresents;
     }
