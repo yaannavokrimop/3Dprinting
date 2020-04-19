@@ -3,6 +3,7 @@ package com.netcracker.educ.printing.model.entity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -20,7 +21,7 @@ public class Equipment {
     private String equipName;
 
     @NonNull
-    @Column(nullable = false)
+    @Column
     private String equipDesc;
 
     @NonNull
@@ -34,4 +35,12 @@ public class Equipment {
     @NonNull
     @Column(nullable = false)
     private int length;
+
+    @ManyToMany
+    @JoinTable(
+            name = "mat_equip",
+            joinColumns = @JoinColumn(name = "equip_id"),
+            inverseJoinColumns = @JoinColumn(name = "mat_id")
+    )
+    Set<Material> materials;
 }

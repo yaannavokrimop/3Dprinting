@@ -28,7 +28,6 @@ public class ResponseService {
     private final ResponseRepo responseRepo;
 
     public void createResponse(ResponseRepresent represent) throws CreatingResponseException {
-        Map<Boolean, String> result = new HashMap<>();
         UserDetailsImpl principal = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (principal.getId().equals(represent.getExecutorId()))
             throw new CreatingResponseException("Нельзя принять собственный заказ. Выберите другого исполнителя!");
