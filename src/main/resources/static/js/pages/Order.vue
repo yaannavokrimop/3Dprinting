@@ -45,6 +45,16 @@
                 <v-list-item-title><strong>Файл:  {{order.file}}</strong></v-list-item-title>
             </v-list-item-content>
         </v-list-item>
+        <v-list-item>
+            <div>
+                <h3>Материалы</h3>
+                <ul>
+                    <li v-for="material in order.materials">
+                        Материал: {{ material.matTitle}} 
+                    </li>
+                </ul>
+            </div>
+        </v-list-item>
 
 
     </v-card>
@@ -76,7 +86,8 @@ props:[],
         width:0,
         length:0,
         file:'',
-        description:''
+        description:'',
+        materials:'',
 
     },
 
@@ -97,6 +108,7 @@ props:[],
              this.order.length = responce.data.length;
              this.order.file = responce.data.file;
              this.order.description = responce.data.description;
+             this.order.materials = responce.data.materials;
 
          }).catch(error => console.log(error));
     },

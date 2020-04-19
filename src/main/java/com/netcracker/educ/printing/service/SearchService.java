@@ -21,23 +21,23 @@ public class SearchService {
     private CityRepo cityRepo;
     private OrderRepo orderRepo;
 
-    public SearchService(UserService userService, AddressRepo addressRepo, CityRepo cityRepo,UserRepo userRepo, OrderRepo orderRepo) {
+    public SearchService(UserService userService, AddressRepo addressRepo, CityRepo cityRepo, UserRepo userRepo, OrderRepo orderRepo) {
         this.userService = userService;
         this.addressRepo = addressRepo;
         this.cityRepo = cityRepo;
-        this.userRepo=userRepo;
+        this.userRepo = userRepo;
         this.orderRepo = orderRepo;
     }
 
 
     public List<UserRepresent> searchExecutorsByAddress(String city) {
-        List<User> users=userRepo.findByRoleAndAddressesCityName(cityRepo.findAllByTitle(city),Role.EXECUTOR);
+        List<User> users = userRepo.findByRoleAndAddressesCityName(cityRepo.findAllByTitle(city), Role.EXECUTOR);
         return userService.usersToUserRepresents(users);
     }
 
 
     public List<UserRepresent> searchExecutorsByAddresses(List<String> city) {
-        List<User> users=userRepo.findByRoleAndAddressesCityNames(cityRepo.findAllByTitleIn(city),Role.EXECUTOR);
+        List<User> users = userRepo.findByRoleAndAddressesCityNames(cityRepo.findAllByTitleIn(city), Role.EXECUTOR);
         return userService.usersToUserRepresents(users);
     }
 
