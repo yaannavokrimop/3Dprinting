@@ -31,9 +31,9 @@ public class Material {
     @Enumerated(EnumType.STRING)
     private MaterialType type;
 
-    @JsonIgnore
+    /*@JsonIgnore
     @ManyToMany(mappedBy = "materials")
-    Set<Equipment> equips;
+    Set<Equipment> equips;*/
 
     @JsonIgnore
     @ManyToMany(mappedBy = "materials")

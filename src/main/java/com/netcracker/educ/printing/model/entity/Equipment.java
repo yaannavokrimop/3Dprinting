@@ -36,11 +36,11 @@ public class Equipment {
     @Column(nullable = false)
     private int length;
 
-    @ManyToMany
+    /*@ManyToMany
     @JoinTable(
             name = "mat_equip",
             joinColumns = @JoinColumn(name = "equip_id"),
             inverseJoinColumns = @JoinColumn(name = "mat_id")
     )
-    Set<Material> materials;
+    Set<Material> materials;*/
 }

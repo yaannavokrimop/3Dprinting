@@ -4,6 +4,7 @@ import lombok.Data;
 
 import javax.persistence.*;
 import java.util.Objects;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -24,6 +25,14 @@ public class ExecutorEquipment {
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "equipmentId", nullable = false)
     private Equipment equipment;
+
+    @ManyToMany
+    @JoinTable(
+            name = "exe_mat_equip",
+            joinColumns = @JoinColumn(name = "exe_equip_id"),
+            inverseJoinColumns = @JoinColumn(name = "mat_equip_id")
+    )
+    Set<MaterialEquipment> matEquips;
 
     public ExecutorEquipment(User executor, Equipment equipment) {
         this.equipment = equipment;
