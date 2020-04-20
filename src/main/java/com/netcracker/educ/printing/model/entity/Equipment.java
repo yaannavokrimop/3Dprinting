@@ -3,6 +3,7 @@ package com.netcracker.educ.printing.model.entity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
@@ -36,11 +37,24 @@ public class Equipment {
     @Column(nullable = false)
     private int length;
 
-    /*@ManyToMany
-    @JoinTable(
-            name = "mat_equip",
-            joinColumns = @JoinColumn(name = "equip_id"),
-            inverseJoinColumns = @JoinColumn(name = "mat_id")
-    )
-    Set<Material> materials;*/
+    @OneToMany(mappedBy = "equipment")
+    Set<MaterialEquipment> materialEquipments;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Equipment equipment = (Equipment) o;
+        return height == equipment.height &&
+                width == equipment.width &&
+                length == equipment.length &&
+                Objects.equals(id, equipment.id) &&
+                Objects.equals(equipName, equipment.equipName) &&
+                Objects.equals(equipDesc, equipment.equipDesc);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, equipName, equipDesc, height, width, length);
+    }
 }
