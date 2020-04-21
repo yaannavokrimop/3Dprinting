@@ -114,7 +114,7 @@
             querySelections (cityPartName) {
                 setTimeout(()=>{
                 if(cityPartName==this.$data.search){
-                AXIOS.post('/search/cityList',{cityPartName}).then((response) =>{
+                AXIOS.get('/search/cityList/'+cityPartName).then((response) =>{
 
                     this.items=response.data;
                 }).catch(error => console.log(error));

@@ -37,9 +37,9 @@ public class SearchController {
         return searchService.searchExecutorsByOrderParameters(order);
     }
 
-    @PostMapping("/cityList")
-    public List<String> getCityNames(@RequestBody Map<String,String> cityTitlePart){
-        return searchService.getCitiesByTitlePart(cityTitlePart.get("cityPartName"));
+    @GetMapping("/cityList/{titlePart}")
+    public List<String> getCityNames(@PathVariable("titlePart") String cityTitlePart){
+        return searchService.getCitiesByTitlePart(cityTitlePart);
 
     }
 }

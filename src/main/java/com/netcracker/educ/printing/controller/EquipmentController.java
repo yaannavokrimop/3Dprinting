@@ -6,17 +6,16 @@ import com.netcracker.educ.printing.model.repository.EquipmentRepo;
 import com.netcracker.educ.printing.security.UserDetailsImpl;
 import com.netcracker.educ.printing.service.EquipmentService;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api/equipment")
 @AllArgsConstructor
+@Slf4j
 public class EquipmentController {
 
     private final EquipmentService equipmentService;
@@ -87,4 +86,15 @@ public class EquipmentController {
         return id;
 
     }
+
+    @GetMapping("/equipByPartName/{partName}")
+    public List<String> getEquipmentByPartName(@PathVariable("partName") String equipPartName){
+        return equipmentService.getEquipmentsByEquipNamePart(equipPartName);
+    }
+
+    @GetMapping("/name/{equipName}")
+    public Equipment getEquipmentByName(@PathVariable("equipName") String equipName){
+        return equipmentService.getEquipmentByName(equipName);
+    }
+
 }

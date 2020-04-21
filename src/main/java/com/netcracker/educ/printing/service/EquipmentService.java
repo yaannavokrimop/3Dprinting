@@ -7,6 +7,7 @@ import com.netcracker.educ.printing.model.repository.EquipmentRepo;
 import com.netcracker.educ.printing.model.repository.ExecutorEquipmentRepo;
 import com.netcracker.educ.printing.model.repository.UserRepo;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -17,6 +18,7 @@ import java.util.stream.Collectors;
 @Service
 @AllArgsConstructor
 @Transactional
+@Slf4j
 public class EquipmentService {
     private final EquipmentRepo equipmentRepo;
     private final UserRepo userRepo;
@@ -34,5 +36,13 @@ public class EquipmentService {
         return executorEquipmentRepo.findAllByExecutorId(userId).stream()
                 .map(ExecutorEquipment::getEquipment)
                 .collect(Collectors.toList());
+    }
+
+    public List<String> getEquipmentsByEquipNamePart(String equipName) {
+        return equipmentRepo.findEquipNameByEquipNameContaining(equipName);
+    }
+
+    public Equipment getEquipmentByName(String equipName) {
+      return equipmentRepo.findByEquipName(equipName);
     }
 }

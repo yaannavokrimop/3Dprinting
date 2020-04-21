@@ -13,6 +13,7 @@ import Equipments from 'pages/Equipments.vue'
 import CreateOrder from "pages/CreateOrder.vue";
 import OrderEdit from "pages/OrderEdit.vue";
 import Addresses from "pages/Addresses.vue";
+import SelectEquipment from 'pages/SelectEquipment.vue'
 
 
 Vue.use(VueRouter);
@@ -27,10 +28,11 @@ const routes=[
     {path:'/orders/:id', component: Order},
     {path:'/equipment/:id', component: Equipment},
     {path:'/equipment', component: Equipments},
-    {path:'/add_equipment', component: AddEquipment},
+    {path:'/create_equipment', component: AddEquipment},
     {path:'/order/create', component: CreateOrder},
     {path:'/order/edit/:id', component: OrderEdit},
     {path:'/address', component: Addresses},
+    {path:'/add_equipment', component: SelectEquipment},
     // {path:'/profile/:id',component:'Profile'},
     // {path:'*',component:'Main'}
 ]

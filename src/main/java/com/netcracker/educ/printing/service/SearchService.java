@@ -2,12 +2,10 @@ package com.netcracker.educ.printing.service;
 
 import com.netcracker.educ.printing.model.bean.Role;
 import com.netcracker.educ.printing.model.entity.City;
+import com.netcracker.educ.printing.model.entity.Equipment;
 import com.netcracker.educ.printing.model.entity.Order;
 import com.netcracker.educ.printing.model.entity.User;
-import com.netcracker.educ.printing.model.repository.AddressRepo;
-import com.netcracker.educ.printing.model.repository.CityRepo;
-import com.netcracker.educ.printing.model.repository.OrderRepo;
-import com.netcracker.educ.printing.model.repository.UserRepo;
+import com.netcracker.educ.printing.model.repository.*;
 import com.netcracker.educ.printing.model.representationModel.UserRepresent;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -24,13 +22,15 @@ public class SearchService {
     private AddressRepo addressRepo;
     private CityRepo cityRepo;
     private OrderRepo orderRepo;
+    private EquipmentRepo equipmentRepo;
 
-    public SearchService(UserService userService, AddressRepo addressRepo, CityRepo cityRepo,UserRepo userRepo, OrderRepo orderRepo) {
+    public SearchService(UserService userService, AddressRepo addressRepo, CityRepo cityRepo,UserRepo userRepo, OrderRepo orderRepo,EquipmentRepo equipmentRepo) {
         this.userService = userService;
         this.addressRepo = addressRepo;
         this.cityRepo = cityRepo;
         this.userRepo=userRepo;
         this.orderRepo = orderRepo;
+        this.equipmentRepo=equipmentRepo;
     }
 
 
@@ -53,7 +53,6 @@ public class SearchService {
 
     public List<String> getCitiesByTitlePart(String cityTitlePart) {
         return cityRepo.findTitleByTitleContaining(cityTitlePart);
-
 
     }
 }

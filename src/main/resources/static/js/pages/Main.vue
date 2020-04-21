@@ -154,11 +154,7 @@
         },
          watch: {
               search (val) {
-              console.log(val);
-
                 val && val !== this.selectCity && this.querySelections(val)
-
-
               },
          },
     methods:{
@@ -217,13 +213,13 @@
                     setTimeout(()=>{
                     if(cityPartName==this.$data.search){
                     this.loading = true
-                      AXIOS.post('/search/cityList',{cityPartName}).then((response) =>{
+                      AXIOS.get('/search/cityList/'+cityPartName).then((response) =>{
 
                             this.items=response.data;
                                     }).catch(error => console.log(error));
                       this.loading = false
 
-                      }},2000)
+                      }},1500)
 
                   },
 
