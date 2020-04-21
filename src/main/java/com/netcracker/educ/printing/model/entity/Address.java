@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Objects;
 import java.util.UUID;
 
 @Entity
@@ -37,5 +38,28 @@ public class Address implements Serializable {
         this.city = city;
         this.user = user;
         this.description = description;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Address address = (Address) o;
+        return Objects.equals(id, address.id) &&
+                Objects.equals(user, address.user) &&
+                Objects.equals(description, address.description);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, user, description);
+    }
+
+    @Override
+    public String toString() {
+        return "Address{" +
+                "id=" + id +
+                ", description='" + description + '\'' +
+                '}';
     }
 }

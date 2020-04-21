@@ -44,7 +44,7 @@
             AXIOS.put('/order/'+id,{
                 id : order.id,
             userId : order.userId,
-            status : order.data.status,
+            status : order.status,
             sum : order.sum,
             date : order.date,
             height : order.height,
@@ -56,6 +56,8 @@
 
             console.log(order);
 
+            this.$router.push("/orders");
+            location.reload()
         }
     }
     }
