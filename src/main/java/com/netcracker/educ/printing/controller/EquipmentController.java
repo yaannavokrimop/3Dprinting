@@ -48,7 +48,7 @@ public class EquipmentController {
     }
 
     @GetMapping("/my")
-    public List<Equipment> getUserEquip() {
+    public List<EquipmentRepresent> getUserEquip() {
         UserDetailsImpl principal = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return equipmentService.getUserEquipment(principal.getId());
     }
@@ -105,5 +105,7 @@ public class EquipmentController {
     public Equipment getEquipmentByName(@PathVariable("equipName") String equipName){
         return equipmentService.getEquipmentByName(equipName);
     }
+
+
 
 }

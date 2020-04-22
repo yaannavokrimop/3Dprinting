@@ -10,4 +10,6 @@ import java.util.UUID;
 @RestController
 public interface ExecutorEquipmentRepo extends JpaRepository<ExecutorEquipment, UUID> {
     List<ExecutorEquipment> findAllByExecutorId(UUID executorId);
+
+    ExecutorEquipment findByExecutorIdAndEquipmentId(UUID executorId,UUID equipmentId);
 }

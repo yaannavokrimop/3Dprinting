@@ -25,4 +25,13 @@ public class EquipmentRepresent {
 
     public EquipmentRepresent() {
     }
+
+    public EquipmentRepresent(UUID id, String equipName, int height, int width, int length, String equipDesc) {
+        this.id = id;
+        this.equipName = equipName;
+        this.height = height;
+        this.width = width;
+        this.length = length;
+        this.equipDesc = equipDesc;
+    }
 }
