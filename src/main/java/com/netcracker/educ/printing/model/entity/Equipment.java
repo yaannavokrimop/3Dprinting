@@ -30,4 +30,24 @@ public class Equipment {
     @NonNull
     @Column(nullable = false)
     private int length;
+
+    @OneToMany(mappedBy = "equipment")
+    Set<MaterialEquipment> materialEquipments;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Equipment equipment = (Equipment) o;
+        return height == equipment.height &&
+                width == equipment.width &&
+                length == equipment.length &&
+                Objects.equals(id, equipment.id) &&
+                Objects.equals(equipName, equipment.equipName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, equipName, height, width, length);
+    }
 }

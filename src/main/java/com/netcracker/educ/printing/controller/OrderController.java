@@ -6,28 +6,32 @@ import com.netcracker.educ.printing.model.entity.Order;
 import com.netcracker.educ.printing.model.entity.User;
 import com.netcracker.educ.printing.model.repository.OrderRepo;
 import com.netcracker.educ.printing.model.repository.UserRepo;
+import com.netcracker.educ.printing.model.representationModel.OrderRepresent;
 import com.netcracker.educ.printing.security.UserDetailsImpl;
+import com.netcracker.educ.printing.service.OrderService;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 
+
 @Slf4j
 @RestController
 @RequestMapping("/api/order")
+@AllArgsConstructor
 public class OrderController {
 
     private OrderRepo repo;
     private UserRepo userRepo;
+    private OrderService orderService;
 
-    @Autowired
-    public OrderController(UserRepo userRepo,OrderRepo repo) {
-        this.userRepo = userRepo;
-        this.repo=repo;
-    }
+
 
 
     @GetMapping("/user")
@@ -66,17 +70,14 @@ public class OrderController {
 
     @PostMapping
     public Order createOrder(
-            @RequestBody Order inputOrder
+            @RequestBody OrderRepresent inputOrder
     ) {
-        UserDetailsImpl principal = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        User user = userRepo.findByEmail(principal.getEmail());
 
-        inputOrder.setUser(user);
-        inputOrder.setId(UUID.randomUUID());
-        inputOrder.setStatus(OrderStatus.NO_PAY);
-        inputOrder.setDate(new Date());
+            Order order = orderService.create(inputOrder);
+            order.setStatus(OrderStatus.NO_PAY);
 
-        return repo.save(inputOrder);
+
+        return repo.save(order);
     }
 
     @PostMapping("draft")
@@ -99,9 +100,9 @@ public class OrderController {
             @RequestBody Order inputOrder,
             @PathVariable("id") Order dbOrder
     ) {
-        log.info("User: "+inputOrder.toString()+";    dbUser: "+dbOrder.toString());
+        log.info("Order: "+inputOrder.toString()+";    dbOrder: "+dbOrder.toString());
 
-        BeanUtils.copyProperties(inputOrder,dbOrder,"user");
+        BeanUtils.copyProperties(inputOrder,dbOrder,"user", "materials");
         return repo.save(dbOrder);
     }
 

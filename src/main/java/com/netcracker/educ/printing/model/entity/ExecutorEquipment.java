@@ -2,7 +2,7 @@ package com.netcracker.educ.printing.model.entity;
 
 import lombok.Data;
 import lombok.NonNull;
-
+import java.util.Set;
 import javax.persistence.*;
 import java.util.Objects;
 import java.util.UUID;
@@ -34,6 +34,14 @@ public class ExecutorEquipment {
 //        this.equipment = equipment;
 //        this.executor = executor;
 //    }
+
+    @ManyToMany
+    @JoinTable(
+            name = "exe_mat_equip",
+            joinColumns = @JoinColumn(name = "exe_equip_id"),
+            inverseJoinColumns = @JoinColumn(name = "mat_equip_id")
+    )
+    Set<MaterialEquipment> matEquips;
 
     public ExecutorEquipment(User executor, Equipment equipment,String equipDesc) {
         this.equipment = equipment;
