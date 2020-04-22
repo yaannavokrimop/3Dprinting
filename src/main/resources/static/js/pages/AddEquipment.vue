@@ -47,11 +47,10 @@ export default {
         addEquip(){
             let newEquip = {
                'equipName': this.$data.equipName,
-               'equipDesc': this.$data.equipDesc,
                'height': this.$data.height,
                'width': this.$data.width,
                'length': this.$data.length,
-
+               'equipDesc': this.$data.equipDesc
             };
 
             AXIOS.post('/equipment', newEquip)

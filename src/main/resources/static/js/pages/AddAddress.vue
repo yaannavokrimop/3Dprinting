@@ -9,19 +9,24 @@
          </v-card-title>
          <v-card-text>
            <v-container>
-                 <v-text-field label="Город*" required v-model="city"></v-text-field>
-                 <v-text-field label="Адрес" v-model="description"></v-text-field>
                  <v-autocomplete
-                   :items="['Skiing', 'Ice hockey', 'Soccer', 'Basketball', 'Hockey', 'Reading', 'Writing', 'Coding', 'Basejump']"
-                   label="Город"
-                   multiple
+                    v-model="selectCity"
+                    :loading="loading"
+                    :items="items"
+                    :search-input.sync="search"
+                    cache-items
+                    hide-no-data
+                    hide-details
+                    label="Город"
+                    chips
                  ></v-autocomplete>
+                 <v-text-field label="Адрес" v-model="description"></v-text-field>
            </v-container>
          </v-card-text>
          <v-card-actions>
            <v-spacer></v-spacer>
            <v-btn color="blue darken-1" text @click="dialog = false">Закрыть</v-btn>
-           <v-btn color="blue darken-1" text @click="addEquip">Добавить</v-btn>
+           <v-btn color="blue darken-1" text @click="addAddress">Добавить</v-btn>
          </v-card-actions>
        </v-card>
      </v-dialog>
@@ -35,15 +40,24 @@ export default {
      data(){
         return{
             dialog:false,
-            city: '',
+
             description: '',
+            items: [],
+            search: null,
+            selectCity: null,
+            loading: false
         }
      },
+     watch: {
+        search (val) {
+        val && val !== this.selectCity && this.querySelections(val)
+              },
+         },
 
     methods: {
-        addEquip(){
+        addAddress(){
             var newAddress = {
-                'cityTitle': this.$data.city,
+                'cityTitle': this.$data.selectCity,
                 'description': this.$data.description,
             };
             console.log(newAddress);
@@ -51,13 +65,23 @@ export default {
                  .then(response => {
                     console.log(response)
                   }).catch(error => console.log(error));
+                  location.reload()
             this.$data.dialog=false;
 
         },
-        cleanAndRefresh(){
-            this.$data.city='',
-            this.$data.description=''
-        }
+
+        querySelections (cityPartName) {
+
+            setTimeout(()=>{
+            if(cityPartName==this.$data.search){
+            this.loading = true
+            AXIOS.get('/search/cityList/'+cityPartName).then((response) =>{
+
+                this.items=response.data;
+            }).catch(error => console.log(error));
+            this.loading = false
+            }},1200)
+            },
 
     }
 }

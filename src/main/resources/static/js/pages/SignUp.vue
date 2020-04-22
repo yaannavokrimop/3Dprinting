@@ -53,7 +53,16 @@
                         <b-form-radio v-model="role" name="some-radios" value="EXECUTOR">Исполнитель</b-form-radio>
                     </b-form-group>
 
-                    <b-form-input type="text" placeholder="Город" v-model="cityTitle" />
+                    <v-autocomplete
+                     v-model="cityTitle"
+                     :items="items"
+                     :search-input.sync="search"
+                     cache-items
+                     hide-no-data
+                     hide-details
+                     label="Город"
+                     chips
+                    ></v-autocomplete>
                     <div class="mt-2"></div>
 
                     <b-form-input type="text" placeholder="Адрес" v-model="description" />
@@ -89,12 +98,29 @@
                 dismissCountDown: 0,
                 alertMessage: '',
                 successfullyRegistered: false,
-                cityTitle:'',
-                description:''
+                cityTitle:null,
+                description:'',
+                items: [],
+                search: null
 
             }
         },
+        watch: {
+            search (val) {
+                val && val !== this.cityTitle && this.querySelections(val)
+            },
+         },
         methods: {
+            querySelections (cityPartName) {
+                setTimeout(()=>{
+                if(cityPartName==this.$data.search){
+                AXIOS.get('/search/cityList/'+cityPartName).then((response) =>{
+
+                    this.items=response.data;
+                }).catch(error => console.log(error));
+                }},1200)
+            },
+
             register: function () {
                 if (this.$data.name === '' || this.$data.name == null) {
                     this.$data.alertMessage = 'Please, fill "Username" field';

@@ -21,10 +21,6 @@ public class Equipment {
 
     @NonNull
     @Column(nullable = false)
-    private String equipDesc;
-
-    @NonNull
-    @Column(nullable = false)
     private int height;
 
     @NonNull
