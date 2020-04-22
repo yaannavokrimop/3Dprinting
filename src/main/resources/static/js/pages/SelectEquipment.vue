@@ -1,9 +1,9 @@
 <template>
     <v-container>
         <b-card
-             title="Добавление Оборудования"
+             title="Добавление оборудования"
              tag="article"
-             style="max-width: 20rem;"
+             style="max-width: 50%;"
              class="mb-2"
         >
             <div>
@@ -33,9 +33,15 @@
 
             </div>
             <v-btn v-on:click="addEquip" variant="primary">Добавить</v-btn>
+            <div class="mt-2"></div>
+            <b-alert show dismissible fade>
+                <div>
+                Если Вы не нашли нужное оборудование в нашей базе, можете зарегистрировать своё оборудование вручную
+                </div>
+                <div class="mt-2"></div>
+                <v-btn to="/create_equipment" variant="primary">Зарегистрировать новое оборудование</v-btn>
 
-            <div>Если у вас не получилось найти ваше оборудование при вводе в поле Наименование,нажмите на кнопку ниже и зарегистрируйте  ваше оборудование </div>
-            <v-btn to="/create_equipment" variant="primary">Зарегистрировать новое оборудование</v-btn>
+            </b-alert>
         </b-card>
     </v-container>
 </template>
@@ -76,6 +82,8 @@ export default {
                .then(response => {
                     this.successAlert();
                 }).catch(error => console.log(error));
+
+
             }
         },
         successAlert() {
@@ -84,7 +92,8 @@ export default {
             this.height = '';
             this.width = '';
             this.length = '';
-
+            this.$router.push('/equipment');
+            location.reload()
         },
         querySelections (equipPartName) {
             setTimeout(()=>{

@@ -8,38 +8,10 @@
                 </b-button>
             </b-alert>
 
-            <b-alert
-                    variant="danger"
-                    dismissible
-                    fade
-                    :show="showDismissibleAlert"
-                    @dismissed="showDismissibleAlert=false"
-            >
-                Dismissible Alert!
-            </b-alert>
-
-            <b-alert
-                    :show="dismissCountDown"
-                    dismissible
-                    fade
-                    variant="warning">
-
-                This alert will dismiss after {{ dismissCountDown }} seconds...
-            </b-alert>
-
         </div>
         <div v-if="!currentOrder">
             <b-alert show dismissible fade>Выберите заказ.</b-alert>
 
-            <b-alert
-                    variant="danger"
-                    dismissible
-                    fade
-                    :show="showDismissibleAlert"
-                    @dismissed="showDismissibleAlert=false"
-            >
-                Dismissible Alert!
-            </b-alert>
         </div>
 
         <v-card max-width="1200" tile>
@@ -93,15 +65,7 @@
                     <div class="mt-2"></div>
                     <b-alert show dismissible fade>Вы не можете назначать исполнителя для шаблона.</b-alert>
 
-                    <b-alert
-                            variant="danger"
-                            dismissible
-                            fade
-                            :show="showDismissibleAlert"
-                            @dismissed="showDismissibleAlert=false"
-                    >
-                        Dismissible Alert!
-                    </b-alert>
+
                 </div>
                 <div v-else-if="currentOrder">
                     <div v-if="!currentExecutor">

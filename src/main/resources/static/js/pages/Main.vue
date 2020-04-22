@@ -43,24 +43,6 @@
                 </b-button>
             </b-alert>
 
-            <b-alert
-                    variant="danger"
-                    dismissible
-                    fade
-                    :show="showDismissibleAlert"
-                    @dismissed="showDismissibleAlert=false"
-            >
-                Dismissible Alert!
-            </b-alert>
-
-            <b-alert
-                    :show="dismissCountDown"
-                    dismissible
-                    fade
-                    variant="warning">
-
-                This alert will dismiss after {{ dismissCountDown }} seconds...
-            </b-alert>
         </div>
         <div class="mt-2"></div>
         <v-content>

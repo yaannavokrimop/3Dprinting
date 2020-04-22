@@ -65,7 +65,8 @@ export default {
             this.height = '';
             this.width = '';
             this.length = '';
-
+            this.$router.push('/equipment');
+            location.reload()
         }
 
      }
