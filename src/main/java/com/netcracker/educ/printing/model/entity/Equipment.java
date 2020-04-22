@@ -3,6 +3,8 @@ package com.netcracker.educ.printing.model.entity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.Objects;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
