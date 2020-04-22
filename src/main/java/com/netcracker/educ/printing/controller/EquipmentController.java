@@ -2,7 +2,9 @@ package com.netcracker.educ.printing.controller;
 
 import com.netcracker.educ.printing.exception.NotFoundException;
 import com.netcracker.educ.printing.model.entity.Equipment;
+import com.netcracker.educ.printing.model.entity.ExecutorEquipment;
 import com.netcracker.educ.printing.model.repository.EquipmentRepo;
+import com.netcracker.educ.printing.model.representationModel.EquipmentRepresent;
 import com.netcracker.educ.printing.security.UserDetailsImpl;
 import com.netcracker.educ.printing.service.EquipmentService;
 import lombok.AllArgsConstructor;
@@ -53,9 +55,16 @@ public class EquipmentController {
 
 
     @PostMapping
-    public Equipment createEquip(@RequestBody Equipment inputEquip) {
+    public Equipment createEquip(@RequestBody EquipmentRepresent inputEquip) {
         UserDetailsImpl principal = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return equipmentService.create(principal.getEmail(), inputEquip);
+        Equipment equipment=new Equipment(inputEquip.getEquipName(),inputEquip.getHeight(),inputEquip.getWidth(),inputEquip.getLength());
+        return equipmentService.create(principal.getEmail(), equipment,inputEquip.getEquipDesc());
+    }
+
+    @PostMapping("/add")
+    public ExecutorEquipment addEquip(@RequestBody Map<String, String>  inputEquip) {
+        UserDetailsImpl principal = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return equipmentService.addEquipment(principal.getEmail(),inputEquip.get("equipName"),inputEquip.get("equipDesc"));
     }
 
     @PutMapping("{id}")
@@ -68,7 +77,7 @@ public class EquipmentController {
         if (equipmentData.isPresent()) {
             Equipment equipment = equipmentData.get();
                    equipment.setEquipName(inputEquip.getEquipName());
-                   equipment.setEquipDesc(inputEquip.getEquipDesc());
+//                   equipment.setEquipDesc(inputEquip.getEquipDesc());
                    equipment.setHeight(inputEquip.getHeight());
                    equipment.setWidth(inputEquip.getWidth());
                    equipment.setLength(inputEquip.getLength());

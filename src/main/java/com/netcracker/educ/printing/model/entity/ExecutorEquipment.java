@@ -1,6 +1,7 @@
 package com.netcracker.educ.printing.model.entity;
 
 import lombok.Data;
+import lombok.NonNull;
 
 import javax.persistence.*;
 import java.util.Objects;
@@ -25,9 +26,19 @@ public class ExecutorEquipment {
     @JoinColumn(name = "equipmentId", nullable = false)
     private Equipment equipment;
 
-    public ExecutorEquipment(User executor, Equipment equipment) {
+    @NonNull
+    @Column(nullable = false)
+    private String equipDesc;
+
+//    public ExecutorEquipment(User executor, Equipment equipment) {
+//        this.equipment = equipment;
+//        this.executor = executor;
+//    }
+
+    public ExecutorEquipment(User executor, Equipment equipment,String equipDesc) {
         this.equipment = equipment;
         this.executor = executor;
+        this.equipDesc=equipDesc;
     }
 
     public ExecutorEquipment() {

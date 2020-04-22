@@ -33,6 +33,9 @@
 
             </div>
             <v-btn v-on:click="addEquip" variant="primary">Добавить</v-btn>
+
+            <div>Если у вас не получилось найти ваше оборудование при вводе в поле Наименование,нажмите на кнопку ниже и зарегистрируйте  ваше оборудование </div>
+            <v-btn to="/create_equipment" variant="primary">Зарегистрировать новое оборудование</v-btn>
         </b-card>
     </v-container>
 </template>
@@ -49,7 +52,8 @@ export default {
             width: '',
             length: '',
             items: [],
-            search: null
+            search: null,
+            equipId:null
         }
      },
     watch: {
@@ -61,17 +65,18 @@ export default {
          },
      methods: {
         addEquip(){
+            if(this.$data.equipName!=null){
             let newEquip = {
                'equipName': this.$data.equipName,
                'equipDesc': this.$data.equipDesc,
             };
 
             console.log(newEquip);
-    //        AXIOS.post('/equipment', newEquip)
-      //          .then(response => {
-        //            console.log(response);
+            AXIOS.post('/equipment/add', newEquip)
+               .then(response => {
                     this.successAlert();
-            //    }).catch(error => console.log(error));
+                }).catch(error => console.log(error));
+            }
         },
         successAlert() {
             this.equipName = null;
@@ -96,6 +101,7 @@ export default {
                 this.$data.height=response.data.height;
                 this.$data.width=response.data.width;
                 this.$data.length=response.data.length;
+                this.$data.equipId=response.data.id;
             }).catch(error => console.log(error));
 
         }

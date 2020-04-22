@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -24,10 +25,10 @@ public class EquipmentService {
     private final UserRepo userRepo;
     private final ExecutorEquipmentRepo executorEquipmentRepo;
 
-    public Equipment create(String userEmail, Equipment equipment) {
+    public Equipment create(String userEmail, Equipment equipment,String equipDesc) {
         equipmentRepo.save(equipment);
         User executor = userRepo.findByEmail(userEmail);
-        ExecutorEquipment executorEquipment = new ExecutorEquipment(executor, equipment);
+        ExecutorEquipment executorEquipment = new ExecutorEquipment(executor, equipment,equipDesc);
         executorEquipmentRepo.save(executorEquipment);
         return equipment;
     }
@@ -44,5 +45,13 @@ public class EquipmentService {
 
     public Equipment getEquipmentByName(String equipName) {
       return equipmentRepo.findByEquipName(equipName);
+    }
+
+    public ExecutorEquipment addEquipment(String email, String equipName, String equipDesc) {
+
+
+            Equipment equipment = equipmentRepo.findByEquipName(equipName);
+            return executorEquipmentRepo.save(new ExecutorEquipment(userRepo.findByEmail(email), equipment, equipDesc));
+
     }
 }
