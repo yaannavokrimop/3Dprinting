@@ -2,7 +2,6 @@ package com.netcracker.educ.printing.service;
 
 import com.netcracker.educ.printing.exception.CreatingResponseException;
 import com.netcracker.educ.printing.exception.NotFoundException;
-import com.netcracker.educ.printing.model.bean.ChatId;
 import com.netcracker.educ.printing.model.entity.Chat;
 import com.netcracker.educ.printing.model.entity.User;
 import com.netcracker.educ.printing.model.repository.ChatRepo;
@@ -27,10 +26,9 @@ public class ChatService {
                 .orElseThrow(NotFoundException::new);
         User customer = userRepo.findById(represent.getCustomerId())
                 .orElseThrow(NotFoundException::new);
-        ChatId chatId = new ChatId(customer.getId(), executor.getId());
-        if (chatRepo.existsById(chatId))
+        if (chatRepo.existsByExecutorAndCustomer(executor, customer))
             throw new CreatingResponseException("Этот чат уже есть!");
-        chatRepo.save(new Chat(chatId, executor, customer));
+        chatRepo.save(new Chat(executor, customer));
 
     }
 }

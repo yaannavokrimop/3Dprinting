@@ -1,9 +1,6 @@
 package com.netcracker.educ.printing.model.entity;
 
-import com.netcracker.educ.printing.model.bean.ChatId;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.UUID;
@@ -12,16 +9,18 @@ import java.util.UUID;
 @Table(name = "chat")
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class Chat {
-    @EmbeddedId
-    private ChatId id;
 
-    @MapsId("executorId")
+    @Id
+    @GeneratedValue
+    private UUID id;
+
+    @NonNull
     @ManyToOne(fetch = FetchType.LAZY)
     private User executor;
 
-    @MapsId("customerId")
+    @NonNull
     @ManyToOne(fetch = FetchType.LAZY)
     private User customer;
 }
