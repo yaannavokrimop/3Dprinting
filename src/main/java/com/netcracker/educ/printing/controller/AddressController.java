@@ -11,6 +11,7 @@ import com.netcracker.educ.printing.security.UserDetailsImpl;
 import com.netcracker.educ.printing.service.AddressService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,9 +31,7 @@ public class AddressController {
     private final AddressService addressService;
 
     @GetMapping("/user")
-    public List<AddressRepresent> getAddressByUser() {
-        UserDetailsImpl principal = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
+    public List<AddressRepresent> getAddressByUser(@AuthenticationPrincipal UserDetailsImpl principal) {
         return addressService.getAddressesByUser(principal);
     }
 

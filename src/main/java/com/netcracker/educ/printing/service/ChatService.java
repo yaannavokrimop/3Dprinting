@@ -12,6 +12,9 @@ import lombok.AllArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+import java.util.UUID;
+
 @Service
 @AllArgsConstructor
 public class ChatService {
@@ -30,5 +33,10 @@ public class ChatService {
             throw new CreatingResponseException("Этот чат уже есть!");
         chatRepo.save(new Chat(executor, customer));
 
+    }
+
+    public Chat getChatById(UUID chatId) {
+        Optional<Chat> chatOptional= chatRepo.findById(chatId);
+        return chatOptional.orElse(null);
     }
 }

@@ -31,8 +31,8 @@ public class UserService {
         return true;
     }
 
-    public Optional<User> get(UUID id) {
-            return userRepo.findById(id);
+    public User get(UUID id) {
+            return userRepo.findById(id).orElse(null);
     }
 
     public String userSave(
@@ -87,10 +87,13 @@ public class UserService {
     }
 
     public UserRepresent updateUser(UserRepresent user){
-        User dbUser=userRepo.findById(user.getId()).get();
+        User dbUser=userRepo.findById(user.getId()).orElse(null);
         User updateUser=new User(user.getName(),user.getSurname(),user.getEmail(),user.getInformation(),user.getPhone(),user.getRole());
+
+        if (dbUser != null){
         BeanUtils.copyProperties(updateUser,dbUser,"id","password","addresses");
-        return userToUserRepresent(userRepo.save(dbUser));
+        return userToUserRepresent(userRepo.save(dbUser));}
+        else return null;
     }
 
     public List<UserRepresent> findAllExecutors() {
@@ -105,10 +108,7 @@ public class UserService {
 
     public List<UserRepresent> usersToUserRepresents(List<User> users){
         List<UserRepresent> userRepresents=new ArrayList<>();
-        User user;
-        Iterator<User> iter=users.iterator();
-        while (iter.hasNext()){
-            user=iter.next();
+        for (User user : users) {
             userRepresents.add(userToUserRepresent(user));
         }
         return userRepresents;
