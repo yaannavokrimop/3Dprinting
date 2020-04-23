@@ -12,6 +12,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -33,6 +35,36 @@ public class ChatService {
             throw new CreatingResponseException("Этот чат уже есть!");
         chatRepo.save(new Chat(executor, customer));
 
+    }
+
+    public List<ChatRepresent> chatToChatRepresent (List<Chat> chats) {
+        List<ChatRepresent> chatRepresents = new ArrayList<>();
+        UserDetailsImpl principal = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User currentUser = userRepo.findByEmail(principal.getEmail());
+
+        for (Chat chat : chats) {
+            User companion;
+            Boolean isExecutor;
+
+            if (currentUser.getId().equals(chat.getCustomer().getId())) {
+                companion = chat.getExecutor();
+                isExecutor = false;
+            } else {
+                companion = chat.getCustomer();
+                isExecutor = true;
+            }
+
+            chatRepresents.add(new ChatRepresent(
+                    chat.getId(),
+                    chat.getExecutor().getId(),
+                    chat.getCustomer().getId(),
+                    companion.getName() + " " + companion.getSurname(),
+                    isExecutor
+                    )
+            );
+        }
+
+        return chatRepresents;
     }
 
     public Chat getChatById(UUID chatId) {

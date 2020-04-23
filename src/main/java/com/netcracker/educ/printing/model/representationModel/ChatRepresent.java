@@ -10,8 +10,17 @@ import java.util.UUID;
 @AllArgsConstructor
 public class ChatRepresent {
     @NotNull
+    private UUID chatId;
+
+    @NotNull
     private UUID executorId;
 
     @NotNull
     private UUID customerId;
+
+    @NotNull
+    private String companion;
+
+    @NotNull
+    private Boolean isExecutor;
 }

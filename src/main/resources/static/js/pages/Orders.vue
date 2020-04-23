@@ -120,7 +120,7 @@
         created: function () {
             AXIOS.get('/order/user').then((responce) => {
                 this.orders = responce.data;
-                console.log(response.data);
+                console.log(responce.data);
 
             }).catch(error => console.log(error));
         },

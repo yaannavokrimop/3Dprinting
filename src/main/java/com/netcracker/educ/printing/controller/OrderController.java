@@ -31,9 +31,6 @@ public class OrderController {
     private UserRepo userRepo;
     private OrderService orderService;
 
-
-
-
     @GetMapping("/user")
     public List<Order> getOrderByUserId() {
         UserDetailsImpl principal = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -58,7 +55,7 @@ public class OrderController {
     @GetMapping("{id}")
     public Order getOrderById(@PathVariable("id") UUID id) {
 
-        log.info("/////////////////////////////////////////////////OrderController  id="+id);
+        log.info("/////////////////////////////////////////////////OrderController  id=" + id);
         Optional<Order> orderData = repo.findById(id);
 
         if (orderData.isPresent()) {
@@ -73,8 +70,8 @@ public class OrderController {
             @RequestBody OrderRepresent inputOrder
     ) {
 
-            Order order = orderService.create(inputOrder);
-            order.setStatus(OrderStatus.NO_PAY);
+        Order order = orderService.create(inputOrder);
+        order.setStatus(OrderStatus.NO_PAY);
 
 
         return repo.save(order);
@@ -100,9 +97,9 @@ public class OrderController {
             @RequestBody Order inputOrder,
             @PathVariable("id") Order dbOrder
     ) {
-        log.info("Order: "+inputOrder.toString()+";    dbOrder: "+dbOrder.toString());
+        log.info("Order: " + inputOrder.toString() + ";    dbOrder: " + dbOrder.toString());
 
-        BeanUtils.copyProperties(inputOrder,dbOrder,"user", "materials");
+        BeanUtils.copyProperties(inputOrder, dbOrder, "user", "materials");
         return repo.save(dbOrder);
     }
 
