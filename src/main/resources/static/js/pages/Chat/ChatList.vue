@@ -52,6 +52,7 @@
         methods: {
             goToChat(chat) {
                 var s = "/chat/" + chat.chatId;
+                localStorage.setItem('currentChat', JSON.stringify(chat));
                 this.$router.push(s)
             }
         }

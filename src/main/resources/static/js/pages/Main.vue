@@ -193,7 +193,7 @@
 
             },
             selectOrder() {
-                localStorage.setItem('currentExecutor', this.currentExecutor.id);
+                localStorage.setItem('currentExecutor', JSON.stringify(this.currentExecutor));
                 this.$router.push('/orders');
             },
 

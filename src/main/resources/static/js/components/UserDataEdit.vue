@@ -28,9 +28,6 @@
           v-model="user.information"
           label="Information">
      </v-text-field>
-     <v-text-field
-          СТАТЬ ИСПОЛНИТЕЛЕМ
-     </v-text-field>
      <v-switch v-model="user.role" label="Стать исполнителем" value="EXECUTOR" v-show="user.role=='CUSTOMER'&&testRoleResult"></v-switch>
     </v-card-text>
 

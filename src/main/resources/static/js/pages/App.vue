@@ -84,7 +84,7 @@
                     { title: 'Адреса', icon: 'mdi-home-map-marker', route: "/address" },
                     { title: 'Оборудование', icon: 'mdi-printer-3d', route: "/equipment" },
                     { title: 'Отклики', icon: 'mdi-account-check', route: "/response" },
-                    { title: 'Чаты', icon: 'mdi-email', route: "/chat/list" },
+                    { title: 'Чаты', icon: 'mdi-email', route: "/chatList" },
                 ],
                 drawerToggle: false
             }

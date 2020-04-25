@@ -4,6 +4,7 @@ import com.netcracker.educ.printing.model.entity.Chat;
 import com.netcracker.educ.printing.model.entity.Message;
 import com.netcracker.educ.printing.model.entity.User;
 import com.netcracker.educ.printing.model.repository.MessageRepo;
+import com.netcracker.educ.printing.model.representationModel.MessageRepresent;
 import com.netcracker.educ.printing.security.UserDetailsImpl;
 import org.springframework.stereotype.Service;
 
@@ -32,13 +33,13 @@ public class MessageService {
 
 
 
-    public Message createMessage(Map<String,String> message){
+    public Message createMessage(MessageRepresent message, User currentUser){
         Message message1=new Message();
         message1.setDate(new Date());
-        message1.setChat(chatService.getChatById(UUID.fromString(message.get("chatId"))));
-        message1.setAuthor(userService.get(UUID.fromString(message.get("senderId"))));
+        message1.setChat(chatService.getChatById(message.getChatId()));
+        message1.setAuthor(currentUser);
         message1.setChecked(Boolean.FALSE);
-            message1.setText(message.get("text"));
+            message1.setText(message.getText());
         return messageRepo.save(message1);
     }
 
