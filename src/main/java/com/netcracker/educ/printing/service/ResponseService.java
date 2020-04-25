@@ -17,8 +17,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 @Service
 @AllArgsConstructor
@@ -30,14 +28,14 @@ public class ResponseService {
     public void createResponse(ResponseRepresent represent) throws CreatingResponseException {
         UserDetailsImpl principal = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (principal.getId().equals(represent.getExecutorId()))
-            throw new CreatingResponseException("Нельзя принять собственный заказ. Выберите другого исполнителя!");
+            throw new CreatingResponseException("Нельзя принять собственный заказ. Выберите другого исполнителя.");
         User executor = userRepo.findById(represent.getExecutorId())
                 .orElseThrow(NotFoundException::new);
         Order order = orderRepo.findById(represent.getOrderId())
                 .orElseThrow(NotFoundException::new);
         ResponseId responseId = new ResponseId(represent.getOrderId(), represent.getExecutorId());
         if (responseRepo.existsById(responseId))
-            throw new CreatingResponseException("Этот пользователь уже выбран исполнителем текущего заказа!");
+            throw new CreatingResponseException("Этот пользователь уже выбран исполнителем текущего заказа.");
         responseRepo.save(new Response(responseId, order, executor, ResponseStatus.REQUESTED, represent.getSum(), new Date()));
     }
 }

@@ -37,8 +37,13 @@
 
                         </v-list-item-content>
                     </v-list-item>
-
                 </li>
+                <v-pagination
+                        v-model="pagination.page"
+                        :length="pagination.total"
+                        total-visible=6
+                        @input="getOrders"
+                ></v-pagination>
             </ul>
 
             <div v-if="currentOrder">
@@ -113,18 +118,26 @@
                 currentIndex: -1,
                 currentStatus: null,
                 accessToken: localStorage.getItem('accessToken'),
-                currentExecutor: localStorage.getItem('currentExecutor')
+                currentExecutor: localStorage.getItem('currentExecutor'),
+                pagination: {
+                    page: 1,
+                    total: 0,
+                    perPage: 4
+                }
 
             }
         },
         created: function () {
-            AXIOS.get('/order/user').then((responce) => {
-                this.orders = responce.data;
-                console.log(response.data);
-
-            }).catch(error => console.log(error));
+            this.getOrders();
         },
         methods: {
+            getOrders() {
+                AXIOS.get('/order/user?page=' + this.pagination.page + '&perPage=' + this.pagination.perPage).then((response) => {
+                    this.orders = response.data.content;
+                    this.pagination.total = response.data.pageCount;
+                    console.log(response.data);
+                }).catch(error => console.log(error));
+            },
             showModal() {
                 this.$refs['my-modal'].show()
             },
@@ -143,7 +156,7 @@
             },
             clearExecutor() {
                 localStorage.removeItem('currentExecutor');
-                location.reload()
+                location.reload();
             },
             sendResponse() {
                 AXIOS.post("/chat", {

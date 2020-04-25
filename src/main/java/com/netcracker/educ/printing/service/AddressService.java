@@ -12,6 +12,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -32,8 +33,17 @@ public class AddressService {
         return address;
     }
 
-    public List<AddressRepresent> getAddressesByUser(UserDetailsImpl principal){
-        User user=userRepo.findByEmail(principal.getEmail());
-           return userService.addressToAddressRepresent(user.getAddresses());
+    public List<AddressRepresent> getAddressesByUser(UserDetailsImpl principal) {
+        User user = userRepo.findByEmail(principal.getEmail());
+        return userService.addressToAddressRepresent(user.getAddresses());
+    }
+
+    public List<String> getCitiesTitleByUser(UserDetailsImpl principal) {
+        User user = userRepo.findByEmail(principal.getEmail());
+        List<String> cities = new ArrayList<>();
+        for (Address address : user.getAddresses()) {
+            cities.add(address.getCity().getTitle());
+        }
+        return cities;
     }
 }

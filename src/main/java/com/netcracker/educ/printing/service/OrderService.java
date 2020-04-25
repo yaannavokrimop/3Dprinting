@@ -4,19 +4,20 @@ import com.netcracker.educ.printing.model.bean.MaterialType;
 import com.netcracker.educ.printing.model.entity.Material;
 import com.netcracker.educ.printing.model.entity.Order;
 import com.netcracker.educ.printing.model.repository.MaterialRepo;
+import com.netcracker.educ.printing.model.repository.OrderRepo;
 import com.netcracker.educ.printing.model.repository.UserRepo;
 import com.netcracker.educ.printing.model.representationModel.OrderRepresent;
 import com.netcracker.educ.printing.security.UserDetailsImpl;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @AllArgsConstructor
@@ -24,6 +25,7 @@ import java.util.UUID;
 public class OrderService {
     private final MaterialRepo materialRepo;
     private final UserRepo userRepo;
+    private final OrderRepo orderRepo;
 
     public Order create(OrderRepresent represent) throws RuntimeException {
         UserDetailsImpl principal = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -46,5 +48,13 @@ public class OrderService {
         order.setMaterials(materials);
 
         return order;
+    }
+
+    public Page<Order> getPageOfOrders(Map<String, String> pageParams) {
+        UserDetailsImpl principal = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        int currentPage = Integer.parseInt(pageParams.get("page"))- 1;
+        int perPage = Integer.parseInt(pageParams.get("perPage"));
+        Pageable page = PageRequest.of(currentPage, perPage , Sort.by("date"));
+        return orderRepo.findAllByUserId(principal.getId(), page);
     }
 }

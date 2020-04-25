@@ -1,15 +1,14 @@
 package com.netcracker.educ.printing.model.representationModel;
 
-import com.fasterxml.jackson.annotation.JsonUnwrapped;
+import com.netcracker.educ.printing.model.bean.Pageable;
 import com.netcracker.educ.printing.model.bean.Role;
-import com.netcracker.educ.printing.model.entity.Address;
 import lombok.Data;
 
 import java.util.List;
 import java.util.UUID;
 
 @Data
-public class UserRepresent {
+public class UserRepresent implements Pageable {
     private UUID id;
     private String name;
     private String surname;

@@ -2,7 +2,6 @@ package com.netcracker.educ.printing.controller;
 
 import com.netcracker.educ.printing.model.entity.Address;
 import com.netcracker.educ.printing.model.entity.City;
-import com.netcracker.educ.printing.model.entity.User;
 import com.netcracker.educ.printing.model.repository.AddressRepo;
 import com.netcracker.educ.printing.model.repository.CityRepo;
 import com.netcracker.educ.printing.model.repository.UserRepo;
@@ -36,21 +35,17 @@ public class AddressController {
         return addressService.getAddressesByUser(principal);
     }
 
+    @GetMapping("/user/city")
+    public List<String> getCitiesByUser() {
+        UserDetailsImpl principal = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return addressService.getCitiesTitleByUser(principal);
+    }
 
     @GetMapping("/city")
     public List<Address> getAddressByCity(@RequestParam Long cityId) {
         City city = cityRepo.findAllById(cityId);
         return addressRepo.findAllByCity(city);
     }
-
-//    @PostMapping("/user")
-//    public Address createAddress(@RequestParam Integer cityId, String description) {
-//        UserDetailsImpl principal = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-//        User user = userRepo.findByName(principal.getUsername());
-//        City city = cityRepo.findAllById(cityId);
-//        Address address = new Address(city, user, description);
-//        return addressRepo.save(address);
-//    }
 
     @PostMapping
     public Address addAddress(@RequestBody Map<String, String> address) {
