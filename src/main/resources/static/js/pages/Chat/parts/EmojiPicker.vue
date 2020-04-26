@@ -2,7 +2,7 @@
   <div class="emoji-picker" v-if="show">
     <v-card height="300px" v-if="show">
       <v-card-title class="blue white--text">
-        <span class="headline">Emoji Picker</span>
+        <span class="headline">Смайлики</span>
       </v-card-title>
       <v-card-text>
         <div class="emoji-content">

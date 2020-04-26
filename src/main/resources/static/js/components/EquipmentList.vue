@@ -46,8 +46,8 @@ props:[],
  }
  },
     created:function(){
-         AXIOS.get('/equipment').then((responce) =>{
-             this.equipments = responce.data;
+         AXIOS.get('/equipment').then((response) =>{
+             this.equipments = response.data;
              console.log(response.data);
 
          }).catch(error => console.log(error));

@@ -47,17 +47,17 @@
     export default {
         props:['order'],
         created:function(){
-            AXIOS.get("/order/"+this.$route.params.id).then((responce) =>{
-                this.order.id = responce.data.id;
-                this.order.userId = responce.data.userId;
-                this.order.status = responce.data.status;
-                this.order.sum = responce.data.sum;
-                this.order.date = responce.data.date;
-                this.order.height = responce.data.height;
-                this.order.width = responce.data.width;
-                this.order.length = responce.data.length;
-                this.order.file = responce.data.file;
-                this.order.description = responce.data.description;
+            AXIOS.get("/order/"+this.$route.params.id).then((response) =>{
+                this.order.id = response.data.id;
+                this.order.userId = response.data.userId;
+                this.order.status = response.data.status;
+                this.order.sum = response.data.sum;
+                this.order.date = response.data.date;
+                this.order.height = response.data.height;
+                this.order.width = response.data.width;
+                this.order.length = response.data.length;
+                this.order.file = response.data.file;
+                this.order.description = response.data.description;
 
             }).catch(error => console.log(error));
         }

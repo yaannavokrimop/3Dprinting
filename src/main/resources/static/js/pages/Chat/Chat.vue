@@ -2,7 +2,7 @@
     <v-container fluid style="padding: 0;">
         <v-row no-gutters>
             <v-col sm="2" class="scrollable">
-                <chats></chats>
+                <responses></responses>
             </v-col>
             <v-col sm="10" style="position: relative;">
                 <div class="chat-container" ref="chatContainer">
@@ -10,7 +10,7 @@
                 </div>
                 <emoji-picker :show="emojiPanel" @close="toggleEmojiPanel" @click="addEmojiToMessage"></emoji-picker>
                 <div class="typer">
-                    <input type="text" placeholder="Type here..." v-on:keyup.enter="sendMessage" v-model="content">
+                    <input type="text" placeholder="Напишите сообщение..." v-on:keyup.enter="sendMessage" v-model="content">
                     <v-btn icon class="blue--text emoji-panel" @click="toggleEmojiPanel">
                         <v-icon>mdi-emoticon-outline</v-icon>
                     </v-btn>
@@ -23,7 +23,7 @@
 <script>
     import Message from './parts/Message.vue'
     import EmojiPicker from './parts/EmojiPicker.vue'
-    import Chats from './parts/Chats.vue'
+    import Responses from './parts/ChatResponses.vue'
     import {AXIOS} from "../http-common";
 
     export default {
@@ -47,7 +47,7 @@
         components: {
             'message': Message,
             'emoji-picker': EmojiPicker,
-            'chats': Chats
+            'responses': Responses
         },
         methods: {
             sendMessage() {

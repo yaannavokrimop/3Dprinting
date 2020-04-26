@@ -65,9 +65,9 @@
         },
         created: function () {
 
-            AXIOS.get('/address/user').then((responce) => {
-                this.addresses = responce.data;
-                console.log(responce.data);
+            AXIOS.get('/address/user').then((response) => {
+                this.addresses = response.data;
+                console.log(response.data);
             }).catch(error => console.log(error));
 
         },

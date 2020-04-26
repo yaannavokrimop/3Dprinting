@@ -21,24 +21,24 @@
                 <v-content>
 
                     <ul class="list-group">
-                            <li class="list-group-item"
-                                v-for="(message,index) in messages"
-                                :key="index"
-                            >
-                                <v-list-item>
-                                    <v-list-item-content>
-                                        <v-list-item-title>
-                                            <strong>Сообщение: {{message.text}}</strong>
-                                        </v-list-item-title>
-                                        <v-list-item-subtitle>
-                                            <strong>Отправитель: {{message.author.name+" "+message.author.surname}}</strong>
-                                        </v-list-item-subtitle>
-                                        <v-list-item-subtitle>
-                                            <strong>Дата: {{message.date}}</strong>
-                                        </v-list-item-subtitle>
-                                    </v-list-item-content>
-                                </v-list-item>
-                            </li>
+                        <li class="list-group-item"
+                            v-for="(message,index) in messages"
+                            :key="index"
+                        >
+                            <v-list-item>
+                                <v-list-item-content>
+                                    <v-list-item-title>
+                                        <strong>Сообщение: {{message.text}}</strong>
+                                    </v-list-item-title>
+                                    <v-list-item-subtitle>
+                                        <strong>Отправитель: {{message.author.name+" "+message.author.surname}}</strong>
+                                    </v-list-item-subtitle>
+                                    <v-list-item-subtitle>
+                                        <strong>Дата: {{message.date}}</strong>
+                                    </v-list-item-subtitle>
+                                </v-list-item-content>
+                            </v-list-item>
+                        </li>
                     </ul>
                 </v-content>
             </v-container>
@@ -61,9 +61,9 @@
             }
         },
         created: function () {
-            AXIOS.get('/message/' + this.currentChat.chatId).then((responce) => {
-                this.messages = responce.data;
-                console.log(responce.data);
+            AXIOS.get('/message/' + this.currentChat.chatId).then((response) => {
+                this.messages = response.data;
+                console.log(response.data);
             }).catch(error => console.log(error));
             this.scrollToEnd();
             if (this.currentChat.isExecutor) {
@@ -71,6 +71,7 @@
             } else {
                 this.companionId = this.currentChat.executorId
             }
+            this.scrollToEnd();
         },
 
         methods: {
@@ -86,14 +87,13 @@
 
 <style>
     span.emoji {
-      font-size: 20px;
-      vertical-align: middle;
-      line-height: 2;
+        font-size: 20px;
+        vertical-align: middle;
+        line-height: 2;
     }
 
-    .link
-    {
-        color:white;
+    .link {
+        color: white;
         text-decoration: none;
     }
 </style>

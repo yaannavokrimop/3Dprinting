@@ -44,9 +44,9 @@
             }
         },
         created: function () {
-            AXIOS.get('/chat').then((responce) => {
-                this.chats = responce.data;
-                console.log(responce.data);
+            AXIOS.get('/chat').then((response) => {
+                this.chats = response.data;
+                console.log(response.data);
             }).catch(error => console.log(error));
         },
         methods: {

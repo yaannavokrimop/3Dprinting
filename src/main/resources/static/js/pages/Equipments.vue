@@ -63,9 +63,9 @@
             }
         },
         created: function () {
-            AXIOS.get('/equipment/my').then((responce) => {
-                this.equipments = responce.data;
-                console.log(responce.data);
+            AXIOS.get('/equipment/my').then((response) => {
+                this.equipments = response.data;
+                console.log(response.data);
             }).catch(error => console.log(error));
         },
 

@@ -125,11 +125,11 @@
             }
         },
         created: function () {
-            AXIOS.get('/user/executors').then((responce) => {
-                this.executors = responce.data;
+            AXIOS.get('/user/executors').then((response) => {
+                this.executors = response.data;
                 this.executorsFilter = this.executors;
                 console.log("Данные проверка2");
-                console.log(responce.data);
+                console.log(response.data);
             }).catch(error => console.log(error));
 
 
@@ -149,19 +149,19 @@
      },
      searchByAddress(){
             var w=this.$data.selectCity;
-          AXIOS.post('/search/executorsByCities',{w}).then((responce) =>{
-                  this.executorsFilter=responce.data;
+          AXIOS.post('/search/executorsByCities',{w}).then((response) =>{
+                  this.executorsFilter=response.data;
                   console.log("Данные проверка3");
-                  console.log(responce.data);
+                  console.log(response.data);
               }).catch(error => console.log(error));
      },
      searchByAddressBack(){
           var w=this.$data.selectCity;
           console.log("search by address start.............."+w)
-          AXIOS.get('/search/'+w).then((responce) =>{
-                  this.executorsFilter=responce.data;;
+          AXIOS.get('/search/'+w).then((response) =>{
+                  this.executorsFilter=response.data;;
                   console.log("Данные проверка2");
-                  console.log(responce.data);
+                  console.log(response.data);
               }).catch(error => console.log(error));
 
             },
