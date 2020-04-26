@@ -36,7 +36,6 @@ public class OrderController {
         UserDetailsImpl principal = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User user = userRepo.findByEmail(principal.getEmail());
         return repo.findByUserId(user.getId());
-
     }
 
     @GetMapping

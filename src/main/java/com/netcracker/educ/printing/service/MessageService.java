@@ -6,6 +6,7 @@ import com.netcracker.educ.printing.model.entity.User;
 import com.netcracker.educ.printing.model.repository.MessageRepo;
 import com.netcracker.educ.printing.model.representationModel.MessageRepresent;
 import com.netcracker.educ.printing.security.UserDetailsImpl;
+import lombok.Data;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -14,16 +15,12 @@ import java.util.Map;
 import java.util.UUID;
 
 @Service
+@Data
 public class MessageService {
-    private MessageRepo messageRepo;
-    private UserService userService;
-    private ChatService chatService;
+    private final MessageRepo messageRepo;
+    private final UserService userService;
+    private final ChatService chatService;
 
-    public MessageService(MessageRepo messageRepo, UserService userService, ChatService chatService) {
-        this.messageRepo = messageRepo;
-        this.userService = userService;
-        this.chatService = chatService;
-    }
 
     public List<Message> getMessageByChat(UUID chatId,UserDetailsImpl principal){
         Chat chat=chatService.getChatById(chatId);
