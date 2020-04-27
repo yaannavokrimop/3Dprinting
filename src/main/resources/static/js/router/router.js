@@ -16,7 +16,6 @@ import Addresses from "pages/Addresses.vue";
 import SelectEquipment from 'pages/SelectEquipment.vue'
 import Chat from 'pages/Chat/Chat.vue'
 import ChatList from 'pages/Chat/ChatList.vue'
-import Message from "../pages/Chat/parts/Message.vue";
 
 
 Vue.use(VueRouter);
@@ -38,7 +37,6 @@ const routes=[
     {path:'/add_equipment', component: SelectEquipment},
     {path:'/chat/:id', component: Chat},
     {path:'/chatList', component: ChatList},
-    {path:'/message', component: Message},
     // {path:'/profile/:id',component:'Profile'},
     // {path:'*',component:'Main'}
 ]
