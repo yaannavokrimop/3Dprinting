@@ -8,6 +8,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @RestController
@@ -32,15 +33,11 @@ public class MaterialController {
         return materialService.getMaterialsByTitlePartAndEquipment(materialTitlePart,equipId);
     }
 
-//    @GetMapping("/executor/{executorId}")
-//    public List<String> getMaterialsByExecutor(@PathVariable("executorId") UUID executorId){
-//        return  materialService.getMaterialsByExecutorId(executorId);
-//    }
+    @GetMapping("/executor/")
+    public Set<String> getMaterialsByExecutor(@AuthenticationPrincipal UserDetailsImpl executor){
+        return  materialService.getMaterialsByUser(executor.getId());
+    }
 
-//    @GetMapping("/equipment/{equipId}")
-//    public List<String> getMaterialNamesByEquipment(@AuthenticationPrincipal UserDetailsImpl details,@PathVariable(value = "equipId") UUID equipId){
-//        log.info("MaterialController.class  >> Get Material by equipmentId= "+equipId+"   User: "+details.getEmail());
-//        return materialService.getMaterialsByEquipment(details, equipId);
-//    }
+
 
 }

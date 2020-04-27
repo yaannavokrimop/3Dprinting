@@ -88,8 +88,8 @@ public class EquipmentController {
     }
 
     @DeleteMapping("{id}")
-    public UUID deleteEquip(@PathVariable("id") UUID id) {
-        equipmentService.deleteById(id);
+    public UUID deleteEquip(@PathVariable("id") UUID id,@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        equipmentService.deleteById(id,userDetails.getId());
         return id;
 
     }
@@ -103,6 +103,11 @@ public class EquipmentController {
     public EquipmentRepresent getMyEquipmentById(@PathVariable("equipId") UUID equipId, @AuthenticationPrincipal UserDetailsImpl userDetails){
        log.info("Arrived /equipById/{equipId}");
         return equipmentService.getEquipmentById(equipId,userDetails.getId());
+    }
+
+    @GetMapping("/name/{equipName}")
+    public Equipment getEquipmentByName(@PathVariable("equipName") String equipName,@AuthenticationPrincipal UserDetailsImpl userDetails){
+        return equipmentService.getEquipmentByName(equipName,userDetails.getId());
     }
 
 

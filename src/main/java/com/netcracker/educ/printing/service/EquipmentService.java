@@ -66,8 +66,9 @@ public class EquipmentService {
         List<EquipmentRepresent> equipmentRepresents=new ArrayList<>();
 
         for(Equipment equipment:equipments){
-            ExecutorEquipment executorEquipment=executorEquipmentRepo.findByExecutorIdAndEquipmentId(executorId,equipment.getId());
-            equipmentRepresents.add(new EquipmentRepresent(equipment.getId(),equipment.getEquipName(),equipment.getHeight(),equipment.getWidth(),equipment.getLength(),executorEquipment.getEquipDesc()));
+//            ExecutorEquipment executorEquipment=executorEquipmentRepo.findByExecutorIdAndEquipmentId(executorId,equipment.getId());
+//            equipmentRepresents.add(new EquipmentRepresent(equipment.getId(),equipment.getEquipName(),equipment.getHeight(),equipment.getWidth(),equipment.getLength(),executorEquipment.getEquipDesc()));
+            equipmentRepresents.add(equipmentToEquipmentRepresent(equipment,executorId));
         }
         return equipmentRepresents;
     }
@@ -93,7 +94,17 @@ public class EquipmentService {
         return materials;
     }
 
-    public void deleteById(UUID id) {
-        equipmentRepo.deleteById(id);
+
+    public void deleteById(UUID equipId,UUID userId) {
+        ExecutorEquipment executorEquipment=executorEquipmentRepo.findByExecutorIdAndEquipmentId(userId,equipId);
+
+        if(executorEquipment!=null){
+            executorEquipmentRepo.deleteById(executorEquipment.getId());
+        }
+    }
+
+    public Equipment getEquipmentByName(String equipName,UUID userId) {
+        return equipmentRepo.findByEquipName(equipName);
+
     }
 }

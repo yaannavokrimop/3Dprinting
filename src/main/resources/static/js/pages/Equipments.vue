@@ -12,7 +12,7 @@
             >
             <v-list-item three-line>
                   <v-list-item-content>
-                    <v-list-item-title><strong>Наименование:  {{equip.equipName}}</strong></v-list-item-title>
+                    <v-list-item-title><strong>  {{equip.equipName}}</strong></v-list-item-title>
                     <v-list-item-subtitle>
                      <strong>Описание:   {{equip.equipDesc}}</strong>
                     </v-list-item-subtitle>
@@ -21,6 +21,11 @@
                         {{equip.height}} x
                         {{equip.width}} x
                         {{equip.length}}
+                     </strong>
+                    </v-list-item-subtitle>
+                    <v-list-item-subtitle>
+                     <strong>
+                        <div>Матрериалы: <span v-for="material of equip.materialList"> {{material}}  </span></div>
                      </strong>
                     </v-list-item-subtitle>
                   </v-list-item-content>

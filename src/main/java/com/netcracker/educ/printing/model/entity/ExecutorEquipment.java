@@ -18,11 +18,11 @@ public class ExecutorEquipment {
     @Column(nullable = false)
     private boolean ready = true;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "executorId", nullable = false)
     private User executor;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "equipmentId", nullable = false)
     private Equipment equipment;
 
