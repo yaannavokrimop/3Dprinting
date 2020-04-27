@@ -1,5 +1,4 @@
 <template>
-    <v-container fluid style="padding: 0;">
         <v-row no-gutters>
             <v-col sm="2" class="scrollable">
                 <responses></responses>
@@ -10,14 +9,14 @@
                 </div>
                 <emoji-picker :show="emojiPanel" @close="toggleEmojiPanel" @click="addEmojiToMessage"></emoji-picker>
                 <div class="typer">
-                    <input type="text" placeholder="Напишите сообщение..." v-on:keyup.enter="sendMessage" v-model="content">
+                    <input type="text" placeholder="Напишите сообщение..." v-on:keyup.enter="sendMessage"
+                           v-model="content">
                     <v-btn icon class="blue--text emoji-panel" @click="toggleEmojiPanel">
                         <v-icon>mdi-emoticon-outline</v-icon>
                     </v-btn>
                 </div>
             </v-col>
         </v-row>
-    </v-container>
 </template>
 
 <script>
@@ -41,7 +40,7 @@
         props: [
             'id'
         ],
-        mounted () {
+        mounted() {
             this.scrollToEnd();
         },
         components: {
@@ -68,7 +67,7 @@
                 this.content = '';
                 location.reload();
             },
-            scrollToEnd: function() {
+            scrollToEnd: function () {
                 this.$nextTick(() => {
                     this.totalChatHeight = this.$refs.chatContainer.scrollHeight;
                     var container = this.$el.querySelector('.chat-container')

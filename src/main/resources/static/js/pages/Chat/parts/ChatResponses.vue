@@ -17,16 +17,19 @@
                     <v-list-item-title v-text="response.order.description"></v-list-item-title>
                 </v-list-item-content>
             </template>
-            <v-list-item-title v-text="'Статус заказа: '+response.status"></v-list-item-title>
-            <a :href="'#/orders/'+response.order.id">
-                <div class="details">
-                    Подробности...
-                </div>
-            </a>
-            <v-text-field label="Сумма"></v-text-field>
-            <b-button variant="success">Предложить цену</b-button>
-            <b-button variant="danger">Отказаться от заказа</b-button>
-
+            <v-container>
+                <v-list-item-content>
+                    <v-list-item-title v-text="'Статус заказа: '+response.status"></v-list-item-title>
+                    <a :href="'#/orders/'+response.order.id">
+                        <div class="details">
+                            Подробности...
+                        </div>
+                    </a>
+                    <v-text-field label="Сумма"></v-text-field>
+                    <b-button variant="success">Предложить цену</b-button>
+                    <b-button variant="danger">Отказаться от заказа</b-button>
+                </v-list-item-content>
+            </v-container>
         </v-list-group>
     </v-list>
 </template>

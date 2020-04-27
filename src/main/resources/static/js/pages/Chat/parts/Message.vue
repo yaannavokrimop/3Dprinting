@@ -6,7 +6,6 @@
                 dense
                 absolute
         >
-
             <v-toolbar-title>
                 <a :href="'#/user/'+companionId">
                     <div class="link">
