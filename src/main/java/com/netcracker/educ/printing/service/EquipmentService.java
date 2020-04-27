@@ -37,21 +37,18 @@ public class EquipmentService {
     }
 
     public List<EquipmentRepresent> getUserEquipment(UUID userId) {
-        List<Equipment>equipmentList= executorEquipmentRepo.findAllByExecutorId(userId).stream()
-                .map(ExecutorEquipment::getEquipment)
-                .collect(Collectors.toList());
-        return equipmentsToEquipmentRepresent(equipmentList,userId);
-    }
+        List<ExecutorEquipment>executorEquipmentList= executorEquipmentRepo.findAllByExecutorId(userId);
+        return executorEquipmentsToEquipmentRepresent(executorEquipmentList);
+}
 
     public List<String> getEquipmentsByEquipNamePart(String equipName) {
         return equipmentRepo.findEquipNameByEquipNameContaining(equipName);
     }
 
-    public EquipmentRepresent getEquipmentById(UUID equipId,UUID userId) {
-      Equipment equipment=equipmentRepo.findById(equipId).orElse(null);
-      if(equipment != null){
-        return equipmentToEquipmentRepresent(equipment,userId);
-      }else return null;
+    public EquipmentRepresent getEquipmentByExecutorEquipId(UUID executorEquipId) {
+      ExecutorEquipment executorEquipment=Objects.requireNonNull( executorEquipmentRepo.findById(executorEquipId).orElse(null),"executorEquipment must not be null");
+        return executorEquipmentToEquipmentRepresent(executorEquipment);
+
 
     }
 
@@ -62,27 +59,26 @@ public class EquipmentService {
 
     }
 
-    public List<EquipmentRepresent> equipmentsToEquipmentRepresent(List<Equipment> equipments,UUID executorId){
+    public List<EquipmentRepresent> executorEquipmentsToEquipmentRepresent(List<ExecutorEquipment> executorEquipments){
         List<EquipmentRepresent> equipmentRepresents=new ArrayList<>();
-
-        for(Equipment equipment:equipments){
-//            ExecutorEquipment executorEquipment=executorEquipmentRepo.findByExecutorIdAndEquipmentId(executorId,equipment.getId());
-//            equipmentRepresents.add(new EquipmentRepresent(equipment.getId(),equipment.getEquipName(),equipment.getHeight(),equipment.getWidth(),equipment.getLength(),executorEquipment.getEquipDesc()));
-            equipmentRepresents.add(equipmentToEquipmentRepresent(equipment,executorId));
+        for(ExecutorEquipment exEquipment:executorEquipments){
+            equipmentRepresents.add(executorEquipmentToEquipmentRepresent(exEquipment));
         }
         return equipmentRepresents;
     }
 
-    public EquipmentRepresent equipmentToEquipmentRepresent(Equipment equipment, UUID executorId) {
-        ExecutorEquipment executorEquipment = executorEquipmentRepo.findByExecutorIdAndEquipmentId(executorId, equipment.getId());
-        return new EquipmentRepresent(
-                equipment.getId(),
-                equipment.getEquipName(),
-                equipment.getHeight(),
-                equipment.getWidth(),
-                equipment.getLength(),
-                executorEquipment.getEquipDesc(),
-                getMaterialsByExecutorEquipment(executorEquipment));
+    public EquipmentRepresent executorEquipmentToEquipmentRepresent(ExecutorEquipment executorEquipment) {
+        Equipment equipment=executorEquipment.getEquipment();
+            return new EquipmentRepresent(
+                    equipment.getId(),
+                    equipment.getEquipName(),
+                    equipment.getHeight(),
+                    equipment.getWidth(),
+                    equipment.getLength(),
+                    executorEquipment.getEquipDesc(),
+                    getMaterialsByExecutorEquipment(executorEquipment),
+                    executorEquipment.getId());
+
     }
 
     public List<String> getMaterialsByExecutorEquipment(ExecutorEquipment executorEquipment ){
@@ -95,12 +91,8 @@ public class EquipmentService {
     }
 
 
-    public void deleteById(UUID equipId,UUID userId) {
-        ExecutorEquipment executorEquipment=executorEquipmentRepo.findByExecutorIdAndEquipmentId(userId,equipId);
-
-        if(executorEquipment!=null){
-            executorEquipmentRepo.deleteById(executorEquipment.getId());
-        }
+    public void deleteById(UUID executorEquipId) {
+            executorEquipmentRepo.deleteById(executorEquipId);
     }
 
     public Equipment getEquipmentByName(String equipName,UUID userId) {

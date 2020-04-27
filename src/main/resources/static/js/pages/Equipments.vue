@@ -91,11 +91,11 @@ props:[],
             this.$refs['my-modal'].show()
         },
      goToEquipment(equip){
-     var s="/equipment/"+equip.id;
+     var s="/equipment/"+equip.executorEquipId;
              this.$router.push(s)
      },
         deleteEquip() {
-            AXIOS.delete('/equipment/' + this.currentEquip.id);
+            AXIOS.delete('/equipment/' + this.currentEquip.executorEquipId);
             location.reload()
         }
     }

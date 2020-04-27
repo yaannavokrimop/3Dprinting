@@ -16,6 +16,7 @@ public class EquipmentRepresent {
     private int length;
     private String equipDesc;
     private List<String> materialList;
+    private UUID executorEquipId;
 
 
     public EquipmentRepresent(String equipName, int height, int width, int length, String equipDesc,List<String> materialList) {
@@ -53,5 +54,16 @@ public class EquipmentRepresent {
         this.length = length;
         this.equipDesc = equipDesc;
         this.materialList = materialList;
+    }
+
+    public EquipmentRepresent(UUID id, String equipName, int height, int width, int length, String equipDesc, List<String> materialList, UUID executorEquipId) {
+        this.id = id;
+        this.equipName = equipName;
+        this.height = height;
+        this.width = width;
+        this.length = length;
+        this.equipDesc = equipDesc;
+        this.materialList = materialList;
+        this.executorEquipId = executorEquipId;
     }
 }

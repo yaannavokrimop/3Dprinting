@@ -16,7 +16,7 @@ import java.util.UUID;
 @Repository
 public interface ExecutorEquipmentRepo extends JpaRepository<ExecutorEquipment, UUID> {
     List<ExecutorEquipment> findAllByExecutorId(UUID executorId);
-    ExecutorEquipment findByExecutorIdAndEquipmentId(UUID executorId,UUID equipmentId);
+    List<ExecutorEquipment> findByExecutorIdAndEquipmentId(UUID executorId,UUID equipmentId);
 
 
     @Query("select exEquip.matEquips from ExecutorEquipment exEquip where exEquip.executor.id=:executorId ")

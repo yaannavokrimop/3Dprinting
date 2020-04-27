@@ -56,7 +56,8 @@ props:[],
         equipDesc:'',
         height:0,
         weight:0,
-        length:0
+        length:0,
+        executorEquipId:null
     },
     materials:[],
 
@@ -73,6 +74,7 @@ props:[],
              this.equipment.height = response.data.height;
              this.equipment.width = response.data.width;
              this.equipment.length = response.data.length;
+             this.equipment.executorEquipId= response.data.executorEquipId;
              this.materials = response.data.materialList;
 
          }).catch(error => console.log(error));
