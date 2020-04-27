@@ -48,6 +48,12 @@ public class ExecutorEquipment {
         this.executor = executor;
         this.equipDesc=equipDesc;
     }
+    public ExecutorEquipment(User executor, Equipment equipment,String equipDesc,Set<MaterialEquipment> matEquips) {
+        this.equipment = equipment;
+        this.executor = executor;
+        this.equipDesc=equipDesc;
+        this.matEquips=matEquips;
+    }
 
     public ExecutorEquipment() {
     }

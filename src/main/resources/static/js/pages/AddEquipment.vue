@@ -22,7 +22,18 @@
 
                  <b-form-input type="text" placeholder="Допустимая длина" v-model="length" />
                  <div class="mt-2"></div>
-
+                <v-autocomplete
+                     v-model="selectMaterial"
+                    :items="items"
+                    :search-input.sync="search"
+                    cache-items
+                    hide-no-data
+                    hide-details
+                    label="Материалы"
+                    multiple
+                    chips
+                ></v-autocomplete>
+                <div class="mt-2"></div>
             </div>
             <v-btn v-on:click="addEquip" variant="primary">Добавить</v-btn>
         </b-card>
@@ -40,8 +51,16 @@ export default {
             height:'',
             width: '',
             length: '',
+            items: [],
+            search: null,
+            selectMaterial: null,
 
         }
+     },
+     watch: {
+        search (val) {
+        val && val !== this.selectMaterial && this.querySelections(val)
+        },
      },
      methods: {
         addEquip(){
@@ -50,7 +69,8 @@ export default {
                'height': this.$data.height,
                'width': this.$data.width,
                'length': this.$data.length,
-               'equipDesc': this.$data.equipDesc
+               'equipDesc': this.$data.equipDesc,
+               'materialList':this.$data.selectMaterial
             };
 
             AXIOS.post('/equipment', newEquip)
@@ -67,7 +87,15 @@ export default {
             this.length = '';
             this.$router.push('/equipment');
             location.reload()
-        }
+        },
+        querySelections (materialPartName) {
+            setTimeout(()=>{
+            if(materialPartName==this.$data.search){
+            AXIOS.get('/material/materialList/'+materialPartName).then((response) =>{
+                this.items=response.data;
+            }).catch(error => console.log(error));
+            }},1200)
+            },
 
      }
 
