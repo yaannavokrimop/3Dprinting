@@ -52,7 +52,11 @@ public class ResponseService {
 
         for (Order customerOrder : customerOrders) {
             Optional<Response> responseOptional = Optional.ofNullable(responseRepo.findByOrderAndExecutor(customerOrder, executor));
-            responseOptional.ifPresent(chatResponses::add);
+            Response response = responseOptional.orElse(null);
+
+            if (response!=null && !response.getStatus().equals(ResponseStatus.REFUSED)) {
+                chatResponses.add(response);
+            }
         }
 
         return chatResponses;

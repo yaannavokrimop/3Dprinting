@@ -25,9 +25,9 @@
                             Подробности...
                         </div>
                     </a>
-                    <v-text-field label="Сумма"></v-text-field>
-                    <b-button variant="success">Предложить цену</b-button>
-                    <b-button variant="danger">Отказаться от заказа</b-button>
+                    <v-text-field v-model="response.sum" label="Сумма"></v-text-field>
+                    <b-button variant="success" @click="makeOffer(response.id.executorId, response.id.orderId, response.sum)">Предложить цену</b-button>
+                    <b-button variant="danger" @click="refuseOffer(response.id.executorId, response.id.orderId)">Отказаться от заказа</b-button>
                 </v-list-item-content>
             </v-container>
         </v-list-group>
@@ -51,6 +51,28 @@
                 console.log(response.data);
             }).catch(error => console.log(error));
         },
+        methods: {
+            makeOffer(executorId, orderId, sum) {
+                AXIOS.post('response/offer', {
+                    'executorId' : executorId,
+                    'orderId' : orderId,
+                    'sum' : sum,
+                    'isExecutor' : this.currentChat.isExecutor
+                }).then((response) => {
+                    console.log(response);
+                    location.reload()
+                }).catch(error => console.log(error));
+            },
+            refuseOffer(executorId, orderId) {
+                AXIOS.patch('response/offer', {
+                    'executorId' : executorId,
+                    'orderId' : orderId
+                }).then((response) => {
+                    console.log(response);
+                    location.reload()
+                }).catch(error => console.log(error));
+            }
+        }
     }
 </script>
 
