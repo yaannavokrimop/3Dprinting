@@ -5,7 +5,7 @@
             </v-col>
             <v-col sm="10" style="position: relative;">
                 <div class="chat-container" ref="chatContainer">
-                    <message :messages="messages" @imageLoad="scrollToEnd"></message>
+                    <message :messages="messages"></message>
                 </div>
                 <emoji-picker :show="emojiPanel" @close="toggleEmojiPanel" @click="addEmojiToMessage"></emoji-picker>
                 <div class="typer">
@@ -121,7 +121,6 @@
         height: calc(100vh - 9.5rem);
         overflow-y: auto;
         padding: 10px;
-        background-color: #f2f2f2;
     }
 
     .message {

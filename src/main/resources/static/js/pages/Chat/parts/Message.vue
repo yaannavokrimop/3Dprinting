@@ -15,35 +15,56 @@
 
             </v-toolbar-title>
         </v-app-bar>
-        <v-sheet>
-            <v-container>
-                <v-content>
+        <div class="mt-10"></div>
+        <v-container>
+            <v-content class="background">
 
-                    <ul class="list-group">
-                        <li class="list-group-item"
+                <ul>
+                    <li
+                            style="list-style: none;"
                             v-for="(message,index) in messages"
                             :key="index"
-                        >
-                            <v-list-item>
+                    >
+                        <div v-if="message.author.id === companionId">
+                            <ul
+                                    class="companion"
+                            >
                                 <v-list-item-content>
+                                    <v-list-item-subtitle>
+                                        <strong>{{message.author.name+" "+message.author.surname}}</strong>
+                                    </v-list-item-subtitle>
                                     <v-list-item-title>
-                                        <strong>Сообщение: {{message.text}}</strong>
+                                        <h3>
+                                            <strong>{{message.text}}</strong>
+                                        </h3>
                                     </v-list-item-title>
                                     <v-list-item-subtitle>
-                                        <strong>Отправитель: {{message.author.name+" "+message.author.surname}}</strong>
-                                    </v-list-item-subtitle>
-                                    <v-list-item-subtitle>
-                                        <strong>Дата: {{message.date}}</strong>
+                                        <strong>{{message.date}}</strong>
                                     </v-list-item-subtitle>
                                 </v-list-item-content>
-                            </v-list-item>
-                        </li>
-                    </ul>
-                </v-content>
-            </v-container>
-        </v-sheet>
-
-
+                            </ul>
+                        </div>
+                        <div v-else>
+                            <ul class="speech-bubble">
+                                <v-list-item-content>
+                                    <v-list-item-subtitle>
+                                        <strong>{{message.author.name+" "+message.author.surname}}</strong>
+                                    </v-list-item-subtitle>
+                                    <v-list-item-title>
+                                        <h3>
+                                            <strong>{{message.text}}</strong>
+                                        </h3>
+                                    </v-list-item-title>
+                                    <v-list-item-subtitle>
+                                        <strong>{{message.date}}</strong>
+                                    </v-list-item-subtitle>
+                                </v-list-item-content>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </v-content>
+        </v-container>
     </div>
 </template>
 
@@ -95,4 +116,69 @@
         color: white;
         text-decoration: none;
     }
+
+    .companion {
+        position: relative;
+        font-family: sans-serif;
+        font-size: 18px;
+        line-height: 24px;
+        width: 500px;
+        border-radius: .4em;
+        background: #aff5d4;
+        text-align: left;
+        margin-bottom: 10px;
+        min-height: 0;
+        /*margin-left: auto;*/
+    }
+
+
+    .companion:after {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 50%;
+        width: 0;
+        height: 0;
+        border: 20px solid transparent;
+        border-right-color: #aff5d4;
+        border-left: 0;
+        border-bottom: 0;
+        margin-top: -10px;
+        margin-left: -20px;
+        min-height: 0;
+    }
+
+    .speech-bubble {
+        position: relative;
+        font-family: sans-serif;
+        font-size: 18px;
+        line-height: 24px;
+        background: #bee5eb;
+        width: 500px;
+        border-radius: .4em;
+        text-align: right;
+        margin-bottom: 10px;
+        margin-left: auto;
+        padding-right: 24px;
+    }
+
+
+    .speech-bubble:after {
+        content: '';
+        position: absolute;
+        right: 0;
+        top: 50%;
+        width: 0;
+        height: 0;
+        border: 20px solid transparent;
+        border-left-color: #bee5eb;
+        border-right: 0;
+        border-bottom: 0;
+        margin-top: -10px;
+        margin-right: -20px;
+        max-height: 0;
+    }
+
+
+
 </style>
