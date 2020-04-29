@@ -16,7 +16,7 @@
             </v-toolbar-title>
         </v-app-bar>
         <div class="mt-10"></div>
-        <v-container>
+        <v-container class="messages">
             <v-content class="background">
 
                 <ul>
@@ -34,9 +34,9 @@
                                         <strong>{{message.author.name+" "+message.author.surname}}</strong>
                                     </v-list-item-subtitle>
                                     <v-list-item-title>
-                                        <h3>
+                                        <h5>
                                             <strong>{{message.text}}</strong>
-                                        </h3>
+                                        </h5>
                                     </v-list-item-title>
                                     <v-list-item-subtitle>
                                         <strong>{{message.date}}</strong>
@@ -51,9 +51,9 @@
                                         <strong>{{message.author.name+" "+message.author.surname}}</strong>
                                     </v-list-item-subtitle>
                                     <v-list-item-title>
-                                        <h3>
+                                        <h5>
                                             <strong>{{message.text}}</strong>
-                                        </h3>
+                                        </h5>
                                     </v-list-item-title>
                                     <v-list-item-subtitle>
                                         <strong>{{message.date}}</strong>
@@ -88,8 +88,10 @@
             this.scrollToEnd();
             if (this.currentChat.isExecutor) {
                 this.companionId = this.currentChat.customerId
+                localStorage.setItem('myId', this.currentChat.executorId)
             } else {
                 this.companionId = this.currentChat.executorId
+                localStorage.setItem('myId', this.currentChat.customerId)
             }
             this.scrollToEnd();
         },
@@ -97,7 +99,7 @@
         methods: {
             scrollToEnd: function () {
                 this.$nextTick(() => {
-                    var container = this.$el.querySelector('list-group-item')
+                    var container = this.$el.querySelector('.messages')
                     container.scrollTop = container.scrollHeight
                 })
             },
