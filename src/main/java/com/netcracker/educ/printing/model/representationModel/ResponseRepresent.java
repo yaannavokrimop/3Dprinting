@@ -1,6 +1,7 @@
 package com.netcracker.educ.printing.model.representationModel;
 
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +22,8 @@ public class ResponseRepresent {
     @NotNull
     private float sum;
 
+    @NotNull
+    @JsonProperty
     private boolean isExecutor;
 
 }

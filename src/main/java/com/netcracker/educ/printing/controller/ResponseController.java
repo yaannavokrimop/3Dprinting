@@ -1,8 +1,6 @@
 package com.netcracker.educ.printing.controller;
 
-import com.fasterxml.jackson.databind.node.BooleanNode;
 import com.netcracker.educ.printing.exception.CreatingResponseException;
-import com.netcracker.educ.printing.model.bean.OrderStatus;
 import com.netcracker.educ.printing.model.bean.ResponseId;
 import com.netcracker.educ.printing.model.bean.ResponseStatus;
 import com.netcracker.educ.printing.model.entity.Response;
@@ -18,7 +16,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 @Slf4j
@@ -46,8 +43,7 @@ public class ResponseController {
     @GetMapping("forchat/{chatId}")
     public List<Response> getResponsesForChat(@PathVariable(name = "chatId") UUID chatId) {
         log.info("/////////////////////////////////////////////////Responses for chat id=" + chatId);
-        List<Response> responsesForChat =  responseService.getResponsesForChat(chatId);
-        return responsesForChat;
+        return responseService.getResponsesForChat(chatId);
     }
 
     @PostMapping("/offer")
@@ -65,6 +61,7 @@ public class ResponseController {
             } else {
                 dbResponse.setStatus(ResponseStatus.BY_CUSTOMER);
             }
+
 
             responseRepo.save(dbResponse);
             log.info("/////////////////////////////////////////////////Successful offer=" + responseRepresent.getSum());

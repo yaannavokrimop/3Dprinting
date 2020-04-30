@@ -26,7 +26,23 @@
                         </div>
                     </a>
                     <v-text-field v-model="response.sum" label="Сумма"></v-text-field>
-                    <b-button variant="success" @click="makeOffer(response.id.executorId, response.id.orderId, response.sum)">Предложить цену</b-button>
+                    <div v-if="!isExecutor">
+                        <div v-if="response.status ==='BY_CUSTOMER'">
+                            <b-button variant="secondary" disabled block>Вы уже предложили цену</b-button>
+                        </div>
+                        <div v-else>
+                            <b-button variant="success" block @click="makeOffer(response.id.executorId, response.id.orderId, response.sum)">Предложить цену</b-button>
+                        </div>
+                    </div>
+                    <div v-if="isExecutor">
+                        <div v-if="response.status ==='BY_EXECUTOR'">
+                            <b-button variant="secondary" disabled block>Вы уже предложили цену</b-button>
+                        </div>
+                        <div v-else>
+                            <b-button variant="success" block @click="makeOffer(response.id.executorId, response.id.orderId, response.sum)">Предложить цену</b-button>
+                        </div>
+                    </div>
+
                     <b-button variant="danger" @click="refuseOffer(response.id.executorId, response.id.orderId)">Отказаться от заказа</b-button>
                 </v-list-item-content>
             </v-container>
@@ -42,7 +58,8 @@
         data() {
             return {
                 responses: [],
-                currentChat: JSON.parse(localStorage.getItem('currentChat'))
+                currentChat: JSON.parse(localStorage.getItem('currentChat')),
+                isExecutor: false
             }
         },
         created() {
@@ -50,6 +67,7 @@
                 this.responses = response.data;
                 console.log(response.data);
             }).catch(error => console.log(error));
+            this.isExecutor = this.currentChat.isExecutor
         },
         methods: {
             makeOffer(executorId, orderId, sum) {
@@ -57,7 +75,7 @@
                     'executorId' : executorId,
                     'orderId' : orderId,
                     'sum' : sum,
-                    'isExecutor' : this.currentChat.isExecutor
+                    'isExecutor' : this.isExecutor
                 }).then((response) => {
                     console.log(response);
                     location.reload()
