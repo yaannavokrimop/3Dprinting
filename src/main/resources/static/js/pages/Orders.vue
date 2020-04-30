@@ -2,7 +2,7 @@
     <v-container>
         <div v-if="currentExecutor">
             <b-alert show dismissible fade>
-                Вы выбираете заказ для исполнителя № {{currentExecutor}}
+                Вы выбираете заказ для исполнителя {{currentExecutor.name+" "+currentExecutor.surname}}
                 <b-button class="mt-3" variant="outline-danger" block @click="clearExecutor">
                     Очистить
                 </b-button>
@@ -113,13 +113,13 @@
                 currentIndex: -1,
                 currentStatus: null,
                 accessToken: localStorage.getItem('accessToken'),
-                currentExecutor: localStorage.getItem('currentExecutor')
+                currentExecutor: JSON.parse(localStorage.getItem('currentExecutor'))
 
             }
         },
         created: function () {
-            AXIOS.get('/order/user').then((responce) => {
-                this.orders = responce.data;
+            AXIOS.get('/order/user').then((response) => {
+                this.orders = response.data;
                 console.log(response.data);
 
             }).catch(error => console.log(error));
@@ -147,7 +147,7 @@
             },
             sendResponse() {
                 AXIOS.post("/chat", {
-                    'executorId': this.currentExecutor,
+                    'executorId': this.currentExecutor.id,
                     'customerId': this.currentOrder.user.id
                 }).then((response) => {
                     console.log(response);
@@ -155,7 +155,7 @@
 
                 AXIOS.post("/response", {
                     'orderId': this.currentOrder.id,
-                    'executorId': localStorage.getItem('currentExecutor'),
+                    'executorId': this.currentExecutor.id,
                     'sum': this.sum
                 }).then((response) => {
                     console.log(response);

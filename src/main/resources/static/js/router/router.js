@@ -14,6 +14,8 @@ import CreateOrder from "pages/CreateOrder.vue";
 import OrderEdit from "pages/OrderEdit.vue";
 import Addresses from "pages/Addresses.vue";
 import SelectEquipment from 'pages/SelectEquipment.vue'
+import Chat from 'pages/Chat/Chat.vue'
+import ChatList from 'pages/Chat/ChatList.vue'
 
 
 Vue.use(VueRouter);
@@ -33,6 +35,8 @@ const routes=[
     {path:'/order/edit/:id', component: OrderEdit},
     {path:'/address', component: Addresses},
     {path:'/add_equipment', component: SelectEquipment},
+    {path:'/chat/:id', component: Chat},
+    {path:'/chatList', component: ChatList},
     // {path:'/profile/:id',component:'Profile'},
     // {path:'*',component:'Main'}
 ]

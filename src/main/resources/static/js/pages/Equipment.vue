@@ -54,13 +54,13 @@ props:[],
  },
     created:function(){
 
-         AXIOS.get("/equipment/"+this.$route.params.id).then((responce) =>{
-             this.equipment.id = responce.data.id;
-             this.equipment.equipName = responce.data.equipName;
-             this.equipment.equipDesc = responce.data.equipDesc;
-             this.equipment.height = responce.data.height;
-             this.equipment.width = responce.data.width;
-             this.equipment.length = responce.data.length;
+         AXIOS.get("/equipment/"+this.$route.params.id).then((response) =>{
+             this.equipment.id = response.data.id;
+             this.equipment.equipName = response.data.equipName;
+             this.equipment.equipDesc = response.data.equipDesc;
+             this.equipment.height = response.data.height;
+             this.equipment.width = response.data.width;
+             this.equipment.length = response.data.length;
 
          }).catch(error => console.log(error));;
     },

@@ -1,27 +1,50 @@
 package com.netcracker.educ.printing.model.entity;
 
-import com.netcracker.educ.printing.model.bean.ChatId;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
+import java.util.Objects;
 import java.util.UUID;
 
 @Entity
 @Table(name = "chat")
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class Chat {
-    @EmbeddedId
-    private ChatId id;
 
-    @MapsId("executorId")
-    @ManyToOne(fetch = FetchType.LAZY)
+    @Id
+    @GeneratedValue
+    private UUID id;
+
+    @NonNull
+    @ManyToOne
     private User executor;
 
-    @MapsId("customerId")
-    @ManyToOne(fetch = FetchType.LAZY)
+    @NonNull
+    @ManyToOne
     private User customer;
+
+    @Override
+    public String toString() {
+        return "Chat{" +
+                "id=" + id +
+                ", executor=" + executor +
+                ", customer=" + customer +
+                '}';
+    }
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Chat chat = (Chat) o;
+        return Objects.equals(id, chat.id) &&
+                Objects.equals(executor, chat.executor) &&
+                Objects.equals(customer, chat.customer);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, executor, customer);
+    }
 }

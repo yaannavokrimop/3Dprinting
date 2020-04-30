@@ -1,16 +1,15 @@
 package com.netcracker.educ.printing.model.repository;
 
 import com.netcracker.educ.printing.model.entity.Chat;
-import com.netcracker.educ.printing.model.entity.User;
+import com.netcracker.educ.printing.model.entity.Message;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.UUID;
 
-
 @Repository
-public interface ChatRepo extends JpaRepository<Chat, UUID> {
-    boolean existsByExecutorAndCustomer(User executor, User customer);
-    List<Chat> findAllByExecutorOrCustomer(User executor, User customer);
+public interface MessageRepo extends JpaRepository<Message, UUID> {
+    List<Message> findAllByChat(Chat chat);
+
 }
