@@ -17,20 +17,22 @@
 
                                         ></v-autocomplete>
                     <div class="input-group-append">
-                        <button class="btn btn-outline-secondary" type="button"
-                        @click="searchByAddress"
-                        >
-                            Search
-                        </button>
-                        <button class="btn btn-outline-secondary" type="button"
-                                @click="showAll"
-                        >
-                            Показать Всех
-                        </button>
                     </div>
-
                 </div>
+            </div>
 
+        </v-content>
+        <v-content>
+            <div class="col-md-8">
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control" placeholder="Высота" v-model="height"/>
+                    <input type="text" class="form-control" placeholder="Ширина" v-model="width"/>
+                    <input type="text" class="form-control" placeholder="Длина" v-model="length"/>
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-secondary" type="button" @click="getData"> Найти</button>
+                        <button class="btn btn-outline-secondary" type="button" @click="showAll"> Показать Всех </button>
+                    </div>
+                </div>
             </div>
 
         </v-content>
@@ -49,7 +51,7 @@
             <h3>Исполнители</h3>
             <ul class="list-group">
                 <li class="list-group-item"
-                    v-for="(executor,index) in executorsFilter"
+                    v-for="(executor,index) in executors"
                     :class="{ active: index == currentIndex }"
                     :key="index"
                     @click="setActiveExecutor(executor, index)"
@@ -72,7 +74,6 @@
                     </v-list-item>
                 </li>
             </ul>
-
         </v-content>
         <v-content>
             <div v-if="currentExecutor">
@@ -97,8 +98,13 @@
                 </div>
             </div>
             <div class="mt-2"></div>
-
         </v-content>
+        <v-pagination
+                v-model="pagination.page"
+                :length="pagination.total"
+                total-visible=6
+                @input="getData"
+        ></v-pagination>
     </v-container>
 </template>
 
@@ -112,61 +118,74 @@
         data() {
             return {
                 executors: [],
-                executorsFilter: [],
                 currentExecutor: null,
                 currentIndex: -1,
-                city: '',
+                height: null,
+                width: null,
+                length: null,
                 currentOrder: JSON.parse(localStorage.getItem("currentOrder")),
                 loading: false,
                 items: [],
                 search: null,
                 selectCity: null,
 
+                pagination: {
+                    page: 1,
+                    total: 0,
+                    perPage: 4
+                }
             }
         },
         created: function () {
-            AXIOS.get('/user/executors').then((response) => {
-                this.executors = response.data;
-                this.executorsFilter = this.executors;
-                console.log("Данные проверка2");
-                console.log(response.data);
-            }).catch(error => console.log(error));
-
-
+            if (this.$data.currentOrder != null) {
+                AXIOS.get('/address/user/city').then((response) => {
+                    this.$data.items = response.data;
+                    this.$data.selectCity = response.data;
+                }).catch(error => console.log(error));
+                this.$data.height = this.$data.currentOrder.height;
+                this.$data.width = this.$data.currentOrder.width;
+                this.$data.length = this.$data.currentOrder.length;
+            }
+            this.getData();
         },
-         watch: {
-              search (val) {
+        watch: {
+            search(val) {
                 val && val !== this.selectCity && this.querySelections(val)
-              },
-         },
-    methods:{
-     setActiveExecutor(executor, index) {
-          this.currentExecutor = executor;
-          this.currentIndex = index;
+            },
         },
-     goToProfile(executor){
-     console.log('пока не реализовано');
-     },
-     searchByAddress(){
-            var w=this.$data.selectCity;
-          AXIOS.post('/search/executorsByCities',{w}).then((response) =>{
-                  this.executorsFilter=response.data;
-                  console.log("Данные проверка3");
-                  console.log(response.data);
-              }).catch(error => console.log(error));
-     },
-     searchByAddressBack(){
-          var w=this.$data.selectCity;
-          console.log("search by address start.............."+w)
-          AXIOS.get('/search/'+w).then((response) =>{
-                  this.executorsFilter=response.data;;
-                  console.log("Данные проверка2");
-                  console.log(response.data);
-              }).catch(error => console.log(error));
-
+        methods: {
+            getParams() {
+                return {
+                    'cities': this.$data.selectCity,
+                    'height' : this.$data.height,
+                    'width' : this.$data.width,
+                    'length' : this.$data.length,
+                    'currentPage' : this.pagination.page,
+                    'perPage' : this.pagination.perPage }
+            },
+            getData() {
+                AXIOS.post('/search/executors', this.getParams()).then((response) => {
+                    this.pagination.total = response.data.pageCount;
+                    this.executors = response.data.content;
+                    console.log("Данные проверка2");
+                    console.log(response.data);
+                }).catch(error => console.log(error));
+            },
+            setActiveExecutor(executor, index) {
+                this.currentExecutor = executor;
+                this.currentIndex = index;
+            },
+            goToProfile(executor) {
+                console.log('пока не реализовано');
             },
             showAll() {
-                this.executorsFilter = this.$data.executors;
+                this.$data.selectCity = null;
+                this.$data.items = [],
+                this.$data.height = null;
+                this.$data.width = null;
+                this.$data.length = null;
+                this.pagination.page = 1;
+                this.getData();
             },
             clearOrder() {
                 localStorage.removeItem('currentOrder');
@@ -193,7 +212,7 @@
 
             },
             selectOrder() {
-                localStorage.setItem('currentExecutor', JSON.stringify(this.currentExecutor));
+                localStorage.setItem('currentExecutor', this.currentExecutor.id);
                 this.$router.push('/orders');
             },
 

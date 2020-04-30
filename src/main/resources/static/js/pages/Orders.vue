@@ -2,7 +2,7 @@
     <v-container>
         <div v-if="currentExecutor">
             <b-alert show dismissible fade>
-                Вы выбираете заказ для исполнителя {{currentExecutor.name+" "+currentExecutor.surname}}
+                Вы выбираете заказ для исполнителя № {{currentExecutor}}
                 <b-button class="mt-3" variant="outline-danger" block @click="clearExecutor">
                     Очистить
                 </b-button>
@@ -37,8 +37,13 @@
 
                         </v-list-item-content>
                     </v-list-item>
-
                 </li>
+                <v-pagination
+                        v-model="pagination.page"
+                        :length="pagination.total"
+                        total-visible=6
+                        @input="getOrders"
+                ></v-pagination>
             </ul>
 
             <div v-if="currentOrder">
@@ -113,18 +118,26 @@
                 currentIndex: -1,
                 currentStatus: null,
                 accessToken: localStorage.getItem('accessToken'),
-                currentExecutor: JSON.parse(localStorage.getItem('currentExecutor'))
+                currentExecutor: localStorage.getItem('currentExecutor'),
+                pagination: {
+                    page: 1,
+                    total: 0,
+                    perPage: 4
+                }
 
             }
         },
         created: function () {
-            AXIOS.get('/order/user').then((response) => {
-                this.orders = response.data;
-                console.log(response.data);
-
-            }).catch(error => console.log(error));
+            this.getOrders();
         },
         methods: {
+            getOrders() {
+                AXIOS.get('/order/user?page=' + this.pagination.page + '&perPage=' + this.pagination.perPage).then((response) => {
+                    this.orders = response.data.content;
+                    this.pagination.total = response.data.pageCount;
+                    console.log(response.data);
+                }).catch(error => console.log(error));
+            },
             showModal() {
                 this.$refs['my-modal'].show()
             },
@@ -143,11 +156,11 @@
             },
             clearExecutor() {
                 localStorage.removeItem('currentExecutor');
-                location.reload()
+                location.reload();
             },
             sendResponse() {
                 AXIOS.post("/chat", {
-                    'executorId': this.currentExecutor.id,
+                    'executorId': this.currentExecutor,
                     'customerId': this.currentOrder.user.id
                 }).then((response) => {
                     console.log(response);
@@ -155,7 +168,7 @@
 
                 AXIOS.post("/response", {
                     'orderId': this.currentOrder.id,
-                    'executorId': this.currentExecutor.id,
+                    'executorId': localStorage.getItem('currentExecutor'),
                     'sum': this.sum
                 }).then((response) => {
                     console.log(response);

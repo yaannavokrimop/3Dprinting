@@ -2,6 +2,7 @@ package com.netcracker.educ.printing.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.netcracker.educ.printing.model.bean.OrderStatus;
+import com.netcracker.educ.printing.model.bean.Pageable;
 import lombok.*;
 
 import javax.persistence.*;
@@ -15,7 +16,7 @@ import java.util.UUID;
 @Data
 @RequiredArgsConstructor
 @NoArgsConstructor
-public class Order {
+public class Order implements Pageable {
     @Id
     private UUID id;
 

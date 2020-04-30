@@ -2,6 +2,7 @@ package com.netcracker.educ.printing.controller;
 
 import com.netcracker.educ.printing.exception.NotFoundException;
 import com.netcracker.educ.printing.model.bean.OrderStatus;
+import com.netcracker.educ.printing.model.bean.PaginationBean;
 import com.netcracker.educ.printing.model.entity.Order;
 import com.netcracker.educ.printing.model.entity.User;
 import com.netcracker.educ.printing.model.repository.OrderRepo;
@@ -10,10 +11,9 @@ import com.netcracker.educ.printing.model.representationModel.OrderRepresent;
 import com.netcracker.educ.printing.security.UserDetailsImpl;
 import com.netcracker.educ.printing.service.OrderService;
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
@@ -31,11 +31,13 @@ public class OrderController {
     private UserRepo userRepo;
     private OrderService orderService;
 
+
+
+
     @GetMapping("/user")
-    public List<Order> getOrderByUserId() {
-        UserDetailsImpl principal = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        User user = userRepo.findByEmail(principal.getEmail());
-        return repo.findByUserId(user.getId());
+    public ResponseEntity<PaginationBean> getOrdersByUserId(@RequestParam Map<String, String> pageParams) {
+        Page<Order> orders = orderService.getPageOfOrders(pageParams);
+        return ResponseEntity.ok(new PaginationBean(orders.getTotalPages(), orders.getContent()));
     }
 
     @GetMapping
@@ -54,7 +56,7 @@ public class OrderController {
     @GetMapping("{id}")
     public Order getOrderById(@PathVariable("id") UUID id) {
 
-        log.info("/////////////////////////////////////////////////OrderController  id=" + id);
+        log.info("/////////////////////////////////////////////////OrderController  id="+id);
         Optional<Order> orderData = repo.findById(id);
 
         if (orderData.isPresent()) {
@@ -69,8 +71,8 @@ public class OrderController {
             @RequestBody OrderRepresent inputOrder
     ) {
 
-        Order order = orderService.create(inputOrder);
-        order.setStatus(OrderStatus.NO_PAY);
+            Order order = orderService.create(inputOrder);
+            order.setStatus(OrderStatus.NO_PAY);
 
 
         return repo.save(order);
@@ -96,9 +98,9 @@ public class OrderController {
             @RequestBody Order inputOrder,
             @PathVariable("id") Order dbOrder
     ) {
-        log.info("Order: " + inputOrder.toString() + ";    dbOrder: " + dbOrder.toString());
+        log.info("Order: "+inputOrder.toString()+";    dbOrder: "+dbOrder.toString());
 
-        BeanUtils.copyProperties(inputOrder, dbOrder, "user", "materials");
+        BeanUtils.copyProperties(inputOrder,dbOrder,"user", "materials");
         return repo.save(dbOrder);
     }
 
