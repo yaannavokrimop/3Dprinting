@@ -25,7 +25,7 @@
                     </v-list-item-subtitle>
                     <v-list-item-subtitle>
                      <strong>
-                        <div>Матрериалы: <span v-for="material of equip.materialList"> {{material}}  </span></div>
+                        <div>Материалы: <span v-for="material of equip.materialList"> {{material}}  </span></div>
                      </strong>
                     </v-list-item-subtitle>
                   </v-list-item-content>
@@ -69,13 +69,13 @@ props:[],
             }
         },
         created: function () {
-            AXIOS.get('/equipment/my').then((responce) => {
-                this.equipments = responce.data;
-                console.log(responce.data);
+            AXIOS.get('/equipment/my').then((response) => {
+                this.equipments = response.data;
+                console.log(response.data);
             }).catch(error => console.log(error));
 
-            /*AXIOS.get('/equipment').then((responce) => {
-                this.equipments = responce.data;
+            /*AXIOS.get('/equipment').then((response) => {
+                this.equipments = response.data;
                 console.log(response.data);
 
             }).catch(error => console.log(error));*/
