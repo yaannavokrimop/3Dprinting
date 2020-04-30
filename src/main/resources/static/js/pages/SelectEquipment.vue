@@ -30,6 +30,18 @@
 
                  <div>Допустимая длина:  {{length}}</div>
                  <div class="mt-2"></div>
+                 <v-autocomplete
+                    v-model="materialName"
+                    :items="materialItems"
+                    :search-input.sync="searchMaterial"
+                    cache-items
+                    hide-no-data
+                    hide-details
+                    label="Материалы"
+                    multiple
+                    chips
+                ></v-autocomplete>
+                <div class="mt-2"></div>
 
             </div>
             <v-btn v-on:click="addEquip" variant="primary">Добавить</v-btn>
@@ -59,15 +71,20 @@ export default {
             length: '',
             items: [],
             search: null,
-            equipId:null
+            equipId:null,
+            materialName:null,
+            searchMaterial:null,
+            materialItems:[]
         }
      },
     watch: {
         search (val) {
-        val && val !== this.equipName && this.querySelections(val)
-
-              },
-         equipName:'getEquipment'
+            val && val !== this.equipName && this.querySelections(val)
+        },
+         equipName:'getEquipment',
+         searchMaterial(val){
+            val && val !== this.materialName && this.materialSelections(val)
+         }
          },
      methods: {
         addEquip(){
@@ -75,6 +92,7 @@ export default {
             let newEquip = {
                'equipName': this.$data.equipName,
                'equipDesc': this.$data.equipDesc,
+               'materialList':this.$data.materialName
             };
 
             console.log(newEquip);
@@ -112,6 +130,15 @@ export default {
                 this.$data.length=response.data.length;
                 this.$data.equipId=response.data.id;
             }).catch(error => console.log(error));
+
+        },
+        materialSelections(materialName){
+            setTimeout(()=>{
+                if((materialName==this.$data.searchMaterial)&&(this.$data.equipName!=null)){
+                AXIOS.get('/material/equip/'+ this.$data.equipId+'/materialList/'+materialName).then((response) =>{
+                    this.materialItems=response.data;
+                    }).catch(error => console.log(error));
+                      }},1200)
 
         }
 

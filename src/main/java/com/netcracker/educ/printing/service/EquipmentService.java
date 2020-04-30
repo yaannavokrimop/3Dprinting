@@ -1,12 +1,10 @@
 package com.netcracker.educ.printing.service;
 
-import com.netcracker.educ.printing.model.entity.Equipment;
-import com.netcracker.educ.printing.model.entity.ExecutorEquipment;
-import com.netcracker.educ.printing.model.entity.User;
-import com.netcracker.educ.printing.model.repository.EquipmentRepo;
-import com.netcracker.educ.printing.model.repository.ExecutorEquipmentRepo;
-import com.netcracker.educ.printing.model.repository.UserRepo;
+import com.netcracker.educ.printing.exception.NotFoundException;
+import com.netcracker.educ.printing.model.entity.*;
+import com.netcracker.educ.printing.model.repository.*;
 import com.netcracker.educ.printing.model.representationModel.EquipmentRepresent;
+import com.netcracker.educ.printing.security.UserDetailsImpl;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -23,46 +21,82 @@ public class EquipmentService {
     private final EquipmentRepo equipmentRepo;
     private final UserRepo userRepo;
     private final ExecutorEquipmentRepo executorEquipmentRepo;
+    private final MaterialEquipmentRepo materialEquipmentRepo;
+    private final MaterialRepo materialRepo;
 
-    public Equipment create(String userEmail, Equipment equipment,String equipDesc) {
+
+    public Equipment create(String userEmail, Equipment equipment,String equipDesc,List<String> materialName) {
         equipmentRepo.save(equipment);
         User executor = userRepo.findByEmail(userEmail);
         ExecutorEquipment executorEquipment = new ExecutorEquipment(executor, equipment,equipDesc);
         executorEquipmentRepo.save(executorEquipment);
+        for(String material:materialName) {
+            materialEquipmentRepo.save(new MaterialEquipment(equipment,materialRepo.findByMatTitle(material)));
+        }
         return equipment;
     }
 
     public List<EquipmentRepresent> getUserEquipment(UUID userId) {
-        List<Equipment>equipmentList= executorEquipmentRepo.findAllByExecutorId(userId).stream()
-                .map(ExecutorEquipment::getEquipment)
-                .collect(Collectors.toList());
-        return equipmentToEquipmentRepresent(equipmentList,userId);
-    }
+        List<ExecutorEquipment>executorEquipmentList= executorEquipmentRepo.findAllByExecutorId(userId);
+        return executorEquipmentsToEquipmentRepresent(executorEquipmentList);
+}
 
     public List<String> getEquipmentsByEquipNamePart(String equipName) {
         return equipmentRepo.findEquipNameByEquipNameContaining(equipName);
     }
 
-    public Equipment getEquipmentByName(String equipName) {
-      return equipmentRepo.findByEquipName(equipName);
+    public EquipmentRepresent getEquipmentByExecutorEquipId(UUID executorEquipId) {
+      ExecutorEquipment executorEquipment=Objects.requireNonNull( executorEquipmentRepo.findById(executorEquipId).orElse(null),"executorEquipment must not be null");
+        return executorEquipmentToEquipmentRepresent(executorEquipment);
+
+
     }
 
-    public ExecutorEquipment addEquipment(String email, String equipName, String equipDesc) {
-
-
+    public void addEquipment(String email, String equipName, String equipDesc,List<String> materials) {
             Equipment equipment = equipmentRepo.findByEquipName(equipName);
-            return executorEquipmentRepo.save(new ExecutorEquipment(userRepo.findByEmail(email), equipment, equipDesc));
+        Set<MaterialEquipment> matEquips = materialEquipmentRepo.findByMaterialNames(materials,equipName);
+             executorEquipmentRepo.save(new ExecutorEquipment(userRepo.findByEmail(email), equipment, equipDesc,matEquips));
 
     }
 
-    public List<EquipmentRepresent> equipmentToEquipmentRepresent(List<Equipment> equipments,UUID executorId){
+    public List<EquipmentRepresent> executorEquipmentsToEquipmentRepresent(List<ExecutorEquipment> executorEquipments){
         List<EquipmentRepresent> equipmentRepresents=new ArrayList<>();
-
-        for(Equipment equipment:equipments){
-            ExecutorEquipment executorEquipment=executorEquipmentRepo.findByExecutorIdAndEquipmentId(executorId,equipment.getId());
-            equipmentRepresents.add(new EquipmentRepresent(equipment.getId(),equipment.getEquipName(),equipment.getHeight(),equipment.getWidth(),equipment.getLength(),executorEquipment.getEquipDesc()));
+        for(ExecutorEquipment exEquipment:executorEquipments){
+            equipmentRepresents.add(executorEquipmentToEquipmentRepresent(exEquipment));
         }
         return equipmentRepresents;
     }
 
+    public EquipmentRepresent executorEquipmentToEquipmentRepresent(ExecutorEquipment executorEquipment) {
+        Equipment equipment=executorEquipment.getEquipment();
+            return new EquipmentRepresent(
+                    equipment.getId(),
+                    equipment.getEquipName(),
+                    equipment.getHeight(),
+                    equipment.getWidth(),
+                    equipment.getLength(),
+                    executorEquipment.getEquipDesc(),
+                    getMaterialsByExecutorEquipment(executorEquipment),
+                    executorEquipment.getId());
+
+    }
+
+    public List<String> getMaterialsByExecutorEquipment(ExecutorEquipment executorEquipment ){
+        Set<MaterialEquipment> materialEquipments=executorEquipment.getMatEquips();
+        List<String> materials=new ArrayList<>();
+        for(MaterialEquipment m:materialEquipments){
+            materials.add(m.getMaterial().getMatTitle());
+        }
+        return materials;
+    }
+
+
+    public void deleteById(UUID executorEquipId) {
+            executorEquipmentRepo.deleteById(executorEquipId);
+    }
+
+    public Equipment getEquipmentByName(String equipName,UUID userId) {
+        return equipmentRepo.findByEquipName(equipName);
+
+    }
 }

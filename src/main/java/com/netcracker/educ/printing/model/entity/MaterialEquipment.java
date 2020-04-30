@@ -1,6 +1,7 @@
 package com.netcracker.educ.printing.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
@@ -33,9 +34,14 @@ public class MaterialEquipment {
     @JoinColumn(name = "mat_id", nullable = false)
     private Material material;
 
-
+    @JsonIgnore
     @ManyToMany(mappedBy = "matEquips")
     Set<ExecutorEquipment> exeEquips;
+
+    public MaterialEquipment(Equipment equipment, Material material) {
+        this.equipment=equipment;
+        this.material=material;
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -48,5 +54,14 @@ public class MaterialEquipment {
     @Override
     public int hashCode() {
         return Objects.hash(id);
+    }
+
+    @Override
+    public String toString() {
+        return "MaterialEquipment{" +
+                "id=" + id +
+                ", equipment=" + equipment +
+                ", material=" + material +
+                '}';
     }
 }

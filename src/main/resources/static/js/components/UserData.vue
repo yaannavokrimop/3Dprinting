@@ -60,8 +60,9 @@
                          <h3>Оборудование</h3>
                          <ul>
                             <li v-for="equip in equipments">
-                           Наименование:  {{equip.equipName}}  Размер печати: {{equip.height}} x {{equip.width}} x {{equip.length}}
-
+                            <div><strong>{{equip.equipName}} </strong></div>
+                            <div>Размер печати: {{equip.height}} x {{equip.width}} x {{equip.length}}</div>
+                            <div>Матрериалы: <span v-for="material of equip.materialList"> {{material}}, </span></div>
                              </li>
                          </ul>
 
@@ -99,7 +100,9 @@ export default {
              this.user.addresses=response.data.addresses;
          }).catch(error => console.log(error));
          this.checkRole();
-         if(!(this.isCustomer)){this.getEquipments();}
+         if(!(this.isCustomer)){
+            this.getEquipments();
+         }
     },
     methods:{
         getEquipments(){
@@ -108,7 +111,6 @@ export default {
             }).catch(error => console.log(error));
         },
         checkRole(){
-
              AXIOS.get('/user/role').then((response) =>{
                 this.$data.isCustomer=response.data;
                 console.log(response.data);

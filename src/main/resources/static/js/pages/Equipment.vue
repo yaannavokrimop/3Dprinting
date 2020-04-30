@@ -26,6 +26,17 @@
                 <v-list-item-title><strong>Высота:  {{equipment.height}}</strong></v-list-item-title>
             </v-list-item-content>
         </v-list-item>
+        <v-list-item>
+            <v-list-item-content>
+                <v-list-item-title><strong>Материал:
+                    <ul class="demo">
+                        <li v-for="material of materials">
+                            {{material}}
+                        </li>
+                    </ul></strong>
+                </v-list-item-title>
+            </v-list-item-content>
+        </v-list-item>
 
 
     </v-card>
@@ -45,8 +56,10 @@ props:[],
         equipDesc:'',
         height:0,
         weight:0,
-        length:0
+        length:0,
+        executorEquipId:null
     },
+    materials:[],
 
     accessToken: localStorage.getItem('accessToken')
 
@@ -54,15 +67,19 @@ props:[],
  },
     created:function(){
 
-         AXIOS.get("/equipment/"+this.$route.params.id).then((response) =>{
+         AXIOS.get("/equipment/equipById/"+this.$route.params.id).then((response) =>{
              this.equipment.id = response.data.id;
              this.equipment.equipName = response.data.equipName;
              this.equipment.equipDesc = response.data.equipDesc;
              this.equipment.height = response.data.height;
              this.equipment.width = response.data.width;
              this.equipment.length = response.data.length;
+             this.equipment.executorEquipId= response.data.executorEquipId;
+             this.materials = response.data.materialList;
 
-         }).catch(error => console.log(error));;
+         }).catch(error => console.log(error));
+
+
     },
     methods:{
 

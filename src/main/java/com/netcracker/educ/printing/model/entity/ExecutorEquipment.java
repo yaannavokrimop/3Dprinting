@@ -18,11 +18,11 @@ public class ExecutorEquipment {
     @Column(nullable = false)
     private boolean ready = true;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "executorId", nullable = false)
     private User executor;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "equipmentId", nullable = false)
     private Equipment equipment;
 
@@ -47,6 +47,12 @@ public class ExecutorEquipment {
         this.equipment = equipment;
         this.executor = executor;
         this.equipDesc=equipDesc;
+    }
+    public ExecutorEquipment(User executor, Equipment equipment,String equipDesc,Set<MaterialEquipment> matEquips) {
+        this.equipment = equipment;
+        this.executor = executor;
+        this.equipDesc=equipDesc;
+        this.matEquips=matEquips;
     }
 
     public ExecutorEquipment() {
