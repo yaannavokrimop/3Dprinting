@@ -31,16 +31,14 @@ public class OrderController {
     private UserRepo userRepo;
     private OrderService orderService;
 
-
-
-
     @GetMapping("/user")
     public ResponseEntity<PaginationBean> getOrdersByUserId(@RequestParam Map<String, String> pageParams) {
-        Page<Order> orders = orderService.getPageOfOrders(pageParams);
-        return ResponseEntity.ok(new PaginationBean(orders.getTotalPages(), orders.getContent()));
+        Page<Order> ordersPage = orderService.getPageOfOrders(pageParams);
+        List<OrderRepresent> orders = orderService.ordersToOrderRepresents(ordersPage.getContent());
+        return ResponseEntity.ok(new PaginationBean(ordersPage.getTotalPages(), orders));
     }
 
-    @GetMapping
+    /*@GetMapping
     public List<Order> getAllOrders(@RequestParam(required = false) String description) {
 
         List<Order> orders = new ArrayList<>();
@@ -51,7 +49,7 @@ public class OrderController {
             orders.addAll(repo.findByDescriptionContaining(description));
 
         return orders;
-    }
+    }*/
 
     @GetMapping("{id}")
     public Order getOrderById(@PathVariable("id") UUID id) {

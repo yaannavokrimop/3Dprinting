@@ -1,6 +1,6 @@
 package com.netcracker.educ.printing.service;
 
-import com.netcracker.educ.printing.exception.CreatingResponseException;
+import com.netcracker.educ.printing.exception.ResponseCreationException;
 import com.netcracker.educ.printing.exception.NotFoundException;
 import com.netcracker.educ.printing.model.bean.ResponseId;
 import com.netcracker.educ.printing.model.bean.ResponseStatus;
@@ -14,6 +14,10 @@ import com.netcracker.educ.printing.model.repository.UserRepo;
 import com.netcracker.educ.printing.model.representationModel.ResponseRepresent;
 import com.netcracker.educ.printing.security.UserDetailsImpl;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -27,17 +31,17 @@ public class ResponseService {
     private final ResponseRepo responseRepo;
     private final ChatService chatService;
 
-    public void createResponse(ResponseRepresent represent) throws CreatingResponseException {
+    public void createResponse(ResponseRepresent represent) throws ResponseCreationException {
         UserDetailsImpl principal = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (principal.getId().equals(represent.getExecutorId()))
-            throw new CreatingResponseException("Нельзя принять собственный заказ. Выберите другого исполнителя!");
+            throw new ResponseCreationException("Нельзя принять собственный заказ. Выберите другого исполнителя!");
         User executor = userRepo.findById(represent.getExecutorId())
                 .orElseThrow(NotFoundException::new);
         Order order = orderRepo.findById(represent.getOrderId())
                 .orElseThrow(NotFoundException::new);
         ResponseId responseId = new ResponseId(represent.getOrderId(), represent.getExecutorId());
         if (responseRepo.existsById(responseId))
-            throw new CreatingResponseException("Этот пользователь уже выбран исполнителем текущего заказа!");
+            throw new ResponseCreationException("Этот пользователь уже выбран исполнителем текущего заказа!");
         responseRepo.save(new Response(responseId, order, executor, ResponseStatus.REQUESTED, represent.getSum(), new Date()));
     }
 
@@ -60,5 +64,31 @@ public class ResponseService {
         }
 
         return chatResponses;
+    }
+
+    public Page<Response> getPageOfResponses(Map<String, String> params) {
+        UUID orderId = UUID.fromString(params.get("orderId"));
+        int currentPage = Integer.parseInt(params.get("page"))- 1;
+        int perPage = Integer.parseInt(params.get("perPage"));
+        Pageable page = PageRequest.of(currentPage, perPage , Sort.by("date").descending());
+        return responseRepo.findAllByOrderId(orderId, page);
+    }
+
+    public ResponseRepresent responseToResponseRepresent(Response response) {
+        return new ResponseRepresent(
+                response.getExecutor().getId(),
+                response.getSum(),
+                "" + response.getExecutor().getSurname() + " " + response.getExecutor().getName(),
+                response.getDate(),
+                response.getStatus()
+                );
+    }
+
+    public List<ResponseRepresent> responsesToResponseRepresents(List<Response> responses) {
+        List<ResponseRepresent> represents = new ArrayList<>();
+        for(Response response : responses) {
+            represents.add(this.responseToResponseRepresent(response));
+        }
+        return represents;
     }
 }

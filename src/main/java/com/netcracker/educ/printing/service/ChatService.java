@@ -1,6 +1,6 @@
 package com.netcracker.educ.printing.service;
 
-import com.netcracker.educ.printing.exception.CreatingResponseException;
+import com.netcracker.educ.printing.exception.ResponseCreationException;
 import com.netcracker.educ.printing.exception.NotFoundException;
 import com.netcracker.educ.printing.model.entity.Chat;
 import com.netcracker.educ.printing.model.entity.User;
@@ -26,13 +26,13 @@ public class ChatService {
     public void createChat(ChatRepresent represent) throws RuntimeException {
         UserDetailsImpl principal = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (principal.getId().equals(represent.getExecutorId()))
-            throw new CreatingResponseException("Нельзя создать чат с самим собой!");
+            throw new ResponseCreationException("Нельзя создать чат с самим собой!");
         User executor = userRepo.findById(represent.getExecutorId())
                 .orElseThrow(NotFoundException::new);
         User customer = userRepo.findById(represent.getCustomerId())
                 .orElseThrow(NotFoundException::new);
         if (chatRepo.existsByExecutorAndCustomer(executor, customer) || chatRepo.existsByExecutorAndCustomer(customer, executor))
-            throw new CreatingResponseException("Этот чат уже есть!");
+            throw new ResponseCreationException("Этот чат уже есть!");
         chatRepo.save(new Chat(executor, customer));
 
     }

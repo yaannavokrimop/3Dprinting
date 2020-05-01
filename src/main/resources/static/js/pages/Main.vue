@@ -103,7 +103,8 @@
                             title="Введите подробности заказа"
                             @ok="sendResponse"
                     >
-                        <b-form-input type="text" placeholder="Сумма заказа" v-model="sum"/>
+                        <h7>Стоимость заказа: </h7>
+                        <b-form-input type="text" placeholder="Сумма заказа" v-model="currentOrder.sum"/>
                         <div class="mt-2"></div>
                     </b-modal>
                 </div>
@@ -113,12 +114,14 @@
             </div>
             <div class="mt-2"></div>
         </v-content>
-        <v-pagination
-                v-model="pagination.page"
-                :length="pagination.total"
-                total-visible=6
-                @input="getData"
-        ></v-pagination>
+        <div v-if="pagination.need">
+            <v-pagination
+                    v-model="pagination.page"
+                    :length="pagination.total"
+                    total-visible=6
+                    @input="getData"
+            ></v-pagination>
+        </div>
     </v-container>
 </template>
 
@@ -148,7 +151,8 @@
                 pagination: {
                     page: 1,
                     total: 0,
-                    perPage: 4
+                    perPage: 4,
+                    need: false
                 }
             }
         },
@@ -184,6 +188,7 @@
                 AXIOS.post('/search/executors', this.getParams()).then((response) => {
                     this.pagination.total = response.data.pageCount;
                     this.executors = response.data.content;
+                    if (this.pagination.total > 1) this.pagination.need = true;
                     console.log("Данные проверка2");
                     console.log(response.data);
                 }).catch(error => console.log(error));
@@ -211,7 +216,7 @@
             sendResponse() {
                 AXIOS.post("/chat", {
                     'executorId': this.currentExecutor.id,
-                    'customerId': this.currentOrder.user.id
+                    'customerId': this.currentOrder.customerId
                 }).then((response) => {
                     console.log(response);
                 }).catch(error => console.log(error));
@@ -219,7 +224,7 @@
                 AXIOS.post("/response", {
                     'executorId': this.currentExecutor.id,
                     'orderId': this.currentOrder.id,
-                    'sum': this.sum
+                    'sum': this.currentOrder.sum
                 }).then((response) => {
                     console.log(response);
                 }).catch(error => console.log(error));

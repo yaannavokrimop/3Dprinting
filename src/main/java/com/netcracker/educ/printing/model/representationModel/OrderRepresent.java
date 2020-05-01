@@ -1,17 +1,20 @@
 package com.netcracker.educ.printing.model.representationModel;
 
-import com.netcracker.educ.printing.model.entity.Material;
+import com.netcracker.educ.printing.model.bean.OrderStatus;
+import com.netcracker.educ.printing.model.bean.Pageable;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NonNull;
 
-import javax.persistence.Column;
 import javax.validation.constraints.NotNull;
-import java.util.Set;
+import java.util.Date;
+import java.util.UUID;
 
 @Data
 @AllArgsConstructor
-public class OrderRepresent {
+public class OrderRepresent implements Pageable {
+
+    private UUID id;
+
     @NotNull
     private float sum;
 
@@ -29,4 +32,14 @@ public class OrderRepresent {
 
     @NotNull
     private String material;
+
+    private int responsesCount;
+
+    private OrderStatus status;
+
+    private String file;
+
+    private UUID customerId;
+
+    private Date date;
 }

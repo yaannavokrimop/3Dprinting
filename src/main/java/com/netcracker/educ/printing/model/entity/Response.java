@@ -19,11 +19,11 @@ public class Response {
     private ResponseId id;
 
     @MapsId("orderId")
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     private Order order;
 
     @MapsId("executorId")
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     private User executor;
 
     @Column(nullable = false)

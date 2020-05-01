@@ -1,6 +1,7 @@
 package com.netcracker.educ.printing.controller;
 
-import com.netcracker.educ.printing.exception.CreatingResponseException;
+import com.netcracker.educ.printing.exception.ResponseCreationException;
+import com.netcracker.educ.printing.model.bean.PaginationBean;
 import com.netcracker.educ.printing.model.bean.ResponseId;
 import com.netcracker.educ.printing.model.bean.ResponseStatus;
 import com.netcracker.educ.printing.model.entity.Response;
@@ -12,10 +13,12 @@ import com.netcracker.educ.printing.service.ResponseService;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @Slf4j
@@ -34,7 +37,7 @@ public class ResponseController {
     public ResponseEntity<String> createResponse(@RequestBody ResponseRepresent responseRepresent) {
         try {
             responseService.createResponse(responseRepresent);
-        } catch (CreatingResponseException ex) {
+        } catch (ResponseCreationException ex) {
             return ResponseEntity.badRequest().body(ex.getMessage());
         }
         return ResponseEntity.ok("Заказ успешно отправлен исполнителю.");
@@ -81,5 +84,12 @@ public class ResponseController {
 
         responseRepo.save(dbResponse);
         log.info("/////////////////////////////////////////////////Response Refused=" + dbResponse.getSum());
+    }
+
+    @GetMapping("/order")
+    public ResponseEntity<PaginationBean> getResponsesForOrder(@RequestParam Map<String, String> params) {
+        Page<Response> responsesPage = responseService.getPageOfResponses(params);
+        List<ResponseRepresent> responses = responseService.responsesToResponseRepresents(responsesPage.getContent());
+        return ResponseEntity.ok(new PaginationBean(responsesPage.getTotalPages(), responses));
     }
 }

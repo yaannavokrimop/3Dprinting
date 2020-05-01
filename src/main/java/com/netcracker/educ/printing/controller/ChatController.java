@@ -1,6 +1,6 @@
 package com.netcracker.educ.printing.controller;
 
-import com.netcracker.educ.printing.exception.CreatingResponseException;
+import com.netcracker.educ.printing.exception.ResponseCreationException;
 import com.netcracker.educ.printing.model.entity.Chat;
 import com.netcracker.educ.printing.model.entity.User;
 import com.netcracker.educ.printing.model.repository.ChatRepo;
@@ -46,7 +46,7 @@ public class ChatController {
     public ResponseEntity<String> createChat(@RequestBody ChatRepresent chatRepresent) {
         try {
             chatService.createChat(chatRepresent);
-        } catch (CreatingResponseException ex) {
+        } catch (ResponseCreationException ex) {
             return ResponseEntity.badRequest().body(ex.getMessage());
         }
         return ResponseEntity.ok("Чат успешно создан.");

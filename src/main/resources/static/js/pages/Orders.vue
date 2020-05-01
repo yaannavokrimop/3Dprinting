@@ -34,16 +34,21 @@
                             <v-list-item-subtitle>
                                 <strong>Сумма: {{order.sum}}</strong>
                             </v-list-item-subtitle>
-
+                            <v-list-item-subtitle>
+                                <strong>Получено {{order.responsesCount}} откликов </strong>
+                            </v-list-item-subtitle>
                         </v-list-item-content>
                     </v-list-item>
                 </li>
-                <v-pagination
-                        v-model="pagination.page"
-                        :length="pagination.total"
-                        total-visible=6
-                        @input="getOrders"
-                ></v-pagination>
+                <div v-if="pagination.need">
+                    <v-pagination
+                            v-model="pagination.page"
+                            :length="pagination.total"
+                            total-visible=6
+                            @input="getOrders"
+                    ></v-pagination>
+                </div>
+
             </ul>
 
             <div v-if="currentOrder">
@@ -88,6 +93,10 @@
                             <div class="mt-2"></div>
                         </b-modal>
                     </div>
+
+                    <div class="mt-2"></div>
+                    <v-btn class="blue-grey--text" @click="watchResponses"> Посмотреть отклики </v-btn>
+
                     <div class="mt-2"></div>
                     <b-button variant="danger" @click="showModal">Удалить заказ</b-button>
 
@@ -122,7 +131,8 @@
                 pagination: {
                     page: 1,
                     total: 0,
-                    perPage: 4
+                    perPage: 4,
+                    need: false
                 }
 
             }
@@ -135,6 +145,7 @@
                 AXIOS.get('/order/user?page=' + this.pagination.page + '&perPage=' + this.pagination.perPage).then((response) => {
                     this.orders = response.data.content;
                     this.pagination.total = response.data.pageCount;
+                    if (this.pagination.total > 1) this.pagination.need = true;
                     console.log(response.data);
                 }).catch(error => console.log(error));
             },
@@ -161,7 +172,7 @@
             sendResponse() {
                 AXIOS.post("/chat", {
                     'executorId': this.currentExecutor,
-                    'customerId': this.currentOrder.user.id
+                    'customerId': this.currentOrder.customerId
                 }).then((response) => {
                     console.log(response);
                 }).catch(error => console.log(error));
@@ -180,6 +191,10 @@
             deleteOrder() {
                 AXIOS.delete('/order/' + this.currentOrder.id);
                 location.reload()
+            },
+            watchResponses() {
+                localStorage.setItem('order', JSON.stringify(this.currentOrder));
+                this.$router.push('/responses/' + this.currentOrder.id);
             }
         }
     }
