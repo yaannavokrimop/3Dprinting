@@ -27,14 +27,14 @@ public class MaterialService {
         this.equipmentService = equipmentService;
     }
 
-    public List<String> getMaterialsByTitlePart(String materialTitlePart) {
-       return materialRepo.findMatTitleByMatTitleContaining(materialTitlePart);
+    //public List<String> getMaterialsByTitlePart(String materialTitlePart) {
+      // return materialRepo.findMatTitleByMatTitleContaining(materialTitlePart);
 
-    }
+    //}
 
-    public List<String> getMaterialsByTitlePartAndEquipment(String materialTitlePart, UUID equipId) {
-        return materialEquipmentRepo.findMatTitleByEquipmentIdAndMatTitleContaining(equipId,materialTitlePart);
-    }
+    //public List<String> getMaterialsByTitlePartAndEquipment(String materialTitlePart, UUID equipId) {
+      //  return materialEquipmentRepo.findMatTitleByEquipmentIdAndMatTitleContaining(equipId,materialTitlePart);
+    //}
 
 
 
@@ -45,5 +45,15 @@ public class MaterialService {
             materials.add(matEquipment.getMaterial().getMatTitle());
         }
         return materials;
+    }
+
+    public List<String> getMaterialsByEquipment(UUID equipId) {
+        return materialEquipmentRepo.findMatTitleByEquipmentId(equipId);
+
+    }
+
+    public List<String> getAllMaterials() {
+        return materialRepo.findAllMatTitles();
+
     }
 }

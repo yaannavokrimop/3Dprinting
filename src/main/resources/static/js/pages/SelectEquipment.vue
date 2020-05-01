@@ -33,8 +33,6 @@
                  <v-autocomplete
                     v-model="materialName"
                     :items="materialItems"
-                    :search-input.sync="searchMaterial"
-                    cache-items
                     hide-no-data
                     hide-details
                     label="Материалы"
@@ -73,7 +71,6 @@ export default {
             search: null,
             equipId:null,
             materialName:null,
-            searchMaterial:null,
             materialItems:[]
         }
      },
@@ -82,9 +79,6 @@ export default {
             val && val !== this.equipName && this.querySelections(val)
         },
          equipName:'getEquipment',
-         searchMaterial(val){
-            val && val !== this.materialName && this.materialSelections(val)
-         }
          },
      methods: {
         addEquip(){
@@ -129,17 +123,13 @@ export default {
                 this.$data.width=response.data.width;
                 this.$data.length=response.data.length;
                 this.$data.equipId=response.data.id;
+                this.materialSelections(response.data.id);
             }).catch(error => console.log(error));
-
         },
-        materialSelections(materialName){
-            setTimeout(()=>{
-                if((materialName==this.$data.searchMaterial)&&(this.$data.equipName!=null)){
-                AXIOS.get('/material/equip/'+ this.$data.equipId+'/materialList/'+materialName).then((response) =>{
+        materialSelections(equipId){
+                AXIOS.get('/material/equip/'+ equipId).then((response) =>{
                     this.materialItems=response.data;
                     }).catch(error => console.log(error));
-                      }},1200)
-
         }
 
      }

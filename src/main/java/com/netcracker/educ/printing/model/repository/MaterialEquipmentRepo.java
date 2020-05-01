@@ -22,4 +22,7 @@ public interface MaterialEquipmentRepo extends JpaRepository<MaterialEquipment, 
     @Query("select ee.matEquips from MaterialEquipment me join ExecutorEquipment ee  where me.equipment.id=:equipId and ee.executor.id=:userId  ")
     List<MaterialEquipment> findMaterialByEquipmentAndUser(@Param(value = "userId") UUID userId,
                                                 @Param(value = "equipId") UUID equipId);
+
+    @Query("select me.material.matTitle from MaterialEquipment me where me.equipment.id=:equipmentId")
+    List<String> findMatTitleByEquipmentId(@Param(value = "equipmentId") UUID equipId);
 }
