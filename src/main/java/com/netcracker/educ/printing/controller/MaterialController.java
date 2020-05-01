@@ -22,21 +22,31 @@ public class MaterialController {
         this.materialService = materialService;
     }
 
-    @GetMapping("/materialList/{titlePart}")
-    public List<String> getMaterialNames(@PathVariable("titlePart") String materialTitlePart){
-        return materialService.getMaterialsByTitlePart(materialTitlePart);
-    }
+//    @GetMapping("/materialList/{titlePart}")
+//    public List<String> getMaterialNames(@PathVariable("titlePart") String materialTitlePart){
+//        return materialService.getMaterialsByTitlePart(materialTitlePart);
+//    }
 
-    @GetMapping(value = "/equip/{equipmentId}/materialList/{titlePart}")
-    public List<String> getMaterialNamesForEquip(@PathVariable("equipmentId") UUID equipId,
-                                                 @PathVariable("titlePart") String materialTitlePart){
-        return materialService.getMaterialsByTitlePartAndEquipment(materialTitlePart,equipId);
+//    @GetMapping(value = "/equip/{equipmentId}/materialList/{titlePart}")
+//    public List<String> getMaterialNamesForEquip(@PathVariable("equipmentId") UUID equipId,
+//                                                 @PathVariable("titlePart") String materialTitlePart){
+//        return materialService.getMaterialsByTitlePartAndEquipment(materialTitlePart,equipId);
+//    }
+
+    @GetMapping
+    public List<String> getAllMaterialsName(){
+        return materialService.getAllMaterials();
+    }
+    @GetMapping(value = "/equip/{equipmentId}")
+    public List<String> getAllMaterialNamesForEquip(@PathVariable("equipmentId") UUID equipId){
+        return materialService.getMaterialsByEquipment(equipId);
     }
 
     @GetMapping("/executor/")
     public Set<String> getMaterialsByExecutor(@AuthenticationPrincipal UserDetailsImpl executor){
         return  materialService.getMaterialsByUser(executor.getId());
     }
+
 
 
 

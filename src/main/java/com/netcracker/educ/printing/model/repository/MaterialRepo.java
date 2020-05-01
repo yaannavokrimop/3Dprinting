@@ -17,6 +17,9 @@ public interface MaterialRepo extends JpaRepository<Material, UUID> {
     @Query("select m.matTitle from Material m where lower(m.matTitle) like lower(concat('%',:title,'%'))")
     List<String> findMatTitleByMatTitleContaining(@Param(value = "title") String titlePart);
 
+    @Query("select m.matTitle from Material m")
+    List<String> findAllMatTitles();
+
 //    @Query("select m.matTitle from Material m join MaterialEquipment matEquip on matEquip.material=m " +
 //            "join ExecutorEquipment exEquip on exEquip.equipment=matEquip.equipment " +
 //            "where exEquip.executor=:userId")

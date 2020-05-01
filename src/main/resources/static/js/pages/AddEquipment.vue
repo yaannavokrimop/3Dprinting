@@ -25,8 +25,8 @@
                 <v-autocomplete
                      v-model="selectMaterial"
                     :items="items"
-                    :search-input.sync="search"
                     cache-items
+                    deletable-chips
                     hide-no-data
                     hide-details
                     label="Материалы"
@@ -52,15 +52,17 @@ export default {
             width: '',
             length: '',
             items: [],
-            search: null,
             selectMaterial: null,
 
         }
      },
+     created:function(){
+        this.materialSelections();
+     },
      watch: {
-        search (val) {
-        val && val !== this.selectMaterial && this.querySelections(val)
-        },
+//        search (val) {
+//        val && val !== this.selectMaterial && this.querySelections(val)
+//        },
      },
      methods: {
         addEquip(){
@@ -88,14 +90,11 @@ export default {
             this.$router.push('/equipment');
             location.reload()
         },
-        querySelections (materialPartName) {
-            setTimeout(()=>{
-            if(materialPartName==this.$data.search){
-            AXIOS.get('/material/materialList/'+materialPartName).then((response) =>{
+        materialSelections () {
+            AXIOS.get('/material').then((response) =>{
                 this.items=response.data;
             }).catch(error => console.log(error));
-            }},1200)
-            },
+        },
 
      }
 

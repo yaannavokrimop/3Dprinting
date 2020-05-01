@@ -14,7 +14,6 @@
                                           label="Название города"
                                           multiple
                                           chips
-
                                         ></v-autocomplete>
                     <div class="input-group-append">
                     </div>
@@ -29,6 +28,21 @@
                     <input type="text" class="form-control" placeholder="Ширина" v-model="width"/>
                     <input type="text" class="form-control" placeholder="Длина" v-model="length"/>
                     <div class="input-group-append">
+                    <v-autocomplete
+                        v-model="materialName"
+                        :items="materialItems"
+                        deletable-chips
+                        dense
+                        outlined
+                        hide-no-data
+                        hide-details
+                        label="Материалы"
+                        multiple
+                        chips
+                        small-chips
+                        append
+                    ></v-autocomplete>
+
                         <button class="btn btn-outline-secondary" type="button" @click="getData"> Найти</button>
                         <button class="btn btn-outline-secondary" type="button" @click="showAll"> Показать Всех </button>
                     </div>
@@ -128,6 +142,8 @@
                 items: [],
                 search: null,
                 selectCity: null,
+                materialName:null,
+                materialItems:[],
 
                 pagination: {
                     page: 1,
@@ -147,6 +163,7 @@
                 this.$data.length = this.$data.currentOrder.length;
             }
             this.getData();
+            this. materialSelections();
         },
         watch: {
             search(val) {
@@ -230,6 +247,12 @@
                       }},1500)
 
                   },
+                  materialSelections(){
+                    AXIOS.get('/material').then((response) =>{
+                        this.materialItems=response.data;
+                        }).catch(error => console.log(error));
+                  }
+
 
         }
 
