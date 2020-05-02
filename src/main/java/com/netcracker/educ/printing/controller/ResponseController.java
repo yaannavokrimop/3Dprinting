@@ -42,44 +42,26 @@ public class ResponseController {
 
     @GetMapping("forchat/{chatId}")
     public List<Response> getResponsesForChat(@PathVariable(name = "chatId") UUID chatId) {
-        log.info("/////////////////////////////////////////////////Responses for chat id=" + chatId);
         return responseService.getResponsesForChat(chatId);
     }
 
     @PostMapping("/offer")
     public void makeAnOffer(@RequestBody ResponseRepresent responseRepresent) {
-        Response dbResponse = responseRepo.findById(new ResponseId(
-                responseRepresent.getOrderId(),
-                responseRepresent.getExecutorId()
-        )).orElse(null);
-
-        if (dbResponse != null) {
-            dbResponse.setSum(responseRepresent.getSum());
-
-            if (responseRepresent.isExecutor()) {
-                dbResponse.setStatus(ResponseStatus.BY_EXECUTOR);
-            } else {
-                dbResponse.setStatus(ResponseStatus.BY_CUSTOMER);
-            }
-
-
-            responseRepo.save(dbResponse);
-            log.info("/////////////////////////////////////////////////Successful offer=" + responseRepresent.getSum());
-
-        }
+        responseService.makeAnOffer(responseRepresent);
     }
 
     @PatchMapping("/offer")
     public void refuseResponse(@RequestBody ResponseRepresent responseRepresent) {
-        Response dbResponse = responseRepo.findById(new ResponseId(
-                responseRepresent.getOrderId(),
-                responseRepresent.getExecutorId()
-        )).orElse(null);
+        responseService.refuseResponse(responseRepresent);
+    }
 
-        assert dbResponse != null;
-        dbResponse.setStatus(ResponseStatus.REFUSED);
+    @PatchMapping("/offer/discuss")
+    public void refuseOffer(@RequestBody ResponseRepresent responseRepresent) {
+        responseService.refuseOffer(responseRepresent);
+    }
 
-        responseRepo.save(dbResponse);
-        log.info("/////////////////////////////////////////////////Response Refused=" + dbResponse.getSum());
+    @PatchMapping("/offer/accept")
+    public void acceptOffer(@RequestBody ResponseRepresent responseRepresent) {
+        responseService.acceptOffer(responseRepresent);
     }
 }

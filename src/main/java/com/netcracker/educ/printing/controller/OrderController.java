@@ -72,7 +72,7 @@ public class OrderController {
     ) {
 
             Order order = orderService.create(inputOrder);
-            order.setStatus(OrderStatus.NO_PAY);
+            order.setStatus(OrderStatus.IN_SEARCH);
 
 
         return repo.save(order);

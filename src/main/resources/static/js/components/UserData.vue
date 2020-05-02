@@ -62,7 +62,7 @@
                             <li v-for="equip in equipments">
                             <div><strong>{{equip.equipName}} </strong></div>
                             <div>Размер печати: {{equip.height}} x {{equip.width}} x {{equip.length}}</div>
-                            <div>Матрериалы: <span v-for="material of equip.materialList"> {{material}}, </span></div>
+                            <div>Материалы: <span v-for="material of equip.materialList"> {{material}}, </span></div>
                              </li>
                          </ul>
 
