@@ -34,7 +34,11 @@
                             <v-list-item-subtitle>
                                 <strong>Сумма: {{order.sum}}</strong>
                             </v-list-item-subtitle>
-
+                            <v-list-item-subtitle>
+                                <div>
+                                    <strong>Материалы:  <span v-for="material of order.materials"> {{material.matTitle}}  </span></strong>
+                                </div>
+                             </v-list-item-subtitle>
                         </v-list-item-content>
                     </v-list-item>
                 </li>

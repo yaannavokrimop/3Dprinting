@@ -7,11 +7,16 @@ import lombok.NonNull;
 
 import javax.persistence.Column;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 @Data
 @AllArgsConstructor
 public class OrderRepresent {
+
+    private UUID id;
+
     @NotNull
     private float sum;
 
@@ -28,5 +33,7 @@ public class OrderRepresent {
     private int length;
 
     @NotNull
-    private String material;
+    private List<String> material;
+
+
 }
