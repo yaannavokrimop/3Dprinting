@@ -23,11 +23,18 @@
 
                 <b-form-input type="text" placeholder="Длина изделия" v-model="length"/>
                 <div class="mt-2"></div>
-
-                <b-form-input type="text" placeholder="Материал" v-model="material"/>
+                <v-autocomplete
+                    v-model="selectMaterial"
+                    :items="items"
+                    :search-input.sync="search"
+                    cache-items
+                    hide-no-data
+                    hide-details
+                    label="Материалы"
+                    multiple
+                    chips
+                ></v-autocomplete>
                 <div class="mt-2"></div>
-
-
                 <v-btn v-on:click="addOrder" variant="primary">Добавить</v-btn>
                 <div class="mt-2"></div>
                 <v-btn v-on:click="addDraft" variant="primary">Сохранить как черновик</v-btn>
@@ -50,10 +57,15 @@
                 width: '',
                 length: '',
                 description: '',
-                material: '',
+                selectMaterial: null,
+                items: [],
+                search: null,
 
                 accessToken: localStorage.getItem('accessToken')
             }
+        },
+        created:function(){
+            this.querySelections();
         },
         methods: {
             addOrder() {
@@ -63,7 +75,7 @@
                     'width': this.$data.width,
                     'length': this.$data.length,
                     'description': this.$data.description,
-                    'material': this.$data.material,
+                    'material': this.$data.selectMaterial,
 
                 };
 
@@ -82,6 +94,7 @@
                     'width': this.$data.width,
                     'length': this.$data.length,
                     'description': this.$data.description,
+                    'material': this.$data.selectMaterial,
 
                 };
 
@@ -101,7 +114,13 @@
                 this.width = '';
                 this.length = '';
                 this.description = '';
-            }
+                this.selectMaterial=null;
+            },
+            querySelections () {
+            AXIOS.get('/material').then((response) =>{
+                this.items=response.data;
+            }).catch(error => console.log(error));
+            },
         }
     }
 </script>

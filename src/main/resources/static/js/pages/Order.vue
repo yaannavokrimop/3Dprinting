@@ -41,12 +41,7 @@
             </v-list-item>
             <v-list-item>
                 <div>
-                    <h3>Материалы</h3>
-                    <ul>
-                        <li v-for="material in order.materials">
-                            Материал: {{ material.matTitle}}
-                        </li>
-                    </ul>
+                    <strong>Материалы:  <span v-for="material of order.materials"> {{material.matTitle}}  </span></strong>
                 </div>
             </v-list-item>
 
@@ -85,7 +80,7 @@
                     length: 0,
                     file: '',
                     description: '',
-                    materials: '',
+                    materials: [],
                     myId: ''
 
                 },
