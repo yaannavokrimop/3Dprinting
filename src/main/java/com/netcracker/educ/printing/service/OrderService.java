@@ -39,8 +39,12 @@ public class OrderService {
                 represent.getHeight(),
                 represent.getWidth(),
                 represent.getLength(),
-                represent.getDescription()
+                represent.getName()
         );
+
+        if (represent.getDescription() != null) {
+            order.setDescription(represent.getDescription());
+        }
 
         order.setId(UUID.randomUUID());
         order.setUser(userRepo.findByEmail(principal.getEmail()));
