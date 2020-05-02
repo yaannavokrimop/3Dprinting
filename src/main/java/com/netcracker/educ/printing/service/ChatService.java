@@ -31,7 +31,7 @@ public class ChatService {
                 .orElseThrow(NotFoundException::new);
         User customer = userRepo.findById(represent.getCustomerId())
                 .orElseThrow(NotFoundException::new);
-        if (chatRepo.existsByExecutorAndCustomer(executor, customer) || chatRepo.existsByExecutorAndCustomer(customer, executor))
+        if (chatRepo.existsByExecutorAndCustomer(executor, customer))
             throw new CreatingResponseException("Этот чат уже есть!");
         chatRepo.save(new Chat(executor, customer));
 
