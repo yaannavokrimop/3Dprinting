@@ -21,6 +21,8 @@ public class OrderRepresent {
     private float sum;
 
     @NotNull
+    private String name;
+
     private String description;
 
     @NotNull

@@ -3,10 +3,15 @@
     <v-container>
 
         <v-card max-width="1000" tile>
-            <h4>Заказ "{{order.description}}"</h4>
+            <h4>Заказ "{{order.name}}"</h4>
             <v-list-item>
                 <v-list-item-content>
                     <v-list-item-title><strong>Статус: {{order.status}}</strong></v-list-item-title>
+                </v-list-item-content>
+            </v-list-item>
+            <v-list-item>
+                <v-list-item-content>
+                    <v-list-item-title><strong>Описание: {{order.description}}</strong></v-list-item-title>
                 </v-list-item-content>
             </v-list-item>
             <v-list-item>
@@ -73,6 +78,7 @@
                     id: 0,
                     userId: 0,
                     status: '',
+                    name: '',
                     sum: 0,
                     date: null,
                     height: 0,
@@ -96,6 +102,7 @@
                 this.order.userId = response.data.user.id;
                 this.order.status = response.data.status;
                 this.order.sum = response.data.sum;
+                this.order.name = response.data.name;
                 this.order.date = response.data.date;
                 this.order.height = response.data.height;
                 this.order.width = response.data.width;

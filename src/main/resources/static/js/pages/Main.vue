@@ -52,7 +52,7 @@
         </v-content>
         <div v-if="currentOrder">
             <b-alert show dismissible fade>
-                Вы выбираете исполнителя для заказа № {{currentOrder.description}}  <br>
+                Вы выбираете исполнителя для заказа "{{currentOrder.name}}"  <br>
                 Ширина {{currentOrder.width}}, длина {{currentOrder.length}}, высота {{currentOrder.height}}
                 <b-button class="mt-3" variant="outline-danger" block @click="clearOrder">
                     Очистить
@@ -178,7 +178,8 @@
                     'width' : this.$data.width,
                     'length' : this.$data.length,
                     'currentPage' : this.pagination.page,
-                    'perPage' : this.pagination.perPage }
+                    'perPage' : this.pagination.perPage
+                }
             },
             getData() {
                 AXIOS.post('/search/executors', this.getParams()).then((response) => {

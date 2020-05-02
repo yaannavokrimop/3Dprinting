@@ -28,8 +28,8 @@ import java.util.*;
 @AllArgsConstructor
 public class OrderController {
 
-    private OrderRepo repo;
-    private OrderService orderService;
+    private final OrderRepo repo;
+    private final OrderService orderService;
 
 
 
@@ -41,14 +41,14 @@ public class OrderController {
     }
 
     @GetMapping
-    public List<Order> getAllOrders(@RequestParam(required = false) String description) {
+    public List<Order> getAllOrders(@RequestBody(required = false) String name) {
 
         List<Order> orders = new ArrayList<>();
 
-        if (description == null)
+        if (name == null)
             orders.addAll(repo.findAll());
         else
-            orders.addAll(repo.findByDescriptionContaining(description));
+            orders.addAll(repo.findByNameContaining(name));
 
         return orders;
     }

@@ -9,12 +9,12 @@
         </v-list-item>
         <v-list-group
                 v-for="response in responses"
-                :key="response.order.description"
+                :key="response.order.name"
                 v-model="response.active"
         >
             <template v-slot:activator>
                 <v-list-item-content>
-                    <v-list-item-title v-text="response.order.description"></v-list-item-title>
+                    <v-list-item-title v-text="response.order.name"></v-list-item-title>
                 </v-list-item-content>
             </template>
             <v-container>

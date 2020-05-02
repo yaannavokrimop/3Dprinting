@@ -12,6 +12,9 @@
                 <b-form-input type="text" placeholder="Сумма заказа" v-model="sum"/>
                 <div class="mt-2"></div>
 
+                <b-form-input type="text" placeholder="Название заказа" v-model="name"/>
+                <div class="mt-2"></div>
+
                 <b-form-input type="text" placeholder="Описание" v-model="description"/>
                 <div class="mt-2"></div>
 
@@ -46,7 +49,7 @@
 </template>
 
 <script>
-    import {AXIOS} from "../pages/http-common";
+    import {AXIOS} from "./http-common";
 
     export default {
         name: "CreateOrder",
@@ -56,6 +59,7 @@
                 height: '',
                 width: '',
                 length: '',
+                name: '',
                 description: '',
                 selectMaterial: null,
                 items: [],
@@ -74,6 +78,7 @@
                     'height': this.$data.height,
                     'width': this.$data.width,
                     'length': this.$data.length,
+                    'name': this.$data.name,
                     'description': this.$data.description,
                     'material': this.$data.selectMaterial,
 

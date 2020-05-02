@@ -7,6 +7,10 @@
             </v-card-title>
             <v-card-text>
                 <v-text-field
+                        v-model="order.name"
+                        label="Имя">
+                </v-text-field>
+                <v-text-field
                         v-model="order.status"
                         label="Статус">
                 </v-text-field>
@@ -52,6 +56,7 @@
                 this.order.userId = response.data.userId;
                 this.order.status = response.data.status;
                 this.order.sum = response.data.sum;
+                this.order.name = response.data.name;
                 this.order.date = response.data.date;
                 this.order.height = response.data.height;
                 this.order.width = response.data.width;

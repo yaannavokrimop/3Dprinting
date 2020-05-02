@@ -52,6 +52,9 @@ public class Order implements Pageable {
 
     @NonNull
     @Column
+    private String name;
+
+    @Column
     private String description;
 
 

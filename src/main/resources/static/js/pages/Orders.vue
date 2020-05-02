@@ -14,6 +14,19 @@
 
         </div>
 
+        <v-content>
+            <div class="col-md-8">
+                <div class="input-group mb-5">
+                    <input type="text" class="form-control" placeholder="Имя заказа"/>
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-secondary" type="button"> Найти</button>
+                        <button class="btn btn-outline-secondary" type="button"> Показать Всех</button>
+                    </div>
+                </div>
+            </div>
+
+        </v-content>
+
         <v-card max-width="1200" tile>
             <h4>Заказы:</h4>
             <ul class="list-group">
@@ -27,18 +40,21 @@
 
                     <v-list-item>
                         <v-list-item-content three-line>
-                            <v-list-item-title><strong>Статус: {{order.status}}</strong></v-list-item-title>
+                            <v-list-item-title>
+                                <strong>Имя заказа: {{order.name}}</strong>
+                            </v-list-item-title>
                             <v-list-item-subtitle>
-                                <strong>Описание: {{order.description}}</strong>
+                                <strong>Статус: {{order.status}}</strong>
                             </v-list-item-subtitle>
                             <v-list-item-subtitle>
                                 <strong>Сумма: {{order.sum}}</strong>
                             </v-list-item-subtitle>
                             <v-list-item-subtitle>
                                 <div>
-                                    <strong>Материалы:  <span v-for="material of order.materials"> {{material.matTitle}}  </span></strong>
+                                    <strong>Материалы: <span
+                                            v-for="material of order.materials"> {{material.matTitle}}  </span></strong>
                                 </div>
-                             </v-list-item-subtitle>
+                            </v-list-item-subtitle>
                         </v-list-item-content>
                     </v-list-item>
                 </li>
@@ -52,7 +68,7 @@
 
             <div v-if="currentOrder">
                 <div class="mt-2"></div>
-                <label><strong>Текущий заказ:</strong></label> {{ currentOrder.description }}
+                <label><strong>Текущий заказ:</strong></label> {{ currentOrder.name }}
             </div>
         </v-card>
 
@@ -184,7 +200,7 @@
             deleteOrder() {
                 AXIOS.delete('/order/' + this.currentOrder.id);
                 location.reload()
-            }
+            },
         }
     }
 </script>

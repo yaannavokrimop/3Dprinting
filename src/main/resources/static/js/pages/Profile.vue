@@ -33,8 +33,7 @@ name: "Profile",
                 accessToken: localStorage.getItem('accessToken'),
                 role: localStorage.getItem('authority'),
             }
-          },
-
+          }
 }
 </script>
 
