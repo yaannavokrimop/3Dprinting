@@ -1,5 +1,6 @@
 package com.netcracker.educ.printing.service;
 
+import com.netcracker.educ.printing.exception.NotFoundException;
 import com.netcracker.educ.printing.model.bean.MaterialType;
 import com.netcracker.educ.printing.model.bean.OrderStatus;
 import com.netcracker.educ.printing.model.entity.Material;
@@ -32,25 +33,11 @@ public class OrderService {
     private final OrderRepo orderRepo;
 
     public Order create(OrderRepresent represent,UUID userId) throws RuntimeException {
-        Order order = new Order(
-                represent.getSum(),
-                represent.getHeight(),
-                represent.getWidth(),
-                represent.getLength(),
-                represent.getName()
-        );
-
-        if (represent.getDescription() != null) {
-            order.setDescription(represent.getDescription());
-        }
-
-        order.setId(UUID.randomUUID());
-        order.setUser(userRepo.findById(userId).orElse(null));
-        order.setDate(new Date());
-        order.setMaterials(materialsFromList(represent.getMaterial()));
-        order.setStatus(OrderStatus.NO_PAY);
-        log.info("User "+userId+" created order "+order.getId());
-        return orderRepo.save(order);
+        represent.setId(UUID.randomUUID());
+        Order order = new Order(represent,OrderStatus.NO_PAY,new Date(),materialsFromList(represent.getMaterial()),userRepo.findById(userId).orElseThrow(NotFoundException::new));
+        Order dbOrder=orderRepo.save(order);
+        log.info("User {} created order {}",userId,order.getId());
+        return dbOrder;
     }
 
     public Page<Order> getPageOfOrders(Map<String, String> pageParams) {
@@ -62,26 +49,17 @@ public class OrderService {
     }
 
     public Order createDraft(OrderRepresent inputOrder, UUID userId) {
-        User user = userRepo.findById(userId).orElse(null);
-       Order order= new Order(
-               inputOrder.getSum(),
-               inputOrder.getHeight(),
-               inputOrder.getWidth(),
-               inputOrder.getLength(),
-               inputOrder.getDescription());
-        order.setUser(user);
-        order.setMaterials(materialsFromList(inputOrder.getMaterial()));
-        order.setId(UUID.randomUUID());
-        order.setStatus(OrderStatus.DRAFT);
-        order.setDate(new Date());
-        log.info("User "+userId+" created orderDraft "+order.getId());
-        return orderRepo.save(order);
-
+        User user = userRepo.findById(userId).orElseThrow(NotFoundException::new);
+        inputOrder.setId(UUID.randomUUID());
+        Order order=new Order(inputOrder,OrderStatus.DRAFT,new Date(),materialsFromList(inputOrder.getMaterial()),user);
+        Order dbOrder=orderRepo.save(order);
+        log.info("User {} created orderDraft {}",userId,order.getId());
+        return dbOrder;
     }
 
     public UUID deleteOrder(UUID orderId) {
         orderRepo.deleteById(orderId);
-        log.info("Order "+orderId+"  was deleted");
+        log.info("Order {}  was deleted",orderId);
         return orderId;
     }
 
