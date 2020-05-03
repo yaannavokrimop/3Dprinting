@@ -3,13 +3,11 @@ package com.netcracker.educ.printing.model.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.netcracker.educ.printing.model.bean.OrderStatus;
 import com.netcracker.educ.printing.model.bean.Pageable;
+import com.netcracker.educ.printing.model.representationModel.OrderRepresent;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.Date;
-import java.util.Objects;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 @Entity
 @Table(name = "orders")
@@ -101,5 +99,19 @@ public class Order implements Pageable {
                 ", file='" + file + '\'' +
                 ", description='" + description + '\'' +
                 '}';
+    }
+
+    public Order(OrderRepresent orderRepresent,OrderStatus orderStatus,Date date,Set<Material> materials,User user) {
+        this.id = orderRepresent.getId();
+        this.user = user;
+        this.status = orderStatus ;
+        this.date = date;
+        this.description = orderRepresent.getDescription();
+        this.materials = materials;
+        this.sum=orderRepresent.getSum();
+        this.height=orderRepresent.getHeight();
+        this.width=orderRepresent.getWidth();
+        this.length=orderRepresent.getLength();
+        this.name=orderRepresent.getName();
     }
 }

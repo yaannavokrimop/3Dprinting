@@ -1,14 +1,10 @@
 package com.netcracker.educ.printing.model.representationModel;
 
-import com.netcracker.educ.printing.model.entity.Material;
+import com.netcracker.educ.printing.model.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NonNull;
-
-import javax.persistence.Column;
 import javax.validation.constraints.NotNull;
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
 @Data
@@ -36,6 +32,7 @@ public class OrderRepresent {
 
     @NotNull
     private List<String> material;
+
 
 
 }
