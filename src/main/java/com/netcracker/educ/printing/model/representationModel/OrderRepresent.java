@@ -6,6 +6,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import javax.validation.constraints.NotNull;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 import java.util.Date;
 import java.util.UUID;
 
@@ -19,6 +22,8 @@ public class OrderRepresent implements Pageable {
     private float sum;
 
     @NotNull
+    private String name;
+
     private String description;
 
     @NotNull
@@ -31,7 +36,7 @@ public class OrderRepresent implements Pageable {
     private int length;
 
     @NotNull
-    private String material;
+    private List<String> material;
 
     private int responsesCount;
 

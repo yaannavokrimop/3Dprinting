@@ -50,7 +50,11 @@ public class Order  {
     @Column
     private String file;
 
+
     @NonNull
+    @Column
+    private String name;
+
     @Column
     private String description;
 

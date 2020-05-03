@@ -52,7 +52,7 @@
         </v-content>
         <div v-if="currentOrder">
             <b-alert show dismissible fade>
-                Вы выбираете исполнителя для заказа № {{currentOrder.description}}  <br>
+                Вы выбираете исполнителя для заказа "{{currentOrder.name}}"  <br>
                 Ширина {{currentOrder.width}}, длина {{currentOrder.length}}, высота {{currentOrder.height}}
                 <b-button class="mt-3" variant="outline-danger" block @click="clearOrder">
                     Очистить
@@ -77,11 +77,7 @@
                             </v-list-item-title>
                             <v-list-item-subtitle>
                                 <strong>Адреса:
-                                    <ul class="demo">
-                                        <li v-for="address of executor.addresses">
-                                            {{ address.city }}, {{address.description}}
-                                        </li>
-                                    </ul>
+                                    <span v-for="address of executor.addresses">({{ address.city }}, {{address.description}})  </span>
                                 </strong>
                             </v-list-item-subtitle>
                         </v-list-item-content>
@@ -161,12 +157,13 @@
                 AXIOS.get('/address/user/city').then((response) => {
                     this.$data.items = response.data;
                     this.$data.selectCity = response.data;
+                    this.$data.height = this.$data.currentOrder.height;
+                    this.$data.width = this.$data.currentOrder.width;
+                    this.$data.length = this.$data.currentOrder.length;
+                    this.getData();
                 }).catch(error => console.log(error));
-                this.$data.height = this.$data.currentOrder.height;
-                this.$data.width = this.$data.currentOrder.width;
-                this.$data.length = this.$data.currentOrder.length;
-            }
-            this.getData();
+
+            }else{this.getData();}
             this. materialSelections();
         },
         watch: {
@@ -182,7 +179,8 @@
                     'width' : this.$data.width,
                     'length' : this.$data.length,
                     'currentPage' : this.pagination.page,
-                    'perPage' : this.pagination.perPage }
+                    'perPage' : this.pagination.perPage
+                }
             },
             getData() {
                 AXIOS.post('/search/executors', this.getParams()).then((response) => {

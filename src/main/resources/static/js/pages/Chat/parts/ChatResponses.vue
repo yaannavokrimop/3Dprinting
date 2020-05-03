@@ -9,12 +9,12 @@
         </v-list-item>
         <v-list-group
                 v-for="response in responses"
-                :key="response.order.description"
+                :key="response.order.name"
                 v-model="response.active"
         >
             <template v-slot:activator>
                 <v-list-item-content>
-                    <v-list-item-title v-text="response.order.description"></v-list-item-title>
+                    <v-list-item-title v-text="response.order.name"></v-list-item-title>
                 </v-list-item-content>
             </template>
             <v-container>
@@ -22,28 +22,56 @@
                     <v-list-item-title v-text="'Статус заказа: '+response.status"></v-list-item-title>
                     <a :href="'#/orders/'+response.order.id">
                         <div class="details">
-                            Подробности...
+                            Подробности о заказе
                         </div>
                     </a>
                     <v-text-field v-model="response.sum" label="Сумма"></v-text-field>
-                    <div v-if="!isExecutor">
-                        <div v-if="response.status ==='BY_CUSTOMER'">
-                            <b-button variant="secondary" disabled block>Вы уже предложили цену</b-button>
-                        </div>
-                        <div v-else>
-                            <b-button variant="success" block @click="makeOffer(response.id.executorId, response.id.orderId, response.sum)">Предложить цену</b-button>
-                        </div>
+                    <div v-if="response.status ==='AGREED'">
+                        Ура!
                     </div>
-                    <div v-if="isExecutor">
-                        <div v-if="response.status ==='BY_EXECUTOR'">
-                            <b-button variant="secondary" disabled block>Вы уже предложили цену</b-button>
+                    <div v-else>
+                        <div v-if="!isExecutor">
+                            <div v-if="response.status ==='BY_CUSTOMER'">
+                                <b-button variant="secondary" disabled block>Вы уже предложили цену</b-button>
+                            </div>
+                            <div v-else>
+                                <div v-if="response.status ==='BY_EXECUTOR'">
+                                    <v-btn icon class="green--text accept" @click="accept(response.id.executorId, response.id.orderId)">
+                                        <v-icon>mdi-checkbox-marked-circle</v-icon>
+                                    </v-btn>
+                                    <v-btn icon class="red--text decline" @click="discuss(response.id.executorId, response.id.orderId)">
+                                        <v-icon>mdi-close-circle</v-icon>
+                                    </v-btn>
+                                </div>
+                                <div v-else>
+                                    <b-button variant="success" block @click="makeOffer(response.id.executorId, response.id.orderId, response.sum)">Предложить цену</b-button>
+                                </div>
+                            </div>
                         </div>
-                        <div v-else>
-                            <b-button variant="success" block @click="makeOffer(response.id.executorId, response.id.orderId, response.sum)">Предложить цену</b-button>
+                        <div v-if="isExecutor">
+                            <div v-if="response.status ==='BY_EXECUTOR'">
+                                <b-button variant="secondary" disabled block>Вы уже предложили цену</b-button>
+                            </div>
+                            <div v-else>
+                                <div v-if="response.status ==='BY_CUSTOMER'">
+                                    <div>
+                                        <v-btn icon class="green--text accept" @click="accept(response.id.executorId, response.id.orderId)">
+                                            <v-icon>mdi-checkbox-marked-circle</v-icon>
+                                        </v-btn>
+                                        <v-btn icon class="red--text decline" @click="discuss(response.id.executorId, response.id.orderId)">
+                                            <v-icon>mdi-close-circle</v-icon>
+                                        </v-btn>
+                                    </div>
+                                </div>
+                                <div v-else>
+                                    <b-button variant="success" block @click="makeOffer(response.id.executorId, response.id.orderId, response.sum)">Предложить цену</b-button>
+                                </div>
+                            </div>
                         </div>
+
+                        <b-button variant="danger" block @click="refuseOffer(response.id.executorId, response.id.orderId)">Отказаться от заказа</b-button>
                     </div>
 
-                    <b-button variant="danger" @click="refuseOffer(response.id.executorId, response.id.orderId)">Отказаться от заказа</b-button>
                 </v-list-item-content>
             </v-container>
         </v-list-group>
@@ -89,6 +117,24 @@
                     console.log(response);
                     location.reload()
                 }).catch(error => console.log(error));
+            },
+            discuss(executorId, orderId) {
+                AXIOS.patch('response/offer/discuss', {
+                    'executorId' : executorId,
+                    'orderId' : orderId
+                }).then((response) => {
+                    console.log(response);
+                    location.reload()
+                }).catch(error => console.log(error));
+            },
+            accept(executorId, orderId) {
+                AXIOS.patch('response/offer/accept', {
+                    'executorId' : executorId,
+                    'orderId' : orderId
+                }).then((response) => {
+                    console.log(response);
+                    location.reload()
+                }).catch(error => console.log(error));
             }
         }
     }
@@ -99,5 +145,13 @@
     .details {
         color: #534e4e;
         text-decoration: none;
+    }
+
+    .accept {
+        margin-left: 20%;
+    }
+
+    .decline {
+        margin-left: 20%;
     }
 </style>

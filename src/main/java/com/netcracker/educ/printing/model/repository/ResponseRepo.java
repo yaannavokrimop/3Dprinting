@@ -1,6 +1,5 @@
 package com.netcracker.educ.printing.model.repository;
 
-
 import com.netcracker.educ.printing.model.bean.ResponseId;
 import com.netcracker.educ.printing.model.entity.Order;
 import com.netcracker.educ.printing.model.entity.Response;
@@ -16,6 +15,7 @@ import java.util.UUID;
 @Repository
 public interface ResponseRepo extends JpaRepository<Response, ResponseId> {
     Response findByOrderAndExecutor (Order order, User executor);
+    List<Response> findAllByOrder (Order order);
     Integer countDistinctByOrderId(UUID orderId);
     Page<Response> findAllByOrderId(UUID orderId, Pageable page);
 }

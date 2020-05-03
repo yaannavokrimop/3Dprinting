@@ -38,7 +38,7 @@ public class ChatController {
 
     @GetMapping("{id}")
     public Chat getChat(@PathVariable("id")UUID id) {
-        log.info("/////////////////////////////////////////////////Chat  id=" + id);
+        log.info("Chat  id=" + id);
         return chatService.getChatById(id);
     }
 

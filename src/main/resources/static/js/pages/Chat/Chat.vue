@@ -14,6 +14,10 @@
                     <v-btn icon class="blue--text emoji-panel" @click="toggleEmojiPanel">
                         <v-icon>mdi-emoticon-outline</v-icon>
                     </v-btn>
+                    <v-spacer></v-spacer>
+                    <v-btn icon class="blue--text send" @click="sendMessage">
+                        <v-icon>mdi-send</v-icon>
+                    </v-btn>
                 </div>
             </v-col>
         </v-row>
@@ -89,6 +93,10 @@
 </script>
 
 <style>
+    .send {
+        margin-right: 2%;
+    }
+
     .scrollable {
         overflow-y: auto;
         height: 90vh;

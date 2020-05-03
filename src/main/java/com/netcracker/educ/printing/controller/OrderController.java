@@ -15,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,9 +28,11 @@ import java.util.*;
 @AllArgsConstructor
 public class OrderController {
 
-    private OrderRepo repo;
-    private UserRepo userRepo;
-    private OrderService orderService;
+    private final OrderRepo repo;
+    private final OrderService orderService;
+
+
+
 
     @GetMapping("/user")
     public ResponseEntity<PaginationBean> getOrdersByUserId(@RequestParam Map<String, String> pageParams) {
@@ -38,15 +41,16 @@ public class OrderController {
         return ResponseEntity.ok(new PaginationBean(ordersPage.getTotalPages(), orders));
     }
 
-    /*@GetMapping
-    public List<Order> getAllOrders(@RequestParam(required = false) String description) {
+    /*
+    @GetMapping
+    public List<Order> getAllOrders(@RequestBody(required = false) String name) {
 
         List<Order> orders = new ArrayList<>();
 
-        if (description == null)
+        if (name == null)
             orders.addAll(repo.findAll());
         else
-            orders.addAll(repo.findByDescriptionContaining(description));
+            orders.addAll(repo.findByNameContaining(name));
 
         return orders;
     }*/
@@ -54,7 +58,7 @@ public class OrderController {
     @GetMapping("{id}")
     public Order getOrderById(@PathVariable("id") UUID id) {
 
-        log.info("/////////////////////////////////////////////////OrderController  id="+id);
+        log.info("get Order by id="+id);
         Optional<Order> orderData = repo.findById(id);
 
         if (orderData.isPresent()) {
@@ -65,30 +69,13 @@ public class OrderController {
     }
 
     @PostMapping
-    public Order createOrder(
-            @RequestBody OrderRepresent inputOrder
-    ) {
-
-            Order order = orderService.create(inputOrder);
-            order.setStatus(OrderStatus.NO_PAY);
-
-
-        return repo.save(order);
+    public Order createOrder(@RequestBody OrderRepresent inputOrder, @AuthenticationPrincipal UserDetailsImpl details) {
+            return orderService.create(inputOrder,details.getId());
     }
 
     @PostMapping("draft")
-    public Order createDraft(
-            @RequestBody Order inputOrder
-    ) {
-        UserDetailsImpl principal = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        User user = userRepo.findByEmail(principal.getEmail());
-
-        inputOrder.setUser(user);
-        inputOrder.setId(UUID.randomUUID());
-        inputOrder.setStatus(OrderStatus.DRAFT);
-        inputOrder.setDate(new Date());
-
-        return repo.save(inputOrder);
+    public Order createDraft(@RequestBody OrderRepresent inputOrder,@AuthenticationPrincipal UserDetailsImpl details) {
+        return orderService.createDraft(inputOrder,details.getId());
     }
 
     @PutMapping("{id}")
@@ -104,10 +91,6 @@ public class OrderController {
 
     @DeleteMapping("{id}")
     public UUID deleteOrder(@PathVariable("id") UUID id) {
-
-        repo.deleteById(id);
-
-        return id;
-
+        return orderService.deleteOrder(id);
     }
 }

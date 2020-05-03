@@ -2,6 +2,7 @@ package com.netcracker.educ.printing.service;
 
 import com.netcracker.educ.printing.exception.ResponseCreationException;
 import com.netcracker.educ.printing.exception.NotFoundException;
+import com.netcracker.educ.printing.model.bean.OrderStatus;
 import com.netcracker.educ.printing.model.bean.ResponseId;
 import com.netcracker.educ.printing.model.bean.ResponseStatus;
 import com.netcracker.educ.printing.model.entity.Chat;
@@ -18,13 +19,16 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.*;
 
 @Service
 @AllArgsConstructor
+@Slf4j
 public class ResponseService {
     private final UserRepo userRepo;
     private final OrderRepo orderRepo;
@@ -58,12 +62,83 @@ public class ResponseService {
             Optional<Response> responseOptional = Optional.ofNullable(responseRepo.findByOrderAndExecutor(customerOrder, executor));
             Response response = responseOptional.orElse(null);
 
-            if (response!=null && !response.getStatus().equals(ResponseStatus.REFUSED)) {
+            if (response != null && !response.getStatus().equals(ResponseStatus.REFUSED)) {
                 chatResponses.add(response);
             }
         }
+        log.info("Responses for chat id=" + chatId);
 
         return chatResponses;
+    }
+
+    public void makeAnOffer(ResponseRepresent responseRepresent) {
+        Response dbResponse = responseRepo.findById(new ResponseId(
+                responseRepresent.getOrderId(),
+                responseRepresent.getExecutorId()
+        )).orElse(null);
+
+        if (dbResponse != null) {
+            dbResponse.setSum(responseRepresent.getSum());
+
+            if (responseRepresent.isExecutor()) {
+                dbResponse.setStatus(ResponseStatus.BY_EXECUTOR);
+            } else {
+                dbResponse.setStatus(ResponseStatus.BY_CUSTOMER);
+            }
+
+            responseRepo.save(dbResponse);
+            log.info("Successful offer=" + responseRepresent.getSum());
+        }
+    }
+
+    public void refuseResponse(ResponseRepresent responseRepresent) {
+        Response dbResponse = responseRepo.findById(new ResponseId(
+                responseRepresent.getOrderId(),
+                responseRepresent.getExecutorId()
+        )).orElse(null);
+
+        assert dbResponse != null;
+        dbResponse.setStatus(ResponseStatus.REFUSED);
+
+        responseRepo.save(dbResponse);
+        log.info("Response Refused=" + dbResponse.getSum());
+    }
+
+    public void refuseOffer(ResponseRepresent responseRepresent) {
+        Response dbResponse = responseRepo.findById(new ResponseId(
+                responseRepresent.getOrderId(),
+                responseRepresent.getExecutorId()
+        )).orElse(null);
+
+        assert dbResponse != null;
+        dbResponse.setStatus(ResponseStatus.DISCUSSION);
+
+        responseRepo.save(dbResponse);
+        log.info("Response Discuss=" + dbResponse.getSum());
+    }
+
+    public void acceptOffer(@RequestBody ResponseRepresent responseRepresent) {
+        Response dbResponse = responseRepo.findById(new ResponseId(
+                responseRepresent.getOrderId(),
+                responseRepresent.getExecutorId()
+        )).orElse(null);
+
+        assert dbResponse != null;
+        List<Response> thisOrderResponses = responseRepo.findAllByOrder(dbResponse.getOrder());
+
+        for (Response response : thisOrderResponses) {
+            response.setStatus(ResponseStatus.REFUSED);
+            responseRepo.save(response);
+        }
+
+        dbResponse.setStatus(ResponseStatus.AGREED);
+        responseRepo.save(dbResponse);
+
+        Order currentOrder = dbResponse.getOrder();
+        currentOrder.setStatus(OrderStatus.NO_PAY);
+        orderRepo.save(currentOrder);
+
+        log.info("Response agreed=" + dbResponse.getSum());
     }
 
     public Page<Response> getPageOfResponses(Map<String, String> params) {

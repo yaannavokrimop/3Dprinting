@@ -98,10 +98,9 @@
 
         methods: {
             scrollToEnd: function () {
-                this.$nextTick(() => {
-                    var container = this.$el.querySelector('.messages')
-                    container.scrollTop = container.scrollHeight
-                })
+                window.scrollTo(0, document.body.scrollHeight || document.documentElement.scrollHeight);
+                document.body.scrollTop = document.body.scrollHeight;
+
             },
         }
     }
