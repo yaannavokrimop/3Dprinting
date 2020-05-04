@@ -16,7 +16,8 @@ import Addresses from "pages/Addresses.vue";
 import SelectEquipment from 'pages/SelectEquipment.vue'
 import Chat from 'pages/Chat/Chat.vue'
 import ChatList from 'pages/Chat/ChatList.vue'
-import Responses from 'pages/Responses.vue'
+import CustomerResponses from "../pages/CustomerResponses.vue"
+import ExecutorResponses from "../pages/ExecutorResponses.vue"
 
 
 Vue.use(VueRouter);
@@ -39,7 +40,8 @@ let router = new VueRouter({
         {path: '/add_equipment', component: SelectEquipment, meta: {isExecutor: true}},
         {path: '/chat/:id', component: Chat},
         {path: '/chatList', component: ChatList},
-        {path: '/responses/:orderId', component: Responses}
+        {path: '/responses/:orderId', component: CustomerResponses},
+        {path: '/response', component: ExecutorResponses, meta: {isExecutor: true}},
         // {path:'/profile/:id',component:'Profile'},
         // {path:'*',component:'Main'}
     ]

@@ -63,7 +63,7 @@
         },
         methods: {
             getResponses() {
-                AXIOS.get('/response/order?page=' + this.pagination.page +
+                AXIOS.get('/response/forcustomer?page=' + this.pagination.page +
                     '&perPage=' + this.pagination.perPage +
                     '&orderId=' + this.$route.params.orderId)
                     .then((response) => {

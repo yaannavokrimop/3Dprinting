@@ -10,6 +10,7 @@ public class SearchParam {
     int height;
     int width;
     int length;
+    List<String> materials;
     int currentPage;
     int perPage;
 }

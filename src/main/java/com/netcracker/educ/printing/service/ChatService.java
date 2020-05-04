@@ -32,43 +32,46 @@ public class ChatService {
         User customer = userRepo.findById(represent.getCustomerId())
                 .orElseThrow(NotFoundException::new);
         if (chatRepo.existsByExecutorAndCustomer(executor, customer))
-            throw new CreatingResponseException("Этот чат уже есть!");
+            throw new ResponseCreationException("Этот чат уже есть!");
         chatRepo.save(new Chat(executor, customer));
 
     }
 
-    public List<ChatRepresent> chatToChatRepresent (List<Chat> chats) {
+    public List<ChatRepresent> chatsToChatRepresents(List<Chat> chats) {
         List<ChatRepresent> chatRepresents = new ArrayList<>();
         UserDetailsImpl principal = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User currentUser = userRepo.findByEmail(principal.getEmail());
-
         for (Chat chat : chats) {
-            User companion;
-            Boolean isExecutor;
-
-            if (currentUser.getId().equals(chat.getCustomer().getId())) {
-                companion = chat.getExecutor();
-                isExecutor = false;
-            } else {
-                companion = chat.getCustomer();
-                isExecutor = true;
-            }
-
-            chatRepresents.add(new ChatRepresent(
-                    chat.getId(),
-                    chat.getExecutor().getId(),
-                    chat.getCustomer().getId(),
-                    companion.getName() + " " + companion.getSurname(),
-                    isExecutor
-                    )
-            );
+            chatRepresents.add(chatToChatRepresent(chat, currentUser));
         }
-
         return chatRepresents;
+    }
+
+    public ChatRepresent chatToChatRepresent(Chat chat, User currentUser) {
+        User companion;
+        Boolean isExecutor;
+        if (currentUser.getId().equals(chat.getCustomer().getId())) {
+            companion = chat.getExecutor();
+            isExecutor = false;
+        } else {
+            companion = chat.getCustomer();
+            isExecutor = true;
+        }
+        return new ChatRepresent(
+                        chat.getId(),
+                        chat.getExecutor().getId(),
+                        chat.getCustomer().getId(),
+                        companion.getName() + " " + companion.getSurname(),
+                        isExecutor
+                );
     }
 
     public Chat getChatById(UUID chatId) {
         Optional<Chat> chatOptional= chatRepo.findById(chatId);
         return chatOptional.orElse(null);
+    }
+
+    public Chat getChatByExecutorAndOrder(UUID executorId, UUID customerId) {
+        return chatRepo.findByExecutorIdAndCustomerId(executorId, customerId).orElseThrow(NotFoundException::new);
     }
 }

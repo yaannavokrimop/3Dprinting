@@ -8,12 +8,14 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @Repository
 public interface MaterialRepo extends JpaRepository<Material, UUID> {
     Material findByType(MaterialType type);
     Material findByMatTitle(String matTitle);
+    List<Material> findAllByMatTitleIn(List<String> matTitles);
     @Query("select m.matTitle from Material m where lower(m.matTitle) like lower(concat('%',:title,'%'))")
     List<String> findMatTitleByMatTitleContaining(@Param(value = "title") String titlePart);
 

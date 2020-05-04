@@ -141,7 +141,7 @@ public class ResponseService {
         log.info("Response agreed=" + dbResponse.getSum());
     }
 
-    public Page<Response> getPageOfResponses(Map<String, String> params) {
+    public Page<Response> getPageOfResponsesForCustomer(Map<String, String> params) {
         UUID orderId = UUID.fromString(params.get("orderId"));
         int currentPage = Integer.parseInt(params.get("page"))- 1;
         int perPage = Integer.parseInt(params.get("perPage"));
@@ -149,6 +149,12 @@ public class ResponseService {
         return responseRepo.findAllByOrderId(orderId, page);
     }
 
+    public Page<Response> getPageOfResponsesForExecutor(Map<String, String> params, UUID execId) {
+        int currentPage = Integer.parseInt(params.get("page"))- 1;
+        int perPage = Integer.parseInt(params.get("perPage"));
+        Pageable page = PageRequest.of(currentPage, perPage , Sort.by("date").descending());
+        return responseRepo.findAllByExecutorId(execId, page);
+    }
     public ResponseRepresent responseToResponseRepresent(Response response) {
         return new ResponseRepresent(
                 response.getExecutor().getId(),

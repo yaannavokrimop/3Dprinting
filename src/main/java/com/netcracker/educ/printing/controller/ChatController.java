@@ -1,5 +1,6 @@
 package com.netcracker.educ.printing.controller;
 
+import com.netcracker.educ.printing.exception.NotFoundException;
 import com.netcracker.educ.printing.exception.ResponseCreationException;
 import com.netcracker.educ.printing.model.entity.Chat;
 import com.netcracker.educ.printing.model.entity.User;
@@ -12,6 +13,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,7 +35,7 @@ public class ChatController {
         UserDetailsImpl principal = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User currentUser = userRepo.findByEmail(principal.getEmail());
         List<Chat> myChats = chatRepo.findAllByExecutorOrCustomer(currentUser, currentUser);
-        return chatService.chatToChatRepresent(myChats);
+        return chatService.chatsToChatRepresents(myChats);
     }
 
     @GetMapping("{id}")
@@ -50,5 +52,17 @@ public class ChatController {
             return ResponseEntity.badRequest().body(ex.getMessage());
         }
         return ResponseEntity.ok("Чат успешно создан.");
+    }
+
+    @GetMapping("/response")
+    public ResponseEntity getChatForResponse(@RequestParam UUID customerId, @AuthenticationPrincipal UserDetailsImpl principal) {
+        Chat chat;
+        try {
+            chat = chatService.getChatByExecutorAndOrder(principal.getId(), customerId);
+        } catch (NotFoundException ex) {
+            return ResponseEntity.badRequest().body("Чат не найден.");
+        }
+        User user = userRepo.findByEmail(principal.getEmail());
+        return ResponseEntity.ok(chatService.chatToChatRepresent(chat, user));
     }
 }

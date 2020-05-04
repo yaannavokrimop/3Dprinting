@@ -33,27 +33,29 @@ public class OrderService {
     private final UserRepo userRepo;
     private final OrderRepo orderRepo;
     private final ResponseRepo responseRepo;
+    private final MaterialService materialService;
 
     public Order create(OrderRepresent represent,UUID userId) throws RuntimeException {
         represent.setId(UUID.randomUUID());
-        Order order = new Order(represent,OrderStatus.NO_PAY,new Date(),materialsFromList(represent.getMaterial()),userRepo.findById(userId).orElseThrow(NotFoundException::new));
+        Order order = new Order(represent,OrderStatus.NO_PAY,new Date(),materialsFromList(represent.getMaterials()),userRepo.findById(userId).orElseThrow(NotFoundException::new));
         Order dbOrder=orderRepo.save(order);
         log.info("User {} created order {}",userId,order.getId());
         return dbOrder;
     }
 
-    public Page<Order> getPageOfOrders(Map<String, String> pageParams) {
-        UserDetailsImpl principal = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    public Page<Order> getPageOfOrders(Map<String, String> pageParams, UUID principalId) {
         int currentPage = Integer.parseInt(pageParams.get("page"))- 1;
         int perPage = Integer.parseInt(pageParams.get("perPage"));
+        String name = pageParams.get("orderName");
         Pageable page = PageRequest.of(currentPage, perPage , Sort.by("date").descending());
-        return orderRepo.findAllByUserId(principal.getId(), page);
+        if ( name == null || name.isEmpty()|| name.equals("null")) return orderRepo.findAllByUserId(principalId, page);
+        else return orderRepo.findAllByNameContainingAndUserId(name, principalId, page);
     }
 
     public Order createDraft(OrderRepresent inputOrder, UUID userId) {
         User user = userRepo.findById(userId).orElseThrow(NotFoundException::new);
         inputOrder.setId(UUID.randomUUID());
-        Order order=new Order(inputOrder,OrderStatus.DRAFT,new Date(),materialsFromList(inputOrder.getMaterial()),user);
+        Order order=new Order(inputOrder,OrderStatus.DRAFT,new Date(),materialsFromList(inputOrder.getMaterials()),user);
         Order dbOrder=orderRepo.save(order);
         log.info("User {} created orderDraft {}",userId,order.getId());
         return dbOrder;
@@ -77,11 +79,12 @@ public class OrderService {
         return new OrderRepresent(
                 order.getId(),
                 order.getSum(),
+                order.getName(),
                 order.getDescription(),
                 order.getHeight(),
                 order.getWidth(),
                 order.getWidth(),
-                order.getMaterials().toString(),
+                materialService.MaterialSetToMatTitleList(order.getMaterials()),
                 responseRepo.countDistinctByOrderId(order.getId()),
                 order.getStatus(),
                 order.getFile(),

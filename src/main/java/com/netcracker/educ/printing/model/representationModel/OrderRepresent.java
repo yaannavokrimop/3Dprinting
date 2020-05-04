@@ -36,7 +36,7 @@ public class OrderRepresent implements Pageable {
     private int length;
 
     @NotNull
-    private List<String> material;
+    private List<String> materials;
 
     private int responsesCount;
 

@@ -17,10 +17,10 @@
         <v-content>
             <div class="col-md-8">
                 <div class="input-group mb-5">
-                    <input type="text" class="form-control" placeholder="Имя заказа"/>
+                    <input type="text" class="form-control" placeholder="Имя заказа" v-model="orderName"/>
                     <div class="input-group-append">
-                        <button class="btn btn-outline-secondary" type="button"> Найти</button>
-                        <button class="btn btn-outline-secondary" type="button"> Показать Всех</button>
+                        <button class="btn btn-outline-secondary" type="button" @click="findOrders"> Найти</button>
+                        <button class="btn btn-outline-secondary" type="button" @click="showAll"> Показать Всех</button>
                     </div>
                 </div>
             </div>
@@ -50,13 +50,13 @@
                                 <strong>Сумма: {{order.sum}}</strong>
                             </v-list-item-subtitle>
                             <v-list-item-subtitle>
-                                <strong>Получено {{order.responsesCount}} откликов </strong>
-                            </v-list-item-subtitle>
-                            <v-list-item-subtitle>
                                 <div>
                                     <strong>Материалы: <span
-                                            v-for="material of order.materials"> {{material.matTitle}}  </span></strong>
+                                            v-for="material of order.materials"> {{material}}  </span></strong>
                                 </div>
+                            </v-list-item-subtitle>
+                            <v-list-item-subtitle>
+                                <strong>Получено {{order.responsesCount}} откликов </strong>
                             </v-list-item-subtitle>
                         </v-list-item-content>
                     </v-list-item>
@@ -147,6 +147,7 @@
                 currentOrder: null,
                 currentIndex: -1,
                 currentStatus: null,
+                orderName: null,
                 accessToken: localStorage.getItem('accessToken'),
                 currentExecutor: localStorage.getItem('currentExecutor'),
                 pagination: {
@@ -163,7 +164,10 @@
         },
         methods: {
             getOrders() {
-                AXIOS.get('/order/user?page=' + this.pagination.page + '&perPage=' + this.pagination.perPage).then((response) => {
+                AXIOS.get('/order/user?page=' + this.pagination.page +
+                    '&perPage=' + this.pagination.perPage +
+                    '&orderName=' + this.$data.orderName
+                ).then((response) => {
                     this.orders = response.data.content;
                     this.pagination.total = response.data.pageCount;
                     if (this.pagination.total > 1) this.pagination.need = true;
@@ -216,6 +220,17 @@
             watchResponses() {
                 localStorage.setItem('order', JSON.stringify(this.currentOrder));
                 this.$router.push('/responses/' + this.currentOrder.id);
+            },
+            findOrders() {
+                this.pagination.need = false;
+                this.pagination.page = 1;
+                this.getOrders();
+            },
+            showAll() {
+                this.pagination.page = 1;
+                this.pagination.need = false;
+                this.$data.orderName = null;
+                this.getOrders();
             }
         }
     }

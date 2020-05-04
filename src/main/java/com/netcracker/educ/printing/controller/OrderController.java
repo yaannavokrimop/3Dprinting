@@ -31,29 +31,12 @@ public class OrderController {
     private final OrderRepo repo;
     private final OrderService orderService;
 
-
-
-
     @GetMapping("/user")
-    public ResponseEntity<PaginationBean> getOrdersByUserId(@RequestParam Map<String, String> pageParams) {
-        Page<Order> ordersPage = orderService.getPageOfOrders(pageParams);
+    public ResponseEntity<PaginationBean> getOrdersByUserId(@RequestParam Map<String, String> pageParams, @AuthenticationPrincipal UserDetailsImpl principal) {
+        Page<Order> ordersPage = orderService.getPageOfOrders(pageParams, principal.getId());
         List<OrderRepresent> orders = orderService.ordersToOrderRepresents(ordersPage.getContent());
         return ResponseEntity.ok(new PaginationBean(ordersPage.getTotalPages(), orders));
     }
-
-    /*
-    @GetMapping
-    public List<Order> getAllOrders(@RequestBody(required = false) String name) {
-
-        List<Order> orders = new ArrayList<>();
-
-        if (name == null)
-            orders.addAll(repo.findAll());
-        else
-            orders.addAll(repo.findByNameContaining(name));
-
-        return orders;
-    }*/
 
     @GetMapping("{id}")
     public Order getOrderById(@PathVariable("id") UUID id) {

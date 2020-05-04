@@ -18,4 +18,5 @@ public interface ResponseRepo extends JpaRepository<Response, ResponseId> {
     List<Response> findAllByOrder (Order order);
     Integer countDistinctByOrderId(UUID orderId);
     Page<Response> findAllByOrderId(UUID orderId, Pageable page);
+    Page<Response> findAllByExecutorId(UUID execId, Pageable page);
 }

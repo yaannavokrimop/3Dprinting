@@ -32,6 +32,7 @@
                         v-model="materialName"
                         :items="materialItems"
                         deletable-chips
+                        cache-items
                         dense
                         outlined
                         hide-no-data
@@ -43,7 +44,7 @@
                         append
                     ></v-autocomplete>
 
-                        <button class="btn btn-outline-secondary" type="button" @click="getData"> Найти</button>
+                        <button class="btn btn-outline-secondary" type="button" @click="findData"> Найти</button>
                         <button class="btn btn-outline-secondary" type="button" @click="showAll"> Показать Всех </button>
                     </div>
                 </div>
@@ -62,7 +63,7 @@
         </div>
         <div class="mt-2"></div>
         <v-content>
-            <h3>Исполнители</h3>
+            <h3 align="center">Исполнители</h3>
             <ul class="list-group">
                 <li class="list-group-item"
                     v-for="(executor,index) in executors"
@@ -160,6 +161,7 @@
                     this.$data.height = this.$data.currentOrder.height;
                     this.$data.width = this.$data.currentOrder.width;
                     this.$data.length = this.$data.currentOrder.length;
+                    this.$data.materialName = this.$data.currentOrder.materials;
                     this.getData();
                 }).catch(error => console.log(error));
 
@@ -178,6 +180,7 @@
                     'height' : this.$data.height,
                     'width' : this.$data.width,
                     'length' : this.$data.length,
+                    'materials': this.$data.materialName,
                     'currentPage' : this.pagination.page,
                     'perPage' : this.pagination.perPage
                 }
@@ -200,11 +203,18 @@
             },
             showAll() {
                 this.$data.selectCity = null;
-                this.$data.items = [],
+                this.$data.items = [];
                 this.$data.height = null;
                 this.$data.width = null;
                 this.$data.length = null;
+                this.$data.materialName = null;
                 this.pagination.page = 1;
+                this.pagination.need = false;
+                this.getData();
+            },
+            findData() {
+                this.pagination.page = 1;
+                this.pagination.need = false;
                 this.getData();
             },
             clearOrder() {
