@@ -3,7 +3,7 @@
             <v-col sm="2" class="scrollable">
                 <responses></responses>
             </v-col>
-            <v-col sm="10" style="position: relative;">
+            <v-col sm="8" style="position: relative;">
                 <div class="chat-container" ref="chatContainer">
                     <message :messages="messages"></message>
                 </div>
@@ -20,6 +20,9 @@
                     </v-btn>
                 </div>
             </v-col>
+            <v-col sm="2" class="scrollable">
+                <orders></orders>
+            </v-col>
         </v-row>
 </template>
 
@@ -27,6 +30,7 @@
     import Message from './parts/Message.vue'
     import EmojiPicker from './parts/EmojiPicker.vue'
     import Responses from './parts/ChatResponses.vue'
+    import ChatOrders from './parts/ChatOrders.vue';
     import {AXIOS} from "../http-common";
 
     export default {
@@ -50,7 +54,8 @@
         components: {
             'message': Message,
             'emoji-picker': EmojiPicker,
-            'responses': Responses
+            'responses': Responses,
+            'orders': ChatOrders
         },
         methods: {
             sendMessage() {

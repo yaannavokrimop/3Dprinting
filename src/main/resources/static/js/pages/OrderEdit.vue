@@ -15,7 +15,7 @@
 
 <script>
     import OrderDataEdit from "components/OrderDataEdit.vue";
-    import {AXIOS} from "../pages/http-common";
+    import {AXIOS} from "./http-common";
     export default {
         name: "OrderEdit",
         components: {OrderDataEdit},

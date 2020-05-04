@@ -223,8 +223,9 @@
                 }).catch(error => console.log(error));
 
                 localStorage.removeItem('currentOrder');
-                this.$router.push('/orders');
 
+                this.$router.push('/chatList');
+                location.reload();
             },
             selectOrder() {
                 localStorage.setItem('currentExecutor', this.currentExecutor.id);

@@ -1,22 +1,25 @@
 package com.netcracker.educ.printing.controller;
 
 import com.netcracker.educ.printing.exception.NotFoundException;
-import com.netcracker.educ.printing.model.bean.OrderStatus;
 import com.netcracker.educ.printing.model.bean.PaginationBean;
+import com.netcracker.educ.printing.model.bean.ResponseStatus;
+import com.netcracker.educ.printing.model.entity.Chat;
 import com.netcracker.educ.printing.model.entity.Order;
+import com.netcracker.educ.printing.model.entity.Response;
 import com.netcracker.educ.printing.model.entity.User;
+import com.netcracker.educ.printing.model.repository.ChatRepo;
 import com.netcracker.educ.printing.model.repository.OrderRepo;
-import com.netcracker.educ.printing.model.repository.UserRepo;
 import com.netcracker.educ.printing.model.representationModel.OrderRepresent;
 import com.netcracker.educ.printing.security.UserDetailsImpl;
+import com.netcracker.educ.printing.service.ChatService;
 import com.netcracker.educ.printing.service.OrderService;
+import com.netcracker.educ.printing.service.ResponseService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
@@ -30,9 +33,9 @@ public class OrderController {
 
     private final OrderRepo repo;
     private final OrderService orderService;
-
-
-
+    private final ChatRepo chatRepo;
+    private final ChatService chatService;
+    private final ResponseService responseService;
 
     @GetMapping("/user")
     public ResponseEntity<PaginationBean> getOrdersByUserId(@RequestParam Map<String, String> pageParams) {
@@ -64,6 +67,21 @@ public class OrderController {
         } else {
             throw new NotFoundException();
         }
+    }
+
+    @GetMapping("forchat/{chatId}")
+    public List<Order> getOrdersForChat(@PathVariable(name = "chatId") UUID chatId) {
+        List<Response> chatResponses = responseService.getResponsesForChat(chatId);
+
+        List<Order> chatOrders = new ArrayList<>();
+
+        for (Response response : chatResponses) {
+            if (response.getStatus() == ResponseStatus.AGREED) {
+                chatOrders.add(response.getOrder());
+            }
+        }
+
+        return chatOrders;
     }
 
     @PostMapping

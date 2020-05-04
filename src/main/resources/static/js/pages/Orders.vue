@@ -193,7 +193,9 @@
                 }).then((response) => {
                     console.log(response);
                     localStorage.removeItem('currentExecutor');
-                    this.$router.push('/orders');
+
+                    this.$router.push('/chatList');
+                    location.reload();
                 }).catch(error => console.log(error));
 
             },

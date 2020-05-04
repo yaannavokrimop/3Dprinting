@@ -5,7 +5,7 @@
                 <v-icon>mdi-clipboard-text-multiple-outline</v-icon>
             </v-list-item-icon>
 
-            <v-list-item-title>Заказы</v-list-item-title>
+            <v-list-item-title>В обсуждении</v-list-item-title>
         </v-list-item>
         <v-list-group
                 v-for="response in responses"
@@ -27,7 +27,7 @@
                     </a>
                     <v-text-field v-model="response.sum" label="Сумма"></v-text-field>
                     <div v-if="response.status ==='AGREED'">
-                        Ура!
+                        Вы договорились с этим исполнителем.
                     </div>
                     <div v-else>
                         <div v-if="!isExecutor">
