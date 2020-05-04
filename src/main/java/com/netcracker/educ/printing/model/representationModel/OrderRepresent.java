@@ -1,5 +1,6 @@
 package com.netcracker.educ.printing.model.representationModel;
 
+import com.netcracker.educ.printing.model.entity.User;
 import com.netcracker.educ.printing.model.bean.OrderStatus;
 import com.netcracker.educ.printing.model.bean.Pageable;
 import lombok.AllArgsConstructor;
@@ -7,10 +8,9 @@ import lombok.Data;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 import java.util.Date;
-import java.util.UUID;
+
 
 @Data
 @AllArgsConstructor
