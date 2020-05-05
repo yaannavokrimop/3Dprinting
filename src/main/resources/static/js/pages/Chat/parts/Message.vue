@@ -7,7 +7,7 @@
                 absolute
         >
             <v-toolbar-title>
-                <a :href="'#/user/'+companionId">
+                <a :href="'#/profile/'+companionId">
                     <div class="link">
                         <h3>{{currentChat.companion}}</h3>
                     </div>

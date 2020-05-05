@@ -56,7 +56,11 @@ public class UserRestController {
     @GetMapping("/role")
     public Boolean checkUserRoleCustomer(){
         UserDetailsImpl principal = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return userService.checkUserRole(principal);
+        return userService.checkUserRole(principal.getId());
+    }
+    @GetMapping("/role/{id}")
+    public Boolean checkUserRoleById(@PathVariable("id") UUID id){
+        return userService.checkUserRole(id);
     }
 
 

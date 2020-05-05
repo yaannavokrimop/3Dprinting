@@ -191,7 +191,8 @@
                 this.currentIndex = index;
             },
             goToProfile(executor) {
-                console.log('пока не реализовано');
+             var s = "/profile/" +  this.$data.currentExecutor.id;
+              this.$router.push(s)
             },
             showAll() {
                 this.$data.selectCity = null;
