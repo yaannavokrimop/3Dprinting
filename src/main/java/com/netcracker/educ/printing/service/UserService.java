@@ -1,5 +1,6 @@
 package com.netcracker.educ.printing.service;
 
+import com.netcracker.educ.printing.exception.NotFoundException;
 import com.netcracker.educ.printing.model.bean.Role;
 import com.netcracker.educ.printing.model.entity.Address;
 import com.netcracker.educ.printing.model.entity.User;
@@ -144,8 +145,8 @@ public class UserService {
 
     }
 
-    public Boolean checkUserRole(UserDetailsImpl principal) {
-        User user=userRepo.findByEmail(principal.getEmail());
+    public Boolean checkUserRole(UUID userId) {
+        User user=userRepo.findById(userId).orElseThrow(NotFoundException::new);
         return user.getRole().toString().equals("CUSTOMER");
 
     }

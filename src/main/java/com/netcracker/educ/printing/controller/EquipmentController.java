@@ -54,6 +54,11 @@ public class EquipmentController {
         return equipmentService.getUserEquipment(principal.getId());
     }
 
+    @GetMapping("/user/{id}")
+    public List<EquipmentRepresent> getUserEquipById(@PathVariable("id") UUID userId) {
+        return equipmentService.getUserEquipment(userId);
+    }
+
 
     @PostMapping
     public Equipment createEquip(@RequestBody EquipmentRepresent inputEquip) {

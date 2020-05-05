@@ -3,8 +3,6 @@
         <v-flex>
         <user-data v-bind:user='user'></user-data>
         </v-flex>
-
-
          </v-container>
 
 </template>
