@@ -19,19 +19,41 @@
             </template>
             <v-container>
                 <v-list-item-content>
-                    <v-list-item-title v-text="'Статус заказа: '+order.status"></v-list-item-title>
                     <div v-if="!isExecutor">
                         <div v-if="order.status ==='NO_PAY'">
+                            <v-list-item-title v-text="'Вы должны оплатить заказ'"></v-list-item-title>
                             <b-button variant="primary" block @click="pay(order.id)">Подтвердить оплату</b-button>
                         </div>
+                        <div v-if="order.status ==='PAYED'">
+                            <v-list-item-title v-text="'Ожидайте выполнения'"></v-list-item-title>
+                            <v-list-item-title v-text="'заказа'"></v-list-item-title>
+                        </div>
                         <div v-if="order.status ==='DONE'">
+                            <v-list-item-title v-text="'Подтвердите получение'"></v-list-item-title>
+                            <v-list-item-title v-text="'заказа'"></v-list-item-title>
+
                             <b-button variant="primary" block @click="receive(order.id)">Подтвердить получение</b-button>
                         </div>
                     </div>
                     <div v-else>
+                        <div v-if="order.status ==='NO_PAY'">
+                            <v-list-item-title v-text="'Ожидайте оплаты заказа'"></v-list-item-title>
+                        </div>
                         <div v-if="order.status ==='PAYED'">
+                            <v-list-item-title v-text="'Подтвердите выполнение'"></v-list-item-title>
+                            <v-list-item-title v-text="'заказа'"></v-list-item-title>
+
                             <b-button variant="primary" block @click="orderDone(order.id)">Деталь выполнена</b-button>
                         </div>
+                        <div v-if="order.status ==='DONE'">
+                            <v-list-item-title v-text="'Вы изготовили деталь.'"></v-list-item-title><br>
+                            <v-list-item-title v-text="'Пользователь должен'"></v-list-item-title>
+                            <v-list-item-title v-text="'подтвердить получение.'"></v-list-item-title>
+
+                        </div>
+                    </div>
+                    <div v-if="order.status ==='RECEIVED'">
+                        <v-list-item-title v-text="'Заказ выполнен'"></v-list-item-title>
                     </div>
 
                 </v-list-item-content>
