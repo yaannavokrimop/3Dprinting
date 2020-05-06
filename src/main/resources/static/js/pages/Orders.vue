@@ -2,7 +2,7 @@
     <v-container>
         <div v-if="currentExecutor">
             <b-alert show dismissible fade>
-                Вы выбираете заказ для исполнителя № {{currentExecutor}}
+                Вы выбираете заказ для исполнителя {{currentExecutorName}}
                 <b-button class="mt-3" variant="outline-danger" block @click="clearExecutor">
                     Очистить
                 </b-button>
@@ -139,6 +139,7 @@
                 currentStatus: null,
                 accessToken: localStorage.getItem('accessToken'),
                 currentExecutor: localStorage.getItem('currentExecutor'),
+                currentExecutorName: localStorage.getItem('currentExecutorName'),
                 pagination: {
                     page: 1,
                     total: 0,

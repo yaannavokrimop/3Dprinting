@@ -27,7 +27,7 @@
                     </a>
                     <v-text-field v-model="response.sum" label="Сумма"></v-text-field>
                     <div v-if="response.status ==='AGREED'">
-                        Вы договорились с этим исполнителем.
+                        Вы договорились по поводу этого заказа.
                     </div>
                     <div v-else>
                         <div v-if="!isExecutor">

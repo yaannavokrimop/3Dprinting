@@ -229,6 +229,7 @@
             },
             selectOrder() {
                 localStorage.setItem('currentExecutor', this.currentExecutor.id);
+                localStorage.setItem('currentExecutorName', this.currentExecutor.name + " "+ this.currentExecutor.surname);
                 this.$router.push('/orders');
             },
 

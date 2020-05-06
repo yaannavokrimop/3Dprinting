@@ -1,6 +1,7 @@
 package com.netcracker.educ.printing.controller;
 
 import com.netcracker.educ.printing.exception.NotFoundException;
+import com.netcracker.educ.printing.model.bean.OrderStatus;
 import com.netcracker.educ.printing.model.bean.PaginationBean;
 import com.netcracker.educ.printing.model.bean.ResponseStatus;
 import com.netcracker.educ.printing.model.entity.Chat;
@@ -108,5 +109,44 @@ public class OrderController {
     @DeleteMapping("{id}")
     public UUID deleteOrder(@PathVariable("id") UUID id) {
         return orderService.deleteOrder(id);
+    }
+
+    @PatchMapping("/pay/{id}")
+    public Order payOrder(@PathVariable("id") UUID id) {
+        Order order = repo.findById(id).orElse(null);
+
+        assert order != null;
+        order.setStatus(OrderStatus.PAYED);
+
+        repo.save(order);
+        log.info("Order payed=" + order.getId());
+
+        return order;
+    }
+
+    @PatchMapping("/done/{id}")
+    public Order doneOrder(@PathVariable("id") UUID id) {
+        Order order = repo.findById(id).orElse(null);
+
+        assert order != null;
+        order.setStatus(OrderStatus.DONE);
+
+        repo.save(order);
+        log.info("Order done=" + order.getId());
+
+        return order;
+    }
+
+    @PatchMapping("/receive/{id}")
+    public Order receivedOrder(@PathVariable("id") UUID id) {
+        Order order = repo.findById(id).orElse(null);
+
+        assert order != null;
+        order.setStatus(OrderStatus.RECEIVED);
+
+        repo.save(order);
+        log.info("Order received=" + order.getId());
+
+        return order;
     }
 }

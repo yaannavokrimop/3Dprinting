@@ -31,7 +31,7 @@ public class MessageController {
 
         List<Message> messageList = messageService.getMessageByChat(chatId, principal);
         List<MessageRepresent> messageRepresents = new ArrayList<>();
-        SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
+        SimpleDateFormat format = new SimpleDateFormat("HH:mm");
 
         for (Message message : messageList) {
             MessageRepresent represent = new MessageRepresent(message.getText(), message.getChat().getId());
