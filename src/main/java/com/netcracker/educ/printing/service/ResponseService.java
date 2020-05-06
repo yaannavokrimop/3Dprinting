@@ -58,7 +58,7 @@ public class ResponseService {
             Optional<Response> responseOptional = Optional.ofNullable(responseRepo.findByOrderAndExecutor(customerOrder, executor));
             Response response = responseOptional.orElse(null);
 
-            if (response != null && !response.getStatus().equals(ResponseStatus.REFUSED)) {
+            if (response != null && !response.getStatus().equals(ResponseStatus.REFUSED) ) {
                 chatResponses.add(response);
             }
         }

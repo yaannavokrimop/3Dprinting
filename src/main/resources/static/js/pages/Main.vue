@@ -224,11 +224,13 @@
                 }).catch(error => console.log(error));
 
                 localStorage.removeItem('currentOrder');
-                this.$router.push('/orders');
 
+                this.$router.push('/chatList');
+                location.reload();
             },
             selectOrder() {
                 localStorage.setItem('currentExecutor', this.currentExecutor.id);
+                localStorage.setItem('currentExecutorName', this.currentExecutor.name + " "+ this.currentExecutor.surname);
                 this.$router.push('/orders');
             },
 
