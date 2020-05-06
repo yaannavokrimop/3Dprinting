@@ -14,10 +14,8 @@ import lombok.Data;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @RestController
 @Data
@@ -29,8 +27,21 @@ public class MessageController {
     private UserRepo userRepo;
 
     @GetMapping("{chatId}")
-    public List<Message> getMessageByChat(@PathVariable(name = "chatId") UUID chatId, @AuthenticationPrincipal UserDetailsImpl principal) {
-        return messageService.getMessageByChat(chatId, principal);
+    public List<MessageRepresent> getMessageByChat(@PathVariable(name = "chatId") UUID chatId, @AuthenticationPrincipal UserDetailsImpl principal) {
+
+        List<Message> messageList = messageService.getMessageByChat(chatId, principal);
+        List<MessageRepresent> messageRepresents = new ArrayList<>();
+        SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy HH:mm");
+
+        for (Message message : messageList) {
+            MessageRepresent represent = new MessageRepresent(message.getText(), message.getChat().getId());
+            represent.setAuthor(message.getAuthor().getName()+" "+message.getAuthor().getSurname());
+            represent.setAuthorId(message.getAuthor().getId());
+            represent.setDate(format.format(message.getDate()));
+            messageRepresents.add(represent);
+        }
+
+        return messageRepresents;
     }
 
     @PostMapping
