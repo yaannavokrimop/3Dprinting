@@ -16,7 +16,7 @@
                     <v-list-item>
                         <div class="mt-2"></div>
                         <v-list-item-avatar style="margin: 10px">
-                            <v-img src="https://sun9-45.userapi.com/c855628/v855628971/22c8eb/xn_ABhoZ8is.jpg"></v-img>
+                            <v-img src="https://sun9-24.userapi.com/6DKCNMbEKuSg43y4h7w8xTRT6MJdfWSrEhD_Qw/OUUFGIbwJes.jpg"></v-img>
                         </v-list-item-avatar>
 
                         <v-list-item-content>
@@ -45,7 +45,7 @@
 
             <v-app-bar dark>
                 <v-app-bar-nav-icon @click.native.stop="drawerToggle = !drawerToggle"></v-app-bar-nav-icon>
-                <v-toolbar-title>3DPrinting</v-toolbar-title>
+                <v-toolbar-title>Additive Exchange</v-toolbar-title>
                 <v-spacer></v-spacer>
                 <v-btn icon href="/">
                     <v-icon>mdi-card-search-outline</v-icon>
