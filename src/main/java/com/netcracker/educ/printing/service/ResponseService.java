@@ -143,31 +143,33 @@ public class ResponseService {
 
     public Page<Response> getPageOfResponsesForCustomer(Map<String, String> params) {
         UUID orderId = UUID.fromString(params.get("orderId"));
-        int currentPage = Integer.parseInt(params.get("page"))- 1;
+        int currentPage = Integer.parseInt(params.get("page")) - 1;
         int perPage = Integer.parseInt(params.get("perPage"));
-        Pageable page = PageRequest.of(currentPage, perPage , Sort.by("date").descending());
+        Pageable page = PageRequest.of(currentPage, perPage, Sort.by("date").descending());
         return responseRepo.findAllByOrderId(orderId, page);
     }
 
     public Page<Response> getPageOfResponsesForExecutor(Map<String, String> params, UUID execId) {
-        int currentPage = Integer.parseInt(params.get("page"))- 1;
+        int currentPage = Integer.parseInt(params.get("page")) - 1;
         int perPage = Integer.parseInt(params.get("perPage"));
-        Pageable page = PageRequest.of(currentPage, perPage , Sort.by("date").descending());
+        Pageable page = PageRequest.of(currentPage, perPage, Sort.by("date").descending());
         return responseRepo.findAllByExecutorId(execId, page);
     }
+
     public ResponseRepresent responseToResponseRepresent(Response response) {
-        return new ResponseRepresent(
-                response.getExecutor().getId(),
-                response.getSum(),
-                "" + response.getExecutor().getSurname() + " " + response.getExecutor().getName(),
-                response.getDate(),
-                response.getStatus()
-                );
+        ResponseRepresent responseRepresent = new ResponseRepresent();
+        responseRepresent.setExecutorId(response.getExecutor().getId());
+        responseRepresent.setSum(response.getSum());
+        responseRepresent.setExecutorInfo("" + response.getExecutor().getSurname() + " " + response.getExecutor().getName());
+        responseRepresent.setDate(response.getDate());
+        responseRepresent.setStatus(response.getStatus());
+        responseRepresent.setCustomerId(response.getOrder().getUser().getId());
+        return responseRepresent;
     }
 
     public List<ResponseRepresent> responsesToResponseRepresents(List<Response> responses) {
         List<ResponseRepresent> represents = new ArrayList<>();
-        for(Response response : responses) {
+        for (Response response : responses) {
             represents.add(this.responseToResponseRepresent(response));
         }
         return represents;

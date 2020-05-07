@@ -1,28 +1,52 @@
 <template>
     <v-container>
         <v-card max-width="1000" tile>
-            <h4>Заказ "{{order.description}}"</h4>
-            <v-list-item>
-                <v-list-item-content>
-                    <v-list-item-title>Статус: {{order.status}}</v-list-item-title>
-                    <v-list-item-title> Начальная стоимость: {{order.sum}}₽</v-list-item-title>
-                    <v-list-item-subtitle>Дата создания: {{order.date}}</v-list-item-subtitle>
-                </v-list-item-content>
-            </v-list-item>
-            <v-list :shaped="true" :flat="true">
-                <h3>Отклики:</h3>
-                <v-list-item-group v-model="openChat" color="primary">
-                    <v-list-item
-                            v-for="(response, i) in responses"
-                            :key="i"
-                    >
-                        <v-list-item-content>
-                            <v-list-item-title><strong>{{response.executorInfo}}</strong></v-list-item-title>
-                            <v-list-item-title><strong>{{response.sum}}₽</strong></v-list-item-title>
-                            <v-list-item-subtitle>{{response.status}}</v-list-item-subtitle>
-                            <v-list-item-subtitle>{{response.date}}</v-list-item-subtitle>
-                        </v-list-item-content>
+            <v-row class="fill-height">
+                <v-card-title>
+                    <v-btn text @click="$router.go(-1)">
+                        <v-icon>mdi-arrow-left</v-icon>
+                        Назад
+                    </v-btn>
+                    <h4 align="center">Заказ "{{order.name}}"</h4>
+                    <v-list-item>
+                        <v-list three-line>
+                            <v-list-item-content>
+                                <v-list-item-title>Статус: {{order.status}}</v-list-item-title>
+                                <v-list-item-title> Начальная стоимость: {{order.sum}}₽</v-list-item-title>
+                                <v-list-item-subtitle>Дата создания: {{order.date}}</v-list-item-subtitle>
+                            </v-list-item-content>
+                        </v-list>
                     </v-list-item>
+                </v-card-title>
+            </v-row>
+            <v-list shaped flat>
+                <h3 align="center">Отклики</h3>
+                <v-list-item-group>
+                    <template v-for="(response, i) in responses">
+                        <v-list-item :key="i">
+                            <template>
+                                <v-list-item-content>
+                                    <v-list-item-title><strong>{{response.executorInfo}}</strong></v-list-item-title>
+                                    <v-list-item-title><strong>{{response.sum}}₽</strong></v-list-item-title>
+                                    <v-list-item-subtitle>{{response.status}}</v-list-item-subtitle>
+                                    <v-list-item-subtitle>{{response.date}}</v-list-item-subtitle>
+                                </v-list-item-content>
+                                <v-spacer></v-spacer>
+                                <v-list-item-icon>
+                                    <v-btn @click="openProfile(response)" class="ma-2" color="deep-purple" fab small>
+                                        <v-icon color="white">mdi-account-circle</v-icon>
+                                    </v-btn>
+                                    <v-btn @click="openChat(response)" class="ma-2" color="primary" fab small>
+                                        <v-icon> mdi-message-text</v-icon>
+                                    </v-btn>
+                                </v-list-item-icon>
+                            </template>
+                        </v-list-item>
+                        <v-divider
+                                v-if="i + 1 < responses.length"
+                                :key="j"
+                        ></v-divider>
+                    </template>
                 </v-list-item-group>
                 <div v-if="pagination.need">
                     <v-pagination
@@ -34,11 +58,6 @@
                 </div>
             </v-list>
         </v-card>
-        <v-content>
-            <div class="mt-2">
-                <b-button variant="outline-primary" @click="$router.go(-1)"> Вернуться к списку заказов</b-button>
-            </div>
-        </v-content>
     </v-container>
 </template>
 
@@ -73,8 +92,16 @@
                         console.log(response.data);
                     }).catch(error => console.log(error));
             },
-            openChat() {
-
+            openChat(response) {
+                AXIOS.get('/chat/response?' +
+                    'executorId=' + response.executorId +
+                    '&customerId=' + response.customerId).then((response) => {
+                    localStorage.setItem('currentChat', JSON.stringify(response.data));
+                    this.$router.push('/chat/' + response.data.chatId);
+                }).catch(error => console.log(error));
+            },
+            openProfile(response) {
+                this.$router.push('/profile/' + response.executorId);
             }
         }
     }

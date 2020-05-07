@@ -1,59 +1,93 @@
 <template>
     <v-container>
-        <v-content>
-            <div class="col-md-8">
-                <div class="input-group mb-3">
-                                    <v-autocomplete
-                                          v-model="selectCity"
-                                          :loading="loading"
-                                          :items="items"
-                                          :search-input.sync="search"
-                                          cache-items
-                                          hide-no-data
-                                          hide-details
-                                          label="Название города"
-                                          multiple
-                                          chips
-                                        ></v-autocomplete>
-                    <div class="input-group-append">
-                    </div>
-                </div>
-            </div>
+        <!--    <v-navigation-drawer-->
+        <!--            v-model="mymodel"-->
+        <!--            absolute-->
+        <!--            clipped-->
+        <!--            right-->
+        <!--    >-->
+        <!--        <template v-slot:prepend>-->
+        <!--            <v-list-item two-line>-->
+        <!--                <v-list-item-avatar>-->
+        <!--                    <img src="https://randomuser.me/api/portraits/women/81.jpg">-->
+        <!--                </v-list-item-avatar>-->
 
-        </v-content>
-        <v-content>
-            <div class="col-md-8">
-                <div class="input-group mb-3">
-                    <input type="text" class="form-control" placeholder="Высота" v-model="height"/>
-                    <input type="text" class="form-control" placeholder="Ширина" v-model="width"/>
-                    <input type="text" class="form-control" placeholder="Длина" v-model="length"/>
-                    <div class="input-group-append">
-                    <v-autocomplete
-                        v-model="materialName"
-                        :items="materialItems"
-                        deletable-chips
-                        cache-items
-                        dense
-                        outlined
-                        hide-no-data
-                        hide-details
-                        label="Материалы"
-                        multiple
-                        chips
-                        small-chips
-                        append
-                    ></v-autocomplete>
+        <!--                <v-list-item-content>-->
+        <!--                    <v-list-item-title>Jane Smith</v-list-item-title>-->
+        <!--                    <v-list-item-subtitle>Logged In</v-list-item-subtitle>-->
+        <!--                </v-list-item-content>-->
+        <!--            </v-list-item>-->
+        <!--        </template>-->
 
-                        <button class="btn btn-outline-secondary" type="button" @click="findData"> Найти</button>
-                        <button class="btn btn-outline-secondary" type="button" @click="showAll"> Показать Всех </button>
-                    </div>
-                </div>
-            </div>
+        <!--        <v-divider></v-divider>-->
 
-        </v-content>
+        <!--        <v-list dense>-->
+
+        <!--        </v-list>-->
+        <!--    </v-navigation-drawer>-->
+
+        <v-form>
+            <v-container>
+                <v-row align="center"
+                       justify="center">
+                    <v-col cols="12" sm="6">
+                        <v-autocomplete
+                                v-model="selectCity"
+                                :loading="loading"
+                                :items="items"
+                                :search-input.sync="search"
+                                cache-items
+                                outlined
+                                hide-no-data
+                                hide-details
+                                label="Название города"
+                                multiple
+                                chips
+                        ></v-autocomplete>
+                    </v-col>
+                    <v-col cols="12" sm="6">
+                        <v-autocomplete
+                                v-model="materialName"
+                                :items="materialItems"
+                                deletable-chips
+                                cache-items
+                                outlined
+                                hide-no-data
+                                hide-details
+                                label="Материалы"
+                                multiple
+                                chips
+                                append
+                        ></v-autocomplete>
+                    </v-col>
+                    <v-col cols="12" sm="4">
+                        <v-text-field label="Высота" v-model="height" outlined></v-text-field>
+                    </v-col>
+                    <v-col cols="12" sm="4">
+                        <v-text-field label="Ширина" v-model="width" outlined></v-text-field>
+                    </v-col>
+                    <v-col cols="12" sm="4">
+                        <v-text-field label="Длина" v-model="length" outlined></v-text-field>
+                    </v-col>
+                    <v-btn class="ma-2" outlined color="primary" @click="findData">
+                        <v-icon left>mdi-magnify</v-icon>
+                        Найти
+                    </v-btn>
+                    <v-btn class="ma-2" outlined color="red" @click="showAll">
+                        Показать Всех
+                    </v-btn>
+                </v-row>
+            </v-container>
+        </v-form>
+
+
+        <!--        <div>-->
+        <!--            <button type="button" @click.stop="mymodel = !mymodel"> Показать </button>-->
+        <!--        </div>-->
+
         <div v-if="currentOrder">
             <b-alert show dismissible fade>
-                Вы выбираете исполнителя для заказа "{{currentOrder.name}}"  <br>
+                Вы выбираете исполнителя для заказа "{{currentOrder.name}}" <br>
                 Ширина {{currentOrder.width}}, длина {{currentOrder.length}}, высота {{currentOrder.height}}
                 <b-button class="mt-3" variant="outline-danger" block @click="clearOrder">
                     Очистить
@@ -92,7 +126,7 @@
                 <label><strong>Текущий исполнитель:</strong></label> {{ currentExecutor.name }}
                 <div class="mt-2"></div>
 
-               <div v-if="currentOrder">
+                <div v-if="currentOrder">
                     <b-button v-b-modal.modal-1>Предложить заказ исполнителю</b-button>
 
                     <b-modal
@@ -100,7 +134,7 @@
                             title="Введите подробности заказа"
                             @ok="sendResponse"
                     >
-                        <h7>Стоимость заказа: </h7>
+                        <h7>Стоимость заказа:</h7>
                         <b-form-input type="text" placeholder="Сумма заказа" v-model="currentOrder.sum"/>
                         <div class="mt-2"></div>
                     </b-modal>
@@ -142,15 +176,16 @@
                 items: [],
                 search: null,
                 selectCity: null,
-                materialName:null,
-                materialItems:[],
+                materialName: null,
+                materialItems: [],
 
                 pagination: {
                     page: 1,
                     total: 0,
                     perPage: 4,
                     need: false
-                }
+                },
+                mymodel: false
             }
         },
         created: function () {
@@ -165,8 +200,10 @@
                     this.getData();
                 }).catch(error => console.log(error));
 
-            }else{this.getData();}
-            this. materialSelections();
+            } else {
+                this.getData();
+            }
+            this.materialSelections();
         },
         watch: {
             search(val) {
@@ -177,12 +214,12 @@
             getParams() {
                 return {
                     'cities': this.$data.selectCity,
-                    'height' : this.$data.height,
-                    'width' : this.$data.width,
-                    'length' : this.$data.length,
+                    'height': this.$data.height,
+                    'width': this.$data.width,
+                    'length': this.$data.length,
                     'materials': this.$data.materialName,
-                    'currentPage' : this.pagination.page,
-                    'perPage' : this.pagination.perPage
+                    'currentPage': this.pagination.page,
+                    'perPage': this.pagination.perPage
                 }
             },
             getData() {
@@ -249,25 +286,26 @@
                 this.$router.push('/orders');
             },
 
-                  querySelections (cityPartName) {
+            querySelections(cityPartName) {
 
-                    setTimeout(()=>{
-                    if(cityPartName==this.$data.search){
-                    this.loading = true
-                      AXIOS.get('/search/cityList/'+cityPartName).then((response) =>{
+                setTimeout(() => {
+                    if (cityPartName == this.$data.search) {
+                        this.loading = true
+                        AXIOS.get('/search/cityList/' + cityPartName).then((response) => {
 
-                            this.items=response.data;
-                                    }).catch(error => console.log(error));
-                      this.loading = false
-
-                      }},1500)
-
-                  },
-                  materialSelections(){
-                    AXIOS.get('/material').then((response) =>{
-                        this.materialItems=response.data;
+                            this.items = response.data;
                         }).catch(error => console.log(error));
-                  }
+                        this.loading = false
+
+                    }
+                }, 1500)
+
+            },
+            materialSelections() {
+                AXIOS.get('/material').then((response) => {
+                    this.materialItems = response.data;
+                }).catch(error => console.log(error));
+            }
 
 
         }

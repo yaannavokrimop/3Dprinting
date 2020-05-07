@@ -6,6 +6,7 @@
                     tag="article"
                     style="max-width: 20rem;"
                     class="mb-2"
+                    align="center"
             >
                 <div>
                     <b-alert
@@ -24,11 +25,12 @@
                     <b-form-input type="password" placeholder="Пароль" v-model="password"/>
                     <div class="mt-2"></div>
                 </div>
-
-                <b-button v-on:click="login" variant="primary">Войти</b-button>
-
+                <v-row align="center"
+                       justify="center">
+                    <b-button v-on:click="login" variant="primary">Войти</b-button>
+                </v-row>
                 <hr class="my-4"/>
-                <div style=" font-size:85%">
+                <div style=" font-size:85%" align="center">
                     Нет аккаунта?
                     <a href="#" @click="goToSignUpPage">
                         Зарегистрируйтесь

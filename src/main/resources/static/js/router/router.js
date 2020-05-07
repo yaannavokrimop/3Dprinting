@@ -44,7 +44,6 @@ let router = new VueRouter({
         {path: '/responses/:orderId', component: CustomerResponses},
         {path: '/response', component: ExecutorResponses, meta: {isExecutor: true}},
         {path:'/profile/:id',component:CurrentProfile},
-        // {path:'/profile/:id',component:'Profile'},
         // {path:'*',component:'Main'}
     ]
 });

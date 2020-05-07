@@ -7,7 +7,6 @@
                     Очистить
                 </b-button>
             </b-alert>
-
         </div>
         <div v-if="!currentOrder">
             <b-alert show dismissible fade>Выберите заказ.</b-alert>
@@ -15,20 +14,33 @@
         </div>
 
         <v-content>
-            <div class="col-md-8">
-                <div class="input-group mb-5">
-                    <input type="text" class="form-control" placeholder="Имя заказа" v-model="orderName"/>
-                    <div class="input-group-append">
-                        <button class="btn btn-outline-secondary" type="button" @click="findOrders"> Найти</button>
-                        <button class="btn btn-outline-secondary" type="button" @click="showAll"> Показать Всех</button>
+            <v-row align="center"
+                   justify="center">
+                <div class="col-md-8">
+                    <div class="input-group mb-5">
+                        <input type="text" class="form-control" placeholder="Имя заказа" v-model="orderName"/>
+                        <div class="input-group-append">
+                            <button class="btn btn-outline-secondary" type="button" @click="findOrders">
+                                <v-icon left>mdi-magnify</v-icon>
+                                Найти
+                            </button>
+                            <button class="btn btn-outline-secondary" type="button" @click="showAll"> Показать Всех
+                            </button>
+                        </div>
                     </div>
                 </div>
-            </div>
-
+            </v-row>
         </v-content>
 
-        <v-card max-width="1200" tile>
-            <h4>Заказы:</h4>
+        <v-card max-width="1000" tile>
+            <v-card-title>
+                <h4 align="center">Заказы</h4>
+                <v-spacer></v-spacer>
+                <v-btn class="mx-2" dark small color="indigo" to="/order/create">
+                    <v-icon dark>mdi-plus</v-icon>
+                    Создать
+                </v-btn>
+            </v-card-title>
             <ul class="list-group">
                 <li class="list-group-item"
                     v-for="(order,index) in orders"
@@ -79,11 +91,7 @@
         </v-card>
 
         <v-content>
-
             <div class="mt-2">
-                <v-btn to="/order/create">Разместить заказ</v-btn>
-
-                <div class="mt-2"></div>
                 <div v-if="currentStatus === 'DRAFT'">
                     <b-button variant="danger" @click="showModal">Удалить заказ</b-button>
 
@@ -114,7 +122,6 @@
                             <div class="mt-2"></div>
                         </b-modal>
                     </div>
-
                     <div class="mt-2"></div>
                     <v-btn class="blue-grey--text" @click="watchResponses"> Посмотреть отклики </v-btn>
 

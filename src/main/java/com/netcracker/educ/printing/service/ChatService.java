@@ -71,7 +71,7 @@ public class ChatService {
         return chatOptional.orElse(null);
     }
 
-    public Chat getChatByExecutorAndOrder(UUID executorId, UUID customerId) {
+    public Chat getChatByExecutorIdAndCustomerId(UUID executorId, UUID customerId) {
         return chatRepo.findByExecutorIdAndCustomerId(executorId, customerId).orElseThrow(NotFoundException::new);
     }
 }

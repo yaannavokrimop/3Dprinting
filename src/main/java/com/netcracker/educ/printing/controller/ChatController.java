@@ -18,6 +18,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @Slf4j
@@ -55,14 +56,17 @@ public class ChatController {
     }
 
     @GetMapping("/response")
-    public ResponseEntity getChatForResponse(@RequestParam UUID customerId, @AuthenticationPrincipal UserDetailsImpl principal) {
+    public ResponseEntity getChatForResponse(@RequestParam Map<String, String> userIds, @AuthenticationPrincipal UserDetailsImpl principal) {
         Chat chat;
+        UUID executorId = UUID.fromString(userIds.get("executorId"));
+        UUID customerId = UUID.fromString(userIds.get("customerId"));
         try {
-            chat = chatService.getChatByExecutorAndOrder(principal.getId(), customerId);
+            chat = chatService.getChatByExecutorIdAndCustomerId(executorId, customerId);
         } catch (NotFoundException ex) {
             return ResponseEntity.badRequest().body("Чат не найден.");
         }
-        User user = userRepo.findByEmail(principal.getEmail());
+        User user = userRepo.findById(principal.getId())
+                .orElseThrow(NotFoundException::new);
         return ResponseEntity.ok(chatService.chatToChatRepresent(chat, user));
     }
 }

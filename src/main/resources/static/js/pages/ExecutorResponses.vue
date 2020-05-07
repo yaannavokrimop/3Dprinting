@@ -17,7 +17,7 @@
                                 </v-list-item-content>
                                 <v-spacer></v-spacer>
                                 <v-list-item-icon>
-                                    <v-btn class="ma-2" color="deep-purple" fab small>
+                                    <v-btn @click="openProfile(response)" class="ma-2" color="deep-purple" fab small>
                                         <v-icon color="white">mdi-account-circle</v-icon>
                                     </v-btn>
                                     <v-btn @click="openChat(response)" class="ma-2" color="primary" fab small>
@@ -84,11 +84,15 @@
             },
             openChat(response) {
                 localStorage.removeItem('currentChat');
-                AXIOS.get('/chat/response?customerId=' + response.order.user.id).then((response) => {
+                AXIOS.get('/chat/response?' +
+                    'executorId=' + response.executor.id +
+                    '&customerId=' + response.order.user.id).then((response) => {
                     localStorage.setItem('currentChat', JSON.stringify(response.data));
-                    this.$router.push('/chat/' + response.data.id);
+                    this.$router.push('/chat/' + response.data.chatId);
                 }).catch(error => console.log(error));
-
+            },
+            openProfile(response) {
+                this.$router.push('/profile/' + response.order.user.id);
             }
         }
     }
