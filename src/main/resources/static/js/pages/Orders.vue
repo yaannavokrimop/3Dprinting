@@ -7,7 +7,6 @@
                     Очистить
                 </b-button>
             </b-alert>
-
         </div>
         <div v-if="!currentOrder">
             <b-alert show dismissible fade>Выберите заказ.</b-alert>
@@ -15,20 +14,33 @@
         </div>
 
         <v-content>
-            <div class="col-md-8">
-                <div class="input-group mb-5">
-                    <input type="text" class="form-control" placeholder="Имя заказа"/>
-                    <div class="input-group-append">
-                        <button class="btn btn-outline-secondary" type="button"> Найти</button>
-                        <button class="btn btn-outline-secondary" type="button"> Показать Всех</button>
+            <v-row align="center"
+                   justify="center">
+                <div class="col-md-8">
+                    <div class="input-group mb-5">
+                        <input type="text" class="form-control" placeholder="Имя заказа" v-model="orderName"/>
+                        <div class="input-group-append">
+                            <button class="btn btn-outline-secondary" type="button" @click="findOrders">
+                                <v-icon left>mdi-magnify</v-icon>
+                                Найти
+                            </button>
+                            <button class="btn btn-outline-secondary" type="button" @click="showAll"> Показать Всех
+                            </button>
+                        </div>
                     </div>
                 </div>
-            </div>
-
+            </v-row>
         </v-content>
 
-        <v-card max-width="1200" tile>
-            <h4>Заказы:</h4>
+        <v-card max-width="1000" tile>
+            <v-card-title>
+                <h4 align="center">Заказы</h4>
+                <v-spacer></v-spacer>
+                <v-btn class="mx-2" dark small color="indigo" to="/order/create">
+                    <v-icon dark>mdi-plus</v-icon>
+                    Создать
+                </v-btn>
+            </v-card-title>
             <ul class="list-group">
                 <li class="list-group-item"
                     v-for="(order,index) in orders"
@@ -52,18 +64,24 @@
                             <v-list-item-subtitle>
                                 <div>
                                     <strong>Материалы: <span
-                                            v-for="material of order.materials"> {{material.matTitle}}  </span></strong>
+                                            v-for="material of order.materials"> {{material}}  </span></strong>
                                 </div>
+                            </v-list-item-subtitle>
+                            <v-list-item-subtitle>
+                                <strong>Получено {{order.responsesCount}} откликов </strong>
                             </v-list-item-subtitle>
                         </v-list-item-content>
                     </v-list-item>
                 </li>
-                <v-pagination
-                        v-model="pagination.page"
-                        :length="pagination.total"
-                        total-visible=6
-                        @input="getOrders"
-                ></v-pagination>
+                <div v-if="pagination.need">
+                    <v-pagination
+                            v-model="pagination.page"
+                            :length="pagination.total"
+                            total-visible=6
+                            @input="getOrders"
+                    ></v-pagination>
+                </div>
+
             </ul>
 
             <div v-if="currentOrder">
@@ -73,11 +91,7 @@
         </v-card>
 
         <v-content>
-
             <div class="mt-2">
-                <v-btn to="/order/create">Разместить заказ</v-btn>
-
-                <div class="mt-2"></div>
                 <div v-if="currentStatus === 'DRAFT'">
                     <b-button variant="danger" @click="showModal">Удалить заказ</b-button>
 
@@ -109,6 +123,9 @@
                         </b-modal>
                     </div>
                     <div class="mt-2"></div>
+                    <v-btn class="blue-grey--text" @click="watchResponses"> Посмотреть отклики </v-btn>
+
+                    <div class="mt-2"></div>
                     <b-button variant="danger" @click="showModal">Удалить заказ</b-button>
 
                     <b-modal ref="my-modal" hide-footer title="Подтверждение">
@@ -137,13 +154,15 @@
                 currentOrder: null,
                 currentIndex: -1,
                 currentStatus: null,
+                orderName: null,
                 accessToken: localStorage.getItem('accessToken'),
                 currentExecutor: localStorage.getItem('currentExecutor'),
                 currentExecutorName: localStorage.getItem('currentExecutorName'),
                 pagination: {
                     page: 1,
                     total: 0,
-                    perPage: 4
+                    perPage: 4,
+                    need: false
                 }
 
             }
@@ -153,9 +172,13 @@
         },
         methods: {
             getOrders() {
-                AXIOS.get('/order/user?page=' + this.pagination.page + '&perPage=' + this.pagination.perPage).then((response) => {
+                AXIOS.get('/order/user?page=' + this.pagination.page +
+                    '&perPage=' + this.pagination.perPage +
+                    '&orderName=' + this.$data.orderName
+                ).then((response) => {
                     this.orders = response.data.content;
                     this.pagination.total = response.data.pageCount;
+                    if (this.pagination.total > 1) this.pagination.need = true;
                     console.log(response.data);
                 }).catch(error => console.log(error));
             },
@@ -182,7 +205,7 @@
             sendResponse() {
                 AXIOS.post("/chat", {
                     'executorId': this.currentExecutor,
-                    'customerId': this.currentOrder.user.id
+                    'customerId': this.currentOrder.customerId
                 }).then((response) => {
                     console.log(response);
                 }).catch(error => console.log(error));
@@ -204,6 +227,21 @@
                 AXIOS.delete('/order/' + this.currentOrder.id);
                 location.reload()
             },
+            watchResponses() {
+                localStorage.setItem('order', JSON.stringify(this.currentOrder));
+                this.$router.push('/responses/' + this.currentOrder.id);
+            },
+            findOrders() {
+                this.pagination.need = false;
+                this.pagination.page = 1;
+                this.getOrders();
+            },
+            showAll() {
+                this.pagination.page = 1;
+                this.pagination.need = false;
+                this.$data.orderName = null;
+                this.getOrders();
+            }
         }
     }
 </script>

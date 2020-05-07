@@ -11,7 +11,7 @@ import java.util.UUID;
 
 @Repository
 public interface OrderRepo extends JpaRepository<Order, UUID> {
-    List<Order> findByNameContaining(String name);
+    Page<Order> findAllByNameContainingAndUserId(String name, UUID id, Pageable page);
     List<Order>findByUserId(UUID user_id);
     Page<Order> findAllByUserId(UUID userId, Pageable page);
 }

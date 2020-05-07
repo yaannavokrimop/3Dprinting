@@ -14,7 +14,7 @@ import java.util.*;
 @Data
 @RequiredArgsConstructor
 @NoArgsConstructor
-public class Order implements Pageable {
+public class Order  {
     @Id
     private UUID id;
 

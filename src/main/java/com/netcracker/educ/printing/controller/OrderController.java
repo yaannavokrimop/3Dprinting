@@ -21,6 +21,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
@@ -39,22 +40,10 @@ public class OrderController {
     private final ResponseService responseService;
 
     @GetMapping("/user")
-    public ResponseEntity<PaginationBean> getOrdersByUserId(@RequestParam Map<String, String> pageParams) {
-        Page<Order> orders = orderService.getPageOfOrders(pageParams);
-        return ResponseEntity.ok(new PaginationBean(orders.getTotalPages(), orders.getContent()));
-    }
-
-    @GetMapping
-    public List<Order> getAllOrders(@RequestBody(required = false) String name) {
-
-        List<Order> orders = new ArrayList<>();
-
-        if (name == null)
-            orders.addAll(repo.findAll());
-        else
-            orders.addAll(repo.findByNameContaining(name));
-
-        return orders;
+    public ResponseEntity<PaginationBean> getOrdersByUserId(@RequestParam Map<String, String> pageParams, @AuthenticationPrincipal UserDetailsImpl principal) {
+        Page<Order> ordersPage = orderService.getPageOfOrders(pageParams, principal.getId());
+        List<OrderRepresent> orders = orderService.ordersToOrderRepresents(ordersPage.getContent());
+        return ResponseEntity.ok(new PaginationBean(ordersPage.getTotalPages(), orders));
     }
 
     @GetMapping("{id}")

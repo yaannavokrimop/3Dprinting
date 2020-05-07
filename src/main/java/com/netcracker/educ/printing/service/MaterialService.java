@@ -56,4 +56,12 @@ public class MaterialService {
         return materialRepo.findAllMatTitles();
 
     }
+
+    public List<String> MaterialSetToMatTitleList(Set<Material> materials) {
+        List<String> result = new ArrayList<>();
+        for (Material material : materials) {
+            result.add(material.getMatTitle());
+        }
+        return result;
+    }
 }

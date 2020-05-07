@@ -1,5 +1,6 @@
 package com.netcracker.educ.printing.model.entity;
 
+import com.netcracker.educ.printing.model.bean.Pageable;
 import com.netcracker.educ.printing.model.bean.ResponseId;
 import com.netcracker.educ.printing.model.bean.ResponseStatus;
 import lombok.AllArgsConstructor;
@@ -14,16 +15,16 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Response {
+public class Response implements Pageable {
     @EmbeddedId
     private ResponseId id;
 
     @MapsId("orderId")
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     private Order order;
 
     @MapsId("executorId")
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     private User executor;
 
     @Column(nullable = false)

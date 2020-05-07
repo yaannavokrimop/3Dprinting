@@ -80,7 +80,7 @@
                     'length': this.$data.length,
                     'name': this.$data.name,
                     'description': this.$data.description,
-                    'material': this.$data.selectMaterial,
+                    'materials': this.$data.selectMaterial,
 
                 };
 
@@ -89,8 +89,8 @@
                         console.log(response);
                         this.successAlert();
                     }).catch(error => console.log(error));
-                this.$router.push('/orders');
-                location.reload()
+                //this.$router.push('/orders');
+                //location.reload()
             },
             addDraft() {
                 let newOrder = {

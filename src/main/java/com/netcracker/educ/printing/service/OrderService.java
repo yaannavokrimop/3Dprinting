@@ -8,6 +8,7 @@ import com.netcracker.educ.printing.model.entity.Order;
 import com.netcracker.educ.printing.model.entity.User;
 import com.netcracker.educ.printing.model.repository.MaterialRepo;
 import com.netcracker.educ.printing.model.repository.OrderRepo;
+import com.netcracker.educ.printing.model.repository.ResponseRepo;
 import com.netcracker.educ.printing.model.repository.UserRepo;
 import com.netcracker.educ.printing.model.representationModel.OrderRepresent;
 import com.netcracker.educ.printing.security.UserDetailsImpl;
@@ -31,27 +32,30 @@ public class OrderService {
     private final MaterialRepo materialRepo;
     private final UserRepo userRepo;
     private final OrderRepo orderRepo;
+    private final ResponseRepo responseRepo;
+    private final MaterialService materialService;
 
     public Order create(OrderRepresent represent,UUID userId) throws RuntimeException {
         represent.setId(UUID.randomUUID());
-        Order order = new Order(represent,OrderStatus.IN_SEARCH,new Date(),materialsFromList(represent.getMaterial()),userRepo.findById(userId).orElseThrow(NotFoundException::new));
+        Order order = new Order(represent,OrderStatus.IN_SEARCH,new Date(),materialsFromList(represent.getMaterials()),userRepo.findById(userId).orElseThrow(NotFoundException::new));
         Order dbOrder=orderRepo.save(order);
         log.info("User {} created order {}",userId,order.getId());
         return dbOrder;
     }
 
-    public Page<Order> getPageOfOrders(Map<String, String> pageParams) {
-        UserDetailsImpl principal = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    public Page<Order> getPageOfOrders(Map<String, String> pageParams, UUID principalId) {
         int currentPage = Integer.parseInt(pageParams.get("page"))- 1;
         int perPage = Integer.parseInt(pageParams.get("perPage"));
-        Pageable page = PageRequest.of(currentPage, perPage , Sort.by("date"));
-        return orderRepo.findAllByUserId(principal.getId(), page);
+        String name = pageParams.get("orderName");
+        Pageable page = PageRequest.of(currentPage, perPage , Sort.by("date").descending());
+        if ( name == null || name.isEmpty()|| name.equals("null")) return orderRepo.findAllByUserId(principalId, page);
+        else return orderRepo.findAllByNameContainingAndUserId(name, principalId, page);
     }
 
     public Order createDraft(OrderRepresent inputOrder, UUID userId) {
         User user = userRepo.findById(userId).orElseThrow(NotFoundException::new);
         inputOrder.setId(UUID.randomUUID());
-        Order order=new Order(inputOrder,OrderStatus.DRAFT,new Date(),materialsFromList(inputOrder.getMaterial()),user);
+        Order order=new Order(inputOrder,OrderStatus.DRAFT,new Date(),materialsFromList(inputOrder.getMaterials()),user);
         order.setName(inputOrder.getName());
         Order dbOrder=orderRepo.save(order);
         log.info("User {} created orderDraft {}",userId,order.getId());
@@ -70,5 +74,31 @@ public class OrderService {
             materials.add(materialRepo.findByMatTitle(materialName));
         }
         return materials;
+    }
+
+    public OrderRepresent orderToOrderRepresent(Order order) {
+        return new OrderRepresent(
+                order.getId(),
+                order.getSum(),
+                order.getName(),
+                order.getDescription(),
+                order.getHeight(),
+                order.getWidth(),
+                order.getWidth(),
+                materialService.MaterialSetToMatTitleList(order.getMaterials()),
+                responseRepo.countDistinctByOrderId(order.getId()),
+                order.getStatus(),
+                order.getFile(),
+                order.getUser().getId(),
+                order.getDate()
+                );
+    }
+
+    public List<OrderRepresent> ordersToOrderRepresents(List<Order> orders) {
+        List<OrderRepresent> orderRepresents = new ArrayList<>();
+        for (Order order : orders) {
+            orderRepresents.add(this.orderToOrderRepresent(order));
+        }
+        return orderRepresents;
     }
 }
