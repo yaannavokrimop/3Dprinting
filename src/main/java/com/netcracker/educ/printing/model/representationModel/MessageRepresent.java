@@ -1,17 +1,27 @@
 package com.netcracker.educ.printing.model.representationModel;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.*;
 
 import javax.validation.constraints.NotNull;
 import java.util.UUID;
 
 @Data
+@RequiredArgsConstructor
+@NoArgsConstructor
 @AllArgsConstructor
 public class MessageRepresent {
-    @NotNull
+    @NonNull
+    @JsonProperty
     private String text;
 
-    @NotNull
+    @NonNull
+    @JsonProperty
     private UUID chatId;
+
+    private String author;
+
+    private UUID authorId;
+
+    private String date;
 }

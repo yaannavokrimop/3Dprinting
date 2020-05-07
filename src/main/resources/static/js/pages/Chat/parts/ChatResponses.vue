@@ -5,7 +5,7 @@
                 <v-icon>mdi-clipboard-text-multiple-outline</v-icon>
             </v-list-item-icon>
 
-            <v-list-item-title>Заказы</v-list-item-title>
+            <v-list-item-title>В обсуждении</v-list-item-title>
         </v-list-item>
         <v-list-group
                 v-for="response in responses"
@@ -19,7 +19,33 @@
             </template>
             <v-container>
                 <v-list-item-content>
-                    <v-list-item-title v-text="'Статус заказа: '+response.status"></v-list-item-title>
+                    <div v-if="response.status ==='REQUESTED'">
+                        <v-list-item-title v-text="'Новый заказ'"></v-list-item-title>
+                    </div>
+                    <div v-if="response.status ==='DISCUSSION'">
+                        <v-list-item-title v-text="'Заказ в обсуждении'"></v-list-item-title>
+                    </div>
+                    <div v-if="!isExecutor">
+                        <div v-if="response.status ==='BY_CUSTOMER'">
+                            <v-list-item-title v-text="'Вы предложили цену'"></v-list-item-title>
+                        </div>
+                        <div v-if="response.status ==='BY_EXECUTOR'">
+                            <v-list-item-title v-text="'Вам предложили цену'"></v-list-item-title>
+                        </div>
+                    </div>
+                    <div v-if="isExecutor">
+                        <div v-if="response.status ==='BY_CUSTOMER'">
+                            <v-list-item-title v-text="'Вам предложили цену'"></v-list-item-title>
+                        </div>
+                        <div v-if="response.status ==='BY_EXECUTOR'">
+                            <v-list-item-title v-text="'Вы предложили цену'"></v-list-item-title>
+                        </div>
+                    </div>
+                    <div v-if="response.status ==='AGREED'">
+                        <v-list-item-title v-text="'Вы договорились по '"></v-list-item-title>
+                        <v-list-item-title v-text="'поводу этого заказа.'"></v-list-item-title>
+
+                    </div>
                     <a :href="'#/orders/'+response.order.id">
                         <div class="details">
                             Подробности о заказе
@@ -27,7 +53,6 @@
                     </a>
                     <v-text-field v-model="response.sum" label="Сумма"></v-text-field>
                     <div v-if="response.status ==='AGREED'">
-                        Ура!
                     </div>
                     <div v-else>
                         <div v-if="!isExecutor">

@@ -37,7 +37,7 @@ public class OrderService {
 
     public Order create(OrderRepresent represent,UUID userId) throws RuntimeException {
         represent.setId(UUID.randomUUID());
-        Order order = new Order(represent,OrderStatus.NO_PAY,new Date(),materialsFromList(represent.getMaterials()),userRepo.findById(userId).orElseThrow(NotFoundException::new));
+        Order order = new Order(represent,OrderStatus.IN_SEARCH,new Date(),materialsFromList(represent.getMaterials()),userRepo.findById(userId).orElseThrow(NotFoundException::new));
         Order dbOrder=orderRepo.save(order);
         log.info("User {} created order {}",userId,order.getId());
         return dbOrder;
@@ -56,6 +56,7 @@ public class OrderService {
         User user = userRepo.findById(userId).orElseThrow(NotFoundException::new);
         inputOrder.setId(UUID.randomUUID());
         Order order=new Order(inputOrder,OrderStatus.DRAFT,new Date(),materialsFromList(inputOrder.getMaterials()),user);
+        order.setName(inputOrder.getName());
         Order dbOrder=orderRepo.save(order);
         log.info("User {} created orderDraft {}",userId,order.getId());
         return dbOrder;

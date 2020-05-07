@@ -18,13 +18,13 @@
                 <b-form-input type="text" placeholder="Описание" v-model="description"/>
                 <div class="mt-2"></div>
 
-                <b-form-input type="text" placeholder="Высота изделия" v-model="height"/>
+                <b-form-input type="text" placeholder="Высота изделия (в мм)" v-model="height"/>
                 <div class="mt-2"></div>
 
-                <b-form-input type="text" placeholder="Ширина изделия" v-model="width"/>
+                <b-form-input type="text" placeholder="Ширина изделия (в мм)" v-model="width"/>
                 <div class="mt-2"></div>
 
-                <b-form-input type="text" placeholder="Длина изделия" v-model="length"/>
+                <b-form-input type="text" placeholder="Длина изделия (в мм)" v-model="length"/>
                 <div class="mt-2"></div>
                 <v-autocomplete
                     v-model="selectMaterial"
@@ -97,6 +97,7 @@
                     'sum': this.$data.sum,
                     'height': this.$data.height,
                     'width': this.$data.width,
+                    'name': this.$data.name,
                     'length': this.$data.length,
                     'description': this.$data.description,
                     'material': this.$data.selectMaterial,

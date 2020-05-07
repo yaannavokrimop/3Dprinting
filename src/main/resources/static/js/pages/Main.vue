@@ -199,7 +199,8 @@
                 this.currentIndex = index;
             },
             goToProfile(executor) {
-                console.log('пока не реализовано');
+             var s = "/profile/" +  this.$data.currentExecutor.id;
+              this.$router.push(s)
             },
             showAll() {
                 this.$data.selectCity = null;
@@ -238,11 +239,13 @@
                 }).catch(error => console.log(error));
 
                 localStorage.removeItem('currentOrder');
-                this.$router.push('/orders');
 
+                this.$router.push('/chatList');
+                location.reload();
             },
             selectOrder() {
                 localStorage.setItem('currentExecutor', this.currentExecutor.id);
+                localStorage.setItem('currentExecutorName', this.currentExecutor.name + " "+ this.currentExecutor.surname);
                 this.$router.push('/orders');
             },
 

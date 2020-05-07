@@ -2,7 +2,7 @@
     <v-container>
         <div v-if="currentExecutor">
             <b-alert show dismissible fade>
-                Вы выбираете заказ для исполнителя № {{currentExecutor}}
+                Вы выбираете заказ для исполнителя {{currentExecutorName}}
                 <b-button class="mt-3" variant="outline-danger" block @click="clearExecutor">
                     Очистить
                 </b-button>
@@ -150,6 +150,7 @@
                 orderName: null,
                 accessToken: localStorage.getItem('accessToken'),
                 currentExecutor: localStorage.getItem('currentExecutor'),
+                currentExecutorName: localStorage.getItem('currentExecutorName'),
                 pagination: {
                     page: 1,
                     total: 0,
@@ -209,7 +210,9 @@
                 }).then((response) => {
                     console.log(response);
                     localStorage.removeItem('currentExecutor');
-                    this.$router.push('/orders');
+
+                    this.$router.push('/chatList');
+                    location.reload();
                 }).catch(error => console.log(error));
 
             },

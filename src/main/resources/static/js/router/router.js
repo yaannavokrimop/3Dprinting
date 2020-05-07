@@ -16,6 +16,7 @@ import Addresses from "pages/Addresses.vue";
 import SelectEquipment from 'pages/SelectEquipment.vue'
 import Chat from 'pages/Chat/Chat.vue'
 import ChatList from 'pages/Chat/ChatList.vue'
+import CurrentProfile from 'pages/CurrentProfile.vue'
 import CustomerResponses from "../pages/CustomerResponses.vue"
 import ExecutorResponses from "../pages/ExecutorResponses.vue"
 
@@ -42,6 +43,7 @@ let router = new VueRouter({
         {path: '/chatList', component: ChatList},
         {path: '/responses/:orderId', component: CustomerResponses},
         {path: '/response', component: ExecutorResponses, meta: {isExecutor: true}},
+        {path:'/profile/:id',component:CurrentProfile},
         // {path:'/profile/:id',component:'Profile'},
         // {path:'*',component:'Main'}
     ]

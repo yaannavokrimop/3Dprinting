@@ -7,7 +7,7 @@
                 absolute
         >
             <v-toolbar-title>
-                <a :href="'#/user/'+companionId">
+                <a :href="'#/profile/'+companionId">
                     <div class="link">
                         <h3>{{currentChat.companion}}</h3>
                     </div>
@@ -25,13 +25,13 @@
                             v-for="(message,index) in messages"
                             :key="index"
                     >
-                        <div v-if="message.author.id === companionId">
+                        <div v-if="message.authorId === companionId">
                             <ul
                                     class="companion"
                             >
                                 <v-list-item-content>
                                     <v-list-item-subtitle>
-                                        <strong>{{message.author.name+" "+message.author.surname}}</strong>
+                                        <strong>{{message.author}}</strong>
                                     </v-list-item-subtitle>
                                     <v-list-item-title>
                                         <h5>
@@ -48,7 +48,7 @@
                             <ul class="speech-bubble">
                                 <v-list-item-content>
                                     <v-list-item-subtitle>
-                                        <strong>{{message.author.name+" "+message.author.surname}}</strong>
+                                        <strong>{{message.author}}</strong>
                                     </v-list-item-subtitle>
                                     <v-list-item-title>
                                         <h5>
