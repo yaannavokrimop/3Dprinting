@@ -100,7 +100,7 @@
                     'name': this.$data.name,
                     'length': this.$data.length,
                     'description': this.$data.description,
-                    'material': this.$data.selectMaterial,
+                    'materials': this.$data.selectMaterial,
 
                 };
 
