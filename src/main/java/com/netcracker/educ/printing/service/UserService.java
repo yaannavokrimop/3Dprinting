@@ -147,7 +147,7 @@ public class UserService {
 
     public Boolean checkUserRole(UUID userId) {
         User user=userRepo.findById(userId).orElseThrow(NotFoundException::new);
-        return user.getRole().toString().equals("CUSTOMER");
+        return user.getRole().equals(Role.CUSTOMER);
 
     }
 }
