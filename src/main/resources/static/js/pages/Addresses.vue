@@ -23,7 +23,6 @@
             <div v-if="currentAddr">
                 <div class="mt-2"></div>
                 <label><strong>Текущий адрес:</strong></label> {{ this.currentAddr.description }}
-                <label><strong>Текущий id:</strong></label> {{ this.currentAddr.id }}
                 <div class="mt-2"></div>
                 <b-button variant="danger" @click="showModal">Удалить адрес</b-button>
 
@@ -46,7 +45,7 @@
 </template>
 
 <script>
-    import {AXIOS} from "../pages/http-common";
+    import {AXIOS} from "./http-common";
     import AddAddress from 'pages/AddAddress.vue';
 
     export default {

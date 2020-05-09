@@ -23,7 +23,7 @@ public class MessageService {
     private final ChatService chatService;
 
 
-    public List<Message> getMessageByChat(UUID chatId, UserDetailsImpl principal) {
+    public List<Message> getMessagesByChat(UUID chatId, UserDetailsImpl principal) {
         Chat chat = chatService.getChatById(chatId);
         if (chat != null && ((chat.getCustomer().getId().equals(principal.getId())) || chat.getExecutor().getId().equals(principal.getId()))) {
             return messageRepo.findAllByChat(chat);
@@ -32,13 +32,13 @@ public class MessageService {
 
 
     public Message createMessage(MessageRepresent message, User currentUser) {
-        Message message1 = new Message();
-        message1.setDate(new Date());
-        message1.setChat(chatService.getChatById(message.getChatId()));
-        message1.setAuthor(currentUser);
-        message1.setChecked(Boolean.FALSE);
-        message1.setText(message.getText());
-        return messageRepo.save(message1);
+        Message newMessage = new Message();
+        newMessage.setDate(new Date());
+        newMessage.setChat(chatService.getChatById(message.getChatId()));
+        newMessage.setAuthor(currentUser);
+        newMessage.setChecked(Boolean.FALSE);
+        newMessage.setText(message.getText());
+        return messageRepo.save(newMessage);
     }
 
     public void deleteMessage(Message message) {

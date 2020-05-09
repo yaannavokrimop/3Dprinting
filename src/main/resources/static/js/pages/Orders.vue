@@ -2,8 +2,8 @@
     <v-container>
         <div v-if="currentExecutor">
             <b-alert show dismissible fade>
-                Вы выбираете заказ для исполнителя {{currentExecutorName}}
-                <b-button class="mt-3" variant="outline-danger" block @click="clearExecutor">
+                Вы выбираете заказ для исполнителя {{currentExecutorName}}<br>
+                <b-button class="mt-3" variant="outline-danger" @click="clearExecutor">
                     Очистить
                 </b-button>
             </b-alert>
@@ -118,6 +118,7 @@
                                 title="Введите подробности заказа"
                                 @ok="sendResponse"
                         >
+                            <h5>Стоимость заказа:</h5>
                             <b-form-input type="text" placeholder="Сумма заказа" v-model="sum"/>
                             <div class="mt-2"></div>
                         </b-modal>

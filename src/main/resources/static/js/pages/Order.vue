@@ -59,7 +59,7 @@
                 <v-btn class="red--text" @click="deleteOrder">Удалить заказ</v-btn>
             </div>
             <div v-else class="mt-2">
-                <b-button variant="outline-primary" @click="$router.go(-1)">Вернуться в диалог</b-button>
+                <b-button variant="outline-primary" @click="$router.go(-1)">Назад</b-button>
             </div>
 
         </v-content>

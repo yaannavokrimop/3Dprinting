@@ -44,7 +44,7 @@
                         <h3>Адреса</h3>
                         <ul>
                             <li v-for="address in user.addresses">
-                                Город: {{ address.city}} Адрес:{{address.description}}
+                                Город: {{ address.city}} Адрес: {{address.description}}
                             </li>
                         </ul>
 

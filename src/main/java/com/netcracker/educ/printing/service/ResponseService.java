@@ -60,13 +60,9 @@ public class ResponseService {
 
         for (Order customerOrder : customerOrders) {
             Optional<Response> responseOptional = Optional.ofNullable(responseRepo.findByOrderAndExecutor(customerOrder, executor));
-            Response response = responseOptional.orElse(null);
-
-            if (response != null && !response.getStatus().equals(ResponseStatus.REFUSED) ) {
-                chatResponses.add(response);
-            }
+            responseOptional.filter(i -> !ResponseStatus.REFUSED.equals(i.getStatus())).ifPresent(chatResponses::add);
         }
-        log.info("Responses for chat id=" + chatId);
+        log.info("Responses for chat id={}", chatId);
 
         return chatResponses;
     }
@@ -75,9 +71,9 @@ public class ResponseService {
         Response dbResponse = responseRepo.findById(new ResponseId(
                 responseRepresent.getOrderId(),
                 responseRepresent.getExecutorId()
-        )).orElse(null);
+        )).orElseThrow(NotFoundException::new);
 
-        if (dbResponse != null) {
+        if (dbResponse.getStatus() == ResponseStatus.REQUESTED || dbResponse.getStatus() == ResponseStatus.DISCUSSION) {
             dbResponse.setSum(responseRepresent.getSum());
 
             if (responseRepresent.isExecutor()) {
@@ -87,7 +83,7 @@ public class ResponseService {
             }
 
             responseRepo.save(dbResponse);
-            log.info("Successful offer=" + responseRepresent.getSum());
+            log.info("Successful offer={}", responseRepresent.getSum());
         }
     }
 
@@ -95,50 +91,51 @@ public class ResponseService {
         Response dbResponse = responseRepo.findById(new ResponseId(
                 responseRepresent.getOrderId(),
                 responseRepresent.getExecutorId()
-        )).orElse(null);
+        )).orElseThrow(NotFoundException::new);
 
-        assert dbResponse != null;
         dbResponse.setStatus(ResponseStatus.REFUSED);
 
         responseRepo.save(dbResponse);
-        log.info("Response Refused=" + dbResponse.getSum());
+        log.info("Response Refused={}", dbResponse.getSum());
     }
 
     public void refuseOffer(ResponseRepresent responseRepresent) {
         Response dbResponse = responseRepo.findById(new ResponseId(
                 responseRepresent.getOrderId(),
                 responseRepresent.getExecutorId()
-        )).orElse(null);
+        )).orElseThrow(NotFoundException::new);
 
-        assert dbResponse != null;
-        dbResponse.setStatus(ResponseStatus.DISCUSSION);
+        if (dbResponse.getStatus() == ResponseStatus.BY_CUSTOMER || dbResponse.getStatus() == ResponseStatus.BY_EXECUTOR) {
+            dbResponse.setStatus(ResponseStatus.DISCUSSION);
 
-        responseRepo.save(dbResponse);
-        log.info("Response Discuss=" + dbResponse.getSum());
+            responseRepo.save(dbResponse);
+            log.info("Response Discuss={}", dbResponse.getSum());
+        }
     }
 
-    public void acceptOffer(@RequestBody ResponseRepresent responseRepresent) {
+    public void acceptOffer(ResponseRepresent responseRepresent) {
         Response dbResponse = responseRepo.findById(new ResponseId(
                 responseRepresent.getOrderId(),
                 responseRepresent.getExecutorId()
-        )).orElse(null);
+        )).orElseThrow(NotFoundException::new);
 
-        assert dbResponse != null;
-        List<Response> thisOrderResponses = responseRepo.findAllByOrder(dbResponse.getOrder());
+        if (dbResponse.getStatus() == ResponseStatus.BY_CUSTOMER || dbResponse.getStatus() == ResponseStatus.BY_EXECUTOR) {
+            List<Response> thisOrderResponses = responseRepo.findAllByOrder(dbResponse.getOrder());
 
-        for (Response response : thisOrderResponses) {
-            response.setStatus(ResponseStatus.REFUSED);
-            responseRepo.save(response);
+            for (Response response : thisOrderResponses) {
+                response.setStatus(ResponseStatus.REFUSED);
+                responseRepo.save(response);
+            }
+
+            dbResponse.setStatus(ResponseStatus.AGREED);
+            responseRepo.save(dbResponse);
+
+            Order currentOrder = dbResponse.getOrder();
+            currentOrder.setStatus(OrderStatus.NO_PAY);
+            orderRepo.save(currentOrder);
+
+            log.info("Response agreed={}", dbResponse.getSum());
         }
-
-        dbResponse.setStatus(ResponseStatus.AGREED);
-        responseRepo.save(dbResponse);
-
-        Order currentOrder = dbResponse.getOrder();
-        currentOrder.setStatus(OrderStatus.NO_PAY);
-        orderRepo.save(currentOrder);
-
-        log.info("Response agreed=" + dbResponse.getSum());
     }
 
     public Page<Response> getPageOfResponsesForCustomer(Map<String, String> params) {

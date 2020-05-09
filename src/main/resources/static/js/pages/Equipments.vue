@@ -5,7 +5,7 @@
         <ul class="list-group">
             <li class="list-group-item"
                  v-for="(equip,index) in equipments"
-                 :class="{ active: index == currentIndex }"
+                 :class="{ active: index === currentIndex }"
                  :key="index"
                  @click="setActiveEquipment(equip, index)"
                  @dblclick="goToEquipment(equip)"
@@ -34,8 +34,7 @@
         </ul>
         <div v-if="currentEquip">
             <div class="mt-2"></div>
-            <label><strong>Current equip:</strong></label> {{ currentEquip.equipDesc }}
-            <label><strong>Current id:</strong></label> {{ currentEquip.id }}
+            <label><strong>Текущее оборудование:</strong></label> {{ currentEquip.equipDesc }}
             <div class="mt-2"></div>
             <b-button variant="danger" @click="showModal">Удалить оборудование</b-button>
 

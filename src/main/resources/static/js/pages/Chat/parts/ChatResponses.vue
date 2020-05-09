@@ -61,9 +61,18 @@
                             </div>
                             <div v-else>
                                 <div v-if="response.status ==='BY_EXECUTOR'">
-                                    <v-btn icon class="green--text accept" @click="accept(response.id.executorId, response.id.orderId)">
+                                    <v-btn icon class="green--text accept" @click="$bvModal.show('acceptModal')">
                                         <v-icon>mdi-checkbox-marked-circle</v-icon>
                                     </v-btn>
+                                    <b-modal id="acceptModal" hide-footer>
+                                        <template v-slot:modal-title>
+                                            Подтвердить
+                                        </template>
+                                        <div class="d-block text-center">
+                                            <h3>После этого действия заказ будет согласован</h3>
+                                        </div>
+                                        <b-button variant="primary" class="mt-3" block @click="acceptModalHide($bvModal, response.id.executorId, response.id.orderId)">Подтвердить</b-button>
+                                    </b-modal>
                                     <v-btn icon class="red--text decline" @click="discuss(response.id.executorId, response.id.orderId)">
                                         <v-icon>mdi-close-circle</v-icon>
                                     </v-btn>
@@ -80,9 +89,18 @@
                             <div v-else>
                                 <div v-if="response.status ==='BY_CUSTOMER'">
                                     <div>
-                                        <v-btn icon class="green--text accept" @click="accept(response.id.executorId, response.id.orderId)">
+                                        <v-btn icon class="green--text accept" @click="$bvModal.show('acceptModal')">
                                             <v-icon>mdi-checkbox-marked-circle</v-icon>
                                         </v-btn>
+                                        <b-modal id="acceptModal" hide-footer>
+                                            <template v-slot:modal-title>
+                                                Подтвердить
+                                            </template>
+                                            <div class="d-block text-center">
+                                                <h3>После этого действия заказ будет согласован</h3>
+                                            </div>
+                                            <b-button variant="primary" class="mt-3" block @click="acceptModalHide($bvModal, response.id.executorId, response.id.orderId)">Подтвердить</b-button>
+                                        </b-modal>
                                         <v-btn icon class="red--text decline" @click="discuss(response.id.executorId, response.id.orderId)">
                                             <v-icon>mdi-close-circle</v-icon>
                                         </v-btn>
@@ -94,7 +112,17 @@
                             </div>
                         </div>
 
-                        <b-button variant="danger" block @click="refuseOffer(response.id.executorId, response.id.orderId)">Отказаться от заказа</b-button>
+                        <b-button variant="danger" block id="show-btn" @click="$bvModal.show('refuse')">Отказаться от заказа</b-button>
+
+                        <b-modal id="refuse" hide-footer>
+                            <template v-slot:modal-title>
+                                Подтвердить отказ
+                            </template>
+                            <div class="d-block text-center">
+                                <h3>Вы не сможете обсуждать заказ с этим собеседником!</h3>
+                            </div>
+                            <b-button variant="danger" class="mt-3" block @click="modalHide($bvModal, response.id.executorId, response.id.orderId)">Подтвердить</b-button>
+                        </b-modal>
                     </div>
 
                 </v-list-item-content>
@@ -133,6 +161,14 @@
                     console.log(response);
                     location.reload()
                 }).catch(error => console.log(error));
+            },
+            modalHide (bvModal, executorId, orderId) {
+                bvModal.hide('refuse');
+                this.refuseOffer(executorId, orderId);
+            },
+            acceptModalHide (bvModal, executorId, orderId) {
+                bvModal.hide('acceptModal');
+                this.accept(executorId, orderId);
             },
             refuseOffer(executorId, orderId) {
                 AXIOS.patch('response/offer', {

@@ -27,8 +27,6 @@
                     </b-alert>
                 </div>
                 <div>
-<!--                    <b-form-input type="text" placeholder="Username" v-model="username" />-->
-<!--                    <div class="mt-2"></div>-->
 
                     <b-form-input type="text" placeholder="Имя" v-model="name" />
                     <div class="mt-2"></div>
@@ -67,10 +65,6 @@
 
                     <b-form-input type="text" placeholder="Адрес" v-model="description" />
                     <div class="mt-2"></div>
-
-
-                    <!--<b-form-input type="password" placeholder="Confirm Password" v-model="confirmpassword" />
-                    <div class="mt-2"></div>-->
                 </div>
 
                 <b-button v-on:click="register" variant="primary">Зарегистрироваться</b-button>
@@ -81,7 +75,7 @@
 </template>
 
 <script>
-    import {AXIOS} from '../pages/http-common'
+    import {AXIOS} from './http-common'
 
     export default {
         name: 'SignUp',
@@ -113,7 +107,7 @@
         methods: {
             querySelections (cityPartName) {
                 setTimeout(()=>{
-                if(cityPartName==this.$data.search){
+                if(cityPartName===this.$data.search){
                 AXIOS.get('/search/cityList/'+cityPartName).then((response) =>{
 
                     this.items=response.data;
@@ -123,30 +117,21 @@
 
             register: function () {
                 if (this.$data.name === '' || this.$data.name == null) {
-                    this.$data.alertMessage = 'Please, fill "Username" field';
-                    this.showAlert();}
-                // } else if (this.$data.firstname === '' || this.$data.firstname == null) {
-                //     this.$data.alertMessage = 'Please, fill "First name" field';
-                //     this.showAlert();
-                // } else if (this.$data.lastname === '' || this.$data.lastname == null) {
-                //     this.$data.alertMessage = 'Please, fill "Last name" field';
-                //     this.showAlert();
-                // } else if (this.$data.email === '' || this.$data.email == null) {
-                //     this.$data.alertMessage = 'Please, fill "Email" field';
-                //     this.showAlert();
-                // } else if (!this.$data.email.includes('@')) {
-                //     this.$data.alertMessage = 'Email is incorrect';
-                //     this.showAlert();
-                // } else if (this.$data.password === '' || this.$data.password == null) {
-                //     this.$data.alertMessage = 'Please, fill "Password" field';
-                //     this.showAlert();
-                // } else if (this.$data.confirmpassword === '' || this.$data.confirmpassword == null) {
-                //     this.$data.alertMessage = 'Please, confirm password';
-                //     this.showAlert();
-                // } else if (this.$data.confirmpassword !== this.$data.password) {
-                //     this.$data.alertMessage = 'Passwords are not match';
-                //     this.showAlert();
-                // }
+                    this.$data.alertMessage = 'Пожалуйста, укажите своё имя';
+                    this.showAlert();
+                } else if (this.$data.surname === '' || this.$data.surname == null) {
+                    this.$data.alertMessage = 'Пожалуйста, укажите свою фамилию';
+                    this.showAlert();
+                } else if (this.$data.email === '' || this.$data.email == null) {
+                    this.$data.alertMessage = 'Пожалуйста, укажите электронную почту';
+                    this.showAlert();
+                } else if (!this.$data.email.includes('@')) {
+                    this.$data.alertMessage = 'Проверьте правильность электронной почты';
+                    this.showAlert();
+                } else if (this.$data.password === '' || this.$data.password == null) {
+                    this.$data.alertMessage = 'Пожалуйста, укажите пароль';
+                    this.showAlert();
+                }
                 else {
                     AXIOS.post('/auth/signup', {
                         'name': this.$data.name,
@@ -163,12 +148,12 @@
                             console.log(response);
                             this.successAlert();
                         }, error => {
-                            this.$data.alertMessage = (error.response.data.message.length < 150) ? error.response.data.message : 'Request error. Please, report this error website owners'
+                            this.$data.alertMessage = (error.response.data.message.length < 150) ? error.response.data.message : 'Ошибка'
                             this.showAlert();
                         })
                         .catch(error => {
                             console.log(error);
-                            this.$data.alertMessage = 'Request error. Please, report this error website owners';
+                            this.$data.alertMessage = 'Ошибка';
                             this.showAlert();
                         });
                 }

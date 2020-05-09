@@ -3,7 +3,6 @@
 
             <v-container>
                 <v-layout justify-space-around column>
-                    <div class="title">Редактирование</div>
 
                    <v-layout row>
                         <user-data-edit v-bind:user='user'></user-data-edit>

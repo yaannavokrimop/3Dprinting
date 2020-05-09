@@ -1,30 +1,5 @@
 <template>
     <v-container>
-        <!--    <v-navigation-drawer-->
-        <!--            v-model="mymodel"-->
-        <!--            absolute-->
-        <!--            clipped-->
-        <!--            right-->
-        <!--    >-->
-        <!--        <template v-slot:prepend>-->
-        <!--            <v-list-item two-line>-->
-        <!--                <v-list-item-avatar>-->
-        <!--                    <img src="https://randomuser.me/api/portraits/women/81.jpg">-->
-        <!--                </v-list-item-avatar>-->
-
-        <!--                <v-list-item-content>-->
-        <!--                    <v-list-item-title>Jane Smith</v-list-item-title>-->
-        <!--                    <v-list-item-subtitle>Logged In</v-list-item-subtitle>-->
-        <!--                </v-list-item-content>-->
-        <!--            </v-list-item>-->
-        <!--        </template>-->
-
-        <!--        <v-divider></v-divider>-->
-
-        <!--        <v-list dense>-->
-
-        <!--        </v-list>-->
-        <!--    </v-navigation-drawer>-->
 
         <v-form>
             <v-container>
@@ -80,16 +55,11 @@
             </v-container>
         </v-form>
 
-
-        <!--        <div>-->
-        <!--            <button type="button" @click.stop="mymodel = !mymodel"> Показать </button>-->
-        <!--        </div>-->
-
         <div v-if="currentOrder">
             <b-alert show dismissible fade>
                 Вы выбираете исполнителя для заказа "{{currentOrder.name}}" <br>
-                Ширина {{currentOrder.width}}, длина {{currentOrder.length}}, высота {{currentOrder.height}}
-                <b-button class="mt-3" variant="outline-danger" block @click="clearOrder">
+<!--                Ширина {{currentOrder.width}}, длина {{currentOrder.length}}, высота {{currentOrder.height}}-->
+                <b-button class="mt-3" variant="outline-danger"  @click="clearOrder">
                     Очистить
                 </b-button>
             </b-alert>
@@ -101,7 +71,7 @@
             <ul class="list-group">
                 <li class="list-group-item"
                     v-for="(executor,index) in executors"
-                    :class="{ active: index == currentIndex }"
+                    :class="{ active: index === currentIndex }"
                     :key="index"
                     @click="setActiveExecutor(executor, index)"
                     @dblclick="goToProfile(executor)"
@@ -134,7 +104,7 @@
                             title="Введите подробности заказа"
                             @ok="sendResponse"
                     >
-                        <h7>Стоимость заказа:</h7>
+                        <h5>Стоимость заказа:</h5>
                         <b-form-input type="text" placeholder="Сумма заказа" v-model="currentOrder.sum"/>
                         <div class="mt-2"></div>
                     </b-modal>

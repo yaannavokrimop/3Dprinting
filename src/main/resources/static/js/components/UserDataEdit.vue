@@ -4,31 +4,31 @@
 
 <v-card>
     <v-card-title>
-     Edit Profile
+     Редактирование профиля
     </v-card-title>
     <v-card-text>
      <v-text-field
           v-model="user.name"
-          label="Name">
+          label="Имя">
      </v-text-field>
      <v-text-field
           v-model="user.surname"
-          label="Surname">
+          label="Фамилия">
      </v-text-field>
      <v-text-field
           v-model="user.email"
-          label="Email Address">
+          label="Электронная почта">
      </v-text-field>
 
      <v-text-field
           v-model="user.phone"
-          label="Tel.">
+          label="Номер телефона">
      </v-text-field>
      <v-text-field
           v-model="user.information"
-          label="Information">
+          label="Информация">
      </v-text-field>
-     <v-switch v-model="user.role" label="Стать исполнителем" value="EXECUTOR" v-show="user.role=='CUSTOMER'&&testRoleResult"></v-switch>
+     <v-switch v-model="user.role" label="Стать исполнителем" value="EXECUTOR" v-show="user.role==='CUSTOMER'&&testRoleResult"></v-switch>
     </v-card-text>
 
     <div>

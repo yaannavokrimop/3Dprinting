@@ -1,14 +1,11 @@
 package com.netcracker.educ.printing.controller;
 
-import com.netcracker.educ.printing.model.entity.Chat;
 import com.netcracker.educ.printing.model.entity.Message;
 import com.netcracker.educ.printing.model.entity.User;
 import com.netcracker.educ.printing.model.repository.UserRepo;
 import com.netcracker.educ.printing.model.representationModel.MessageRepresent;
 import com.netcracker.educ.printing.security.UserDetailsImpl;
-import com.netcracker.educ.printing.service.ChatService;
 import com.netcracker.educ.printing.service.MessageService;
-import com.netcracker.educ.printing.service.UserService;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -29,7 +26,7 @@ public class MessageController {
     @GetMapping("{chatId}")
     public List<MessageRepresent> getMessageByChat(@PathVariable(name = "chatId") UUID chatId, @AuthenticationPrincipal UserDetailsImpl principal) {
 
-        List<Message> messageList = messageService.getMessageByChat(chatId, principal);
+        List<Message> messageList = messageService.getMessagesByChat(chatId, principal);
         List<MessageRepresent> messageRepresents = new ArrayList<>();
         SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy HH:mm");
 
