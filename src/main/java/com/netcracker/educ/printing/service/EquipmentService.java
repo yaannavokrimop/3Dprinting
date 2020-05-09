@@ -26,14 +26,15 @@ public class EquipmentService {
 
 
     public Equipment create(String userEmail, Equipment equipment,String equipDesc,List<String> materialName) {
-        equipmentRepo.save(equipment);
+        Equipment equipmentDb=equipmentRepo.save(equipment);
         User executor = userRepo.findByEmail(userEmail);
-        ExecutorEquipment executorEquipment = new ExecutorEquipment(executor, equipment,equipDesc);
-        executorEquipmentRepo.save(executorEquipment);
+
         for(String material:materialName) {
-            materialEquipmentRepo.save(new MaterialEquipment(equipment,materialRepo.findByMatTitle(material)));
+            materialEquipmentRepo.save(new MaterialEquipment(equipmentDb,materialRepo.findByMatTitle(material)));
         }
-        return equipment;
+        ExecutorEquipment executorEquipment = new ExecutorEquipment(executor, equipmentDb,equipDesc,materialEquipmentRepo.findByMaterialNames(materialName,equipmentDb.getEquipName()));
+        executorEquipmentRepo.save(executorEquipment);
+        return equipmentDb;
     }
 
     public List<EquipmentRepresent> getUserEquipment(UUID userId) {

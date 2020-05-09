@@ -59,7 +59,7 @@ public class UserRestController {
         return userService.checkUserRole(principal.getId());
     }
     @GetMapping("/role/{id}")
-    public Boolean checkUserRoleById(@PathVariable("id") UUID id){
+    public Boolean checkUserRoleCustomerById(@PathVariable("id") UUID id){
         return userService.checkUserRole(id);
     }
 
