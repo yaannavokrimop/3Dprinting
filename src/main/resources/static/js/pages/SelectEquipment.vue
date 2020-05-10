@@ -6,42 +6,46 @@
              style="max-width: 50%;"
              class="mb-2"
         >
-            <div>
+            <v-form ref="form" v-model="valid" lazy-validation>
+                <div>
 
-                <v-autocomplete
-                    v-model="equipName"
-                    :items="items"
-                    :search-input.sync="search"
-                    cache-items
-                    hide-no-data
-                    hide-details
-                    label="Наименование"
-                    chips
-                ></v-autocomplete>
-                <div class="mt-2"></div>
+                    <v-autocomplete
+                        v-model="equipName"
+                        :items="items"
+                        :search-input.sync="search"
+                        cache-items
+                        hide-no-data
+                        hide-details
+                        label="Наименование"
+                        chips
+                        :rules="[v => !!v || 'Выберите оборудование ']"
+                    ></v-autocomplete>
+                    <div class="mt-2"></div>
 
-                <b-form-input type="text" placeholder="Описание" v-model="equipDesc" />
-                <div class="mt-2"></div>
-                <div>Допустимая высота:  {{height}}</div>
-                <div class="mt-2"></div>
+                    <v-text-field type="text" placeholder="Описание" v-model="equipDesc" :rules="[v => ( v.length <= 100) || 'Должно быть не более 100 символов']" ></v-text-field>
+                    <div class="mt-2"></div>
+                    <div>Допустимая высота:  {{height}}</div>
+                    <div class="mt-2"></div>
 
-                <div>Допустимая ширина:  {{width}}</div>
-                <div class="mt-2"></div>
+                    <div>Допустимая ширина:  {{width}}</div>
+                    <div class="mt-2"></div>
 
-                 <div>Допустимая длина:  {{length}}</div>
-                 <div class="mt-2"></div>
-                 <v-autocomplete
-                    v-model="materialName"
-                    :items="materialItems"
-                    hide-no-data
-                    hide-details
-                    label="Материалы"
-                    multiple
-                    chips
-                ></v-autocomplete>
-                <div class="mt-2"></div>
+                     <div>Допустимая длина:  {{length}}</div>
+                     <div class="mt-2"></div>
+                     <v-autocomplete
+                        v-model="materialName"
+                        :items="materialItems"
+                        hide-no-data
+                        hide-details
+                        label="Материалы"
+                        multiple
+                        chips
+                        :rules="[v => !!v || 'Выберите не менее одиного материала']"
+                    ></v-autocomplete>
+                    <div class="mt-2"></div>
 
-            </div>
+                </div>
+            </v-form>
             <v-btn v-on:click="addEquip" variant="primary">Добавить</v-btn>
             <div class="mt-2"></div>
             <b-alert show dismissible fade>
@@ -49,7 +53,7 @@
                 Если Вы не нашли нужное оборудование в нашей базе, можете зарегистрировать своё оборудование вручную
                 </div>
                 <div class="mt-2"></div>
-                <v-btn to="/create_equipment" variant="primary">Зарегистрировать новое оборудование</v-btn>
+                <v-btn to="/create_equipment" variant="primary" :disabled="!valid">Зарегистрировать новое оборудование</v-btn>
 
             </b-alert>
         </b-card>
@@ -71,7 +75,8 @@ export default {
             search: null,
             equipId:null,
             materialName:null,
-            materialItems:[]
+            materialItems:[],
+            valid:true
         }
      },
     watch: {
@@ -82,7 +87,7 @@ export default {
          },
      methods: {
         addEquip(){
-            if(this.$data.equipName!=null){
+            if(this.$refs.form.validate() && this.$data.equipName!=null){
             let newEquip = {
                'equipName': this.$data.equipName,
                'equipDesc': this.$data.equipDesc,

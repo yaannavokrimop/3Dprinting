@@ -10,7 +10,7 @@
                 <emoji-picker :show="emojiPanel" @close="toggleEmojiPanel" @click="addEmojiToMessage"></emoji-picker>
                 <div class="typer">
                     <input type="text" placeholder="Напишите сообщение..." v-on:keyup.enter="sendMessage"
-                           v-model="content">
+                           v-model="content" maxlength="254">
                     <v-btn icon class="blue--text emoji-panel" @click="toggleEmojiPanel">
                         <v-icon>mdi-emoticon-outline</v-icon>
                     </v-btn>

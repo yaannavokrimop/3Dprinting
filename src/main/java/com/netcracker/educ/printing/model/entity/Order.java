@@ -101,17 +101,44 @@ public class Order  {
                 '}';
     }
 
-    public Order(OrderRepresent orderRepresent,OrderStatus orderStatus,Date date,Set<Material> materials,User user) {
+    public Order(OrderRepresent orderRepresent,OrderStatus orderStatus,Date date,User user,Set<Material> materials) {
         this.id = orderRepresent.getId();
         this.user = user;
         this.status = orderStatus ;
         this.date = date;
         this.description = orderRepresent.getDescription();
+        this.sum=orderRepresent.getSum();
+        this.height=orderRepresent.getHeight();
+        this.width=orderRepresent.getWidth();
+        this.length=orderRepresent.getLength();
+        this.name=orderRepresent.getName();
         this.materials = materials;
+    }
+
+    public Order(OrderRepresent orderRepresent,OrderStatus orderStatus,Date date,User user) {
+        this.id = orderRepresent.getId();
+        this.user = user;
+        this.status = orderStatus ;
+        this.date = date;
+        this.description = orderRepresent.getDescription();
         this.sum=orderRepresent.getSum();
         this.height=orderRepresent.getHeight();
         this.width=orderRepresent.getWidth();
         this.length=orderRepresent.getLength();
         this.name=orderRepresent.getName();
     }
+    public Order(OrderRepresent orderRepresent,Date date,User user,Set<Material> materials) {
+        this.id = orderRepresent.getId();
+        this.user = user;
+        this.status = orderRepresent.getStatus() ;
+        this.date = date;
+        this.description = orderRepresent.getDescription();
+        this.sum=orderRepresent.getSum();
+        this.height=orderRepresent.getHeight();
+        this.width=orderRepresent.getWidth();
+        this.length=orderRepresent.getLength();
+        this.name=orderRepresent.getName();
+        this.materials = materials;
+    }
+
 }

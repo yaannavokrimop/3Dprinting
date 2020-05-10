@@ -9,24 +9,31 @@
          </v-card-title>
          <v-card-text>
            <v-container>
-                 <v-autocomplete
-                    v-model="selectCity"
-                    :loading="loading"
-                    :items="items"
-                    :search-input.sync="search"
-                    cache-items
-                    hide-no-data
-                    hide-details
-                    label="Город"
-                    chips
-                 ></v-autocomplete>
-                 <v-text-field label="Адрес" v-model="description"></v-text-field>
+               <v-form
+                   ref="form"
+                   v-model="valid"
+                   lazy-validation
+                 >
+                     <v-autocomplete
+                        v-model="selectCity"
+                        :loading="loading"
+                        :items="items"
+                        :search-input.sync="search"
+                        cache-items
+                        hide-no-data
+                        hide-details
+                        label="Город"
+                        chips
+                        :rules="[v => !!v || 'Выберите один из городов']"
+                     ></v-autocomplete>
+                     <v-text-field label="Адрес" v-model="description" :rules="[v => ( v.length <= 100) || 'Описание должно быть не более 100 символов']"></v-text-field>
+               </v-form>
            </v-container>
          </v-card-text>
          <v-card-actions>
            <v-spacer></v-spacer>
            <v-btn color="blue darken-1" text @click="dialog = false">Закрыть</v-btn>
-           <v-btn color="blue darken-1" text @click="addAddress">Добавить</v-btn>
+           <v-btn color="blue darken-1" text @click="addAddress" :disabled="!valid">Добавить</v-btn>
          </v-card-actions>
        </v-card>
      </v-dialog>
@@ -45,7 +52,8 @@ export default {
             items: [],
             search: null,
             selectCity: null,
-            loading: false
+            loading: false,
+            valid:true,
         }
      },
      watch: {
@@ -56,18 +64,19 @@ export default {
 
     methods: {
         addAddress(){
-            var newAddress = {
-                'cityTitle': this.$data.selectCity,
-                'description': this.$data.description,
-            };
-            console.log(newAddress);
-            AXIOS.post('/address', newAddress)
-                 .then(response => {
-                    console.log(response)
-                  }).catch(error => console.log(error));
-                  location.reload()
-            this.$data.dialog=false;
-
+            if(this.$refs.form.validate()){
+                var newAddress = {
+                    'cityTitle': this.$data.selectCity,
+                    'description': this.$data.description,
+                };
+                console.log(newAddress);
+                AXIOS.post('/address', newAddress)
+                     .then(response => {
+                        console.log(response)
+                      }).catch(error => console.log(error));
+                      location.reload()
+                this.$data.dialog=false;
+            }
         },
 
         querySelections (cityPartName) {

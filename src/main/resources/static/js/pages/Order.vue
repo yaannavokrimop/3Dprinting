@@ -46,7 +46,7 @@
             </v-list-item>
             <v-list-item>
                 <div>
-                    <strong>Материалы:  <span v-for="material of order.materials"> {{material.matTitle}}  </span></strong>
+                    <strong>Материалы:  <span v-for="material of order.materials"> {{material}}  </span></strong>
                 </div>
             </v-list-item>
 
@@ -87,10 +87,10 @@
                     file: '',
                     description: '',
                     materials: [],
-                    myId: ''
+
 
                 },
-
+                myId: '',
                 accessToken: localStorage.getItem('accessToken')
 
             }
@@ -99,7 +99,7 @@
 
             AXIOS.get("/order/" + this.$route.params.id).then((response) => {
                 this.order.id = response.data.id;
-                this.order.userId = response.data.user.id;
+                this.order.userId = response.data.customerId;
                 this.order.status = response.data.status;
                 this.order.sum = response.data.sum;
                 this.order.name = response.data.name;

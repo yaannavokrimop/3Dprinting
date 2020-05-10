@@ -15,7 +15,7 @@
                             variant="danger"
                             @dismissed="dismissCountDown=0"
                             @dismiss-count-down="countDownChanged"
-                    > {{ alertMessage }}
+                    > {{ alertMessage1 }}
                     </b-alert>
                 </div>
                 <div>
@@ -53,6 +53,7 @@
                 dismissSecs: 5,
                 dismissCountDown: 0,
                 alertMessage: 'Request error',
+                alertMessage1:'Неверный логин или пароль'
             }
         },
         methods: {
@@ -68,6 +69,8 @@
                         this.$router.push('/profile')
                     }, error => {
                         this.$data.alertMessage = (error.response.data.message.length < 150) ? error.response.data.message : 'Request error. Please, report this error website owners';
+                       console.log("error .........Y");
+                       this.showAlert();
                         console.log(error)
                     })
                     .catch(e => {

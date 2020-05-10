@@ -1,7 +1,6 @@
 package com.netcracker.educ.printing.service;
 
 import com.netcracker.educ.printing.exception.NotFoundException;
-import com.netcracker.educ.printing.model.bean.MaterialType;
 import com.netcracker.educ.printing.model.bean.OrderStatus;
 import com.netcracker.educ.printing.model.bean.ResponseStatus;
 import com.netcracker.educ.printing.model.entity.Material;
@@ -13,16 +12,15 @@ import com.netcracker.educ.printing.model.repository.OrderRepo;
 import com.netcracker.educ.printing.model.repository.ResponseRepo;
 import com.netcracker.educ.printing.model.repository.UserRepo;
 import com.netcracker.educ.printing.model.representationModel.OrderRepresent;
-import com.netcracker.educ.printing.security.UserDetailsImpl;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
+
 
 import javax.transaction.Transactional;
 import java.text.SimpleDateFormat;
@@ -42,7 +40,12 @@ public class OrderService {
 
     public Order create(OrderRepresent represent, UUID userId) throws RuntimeException {
         represent.setId(UUID.randomUUID());
-        Order order = new Order(represent, OrderStatus.IN_SEARCH, new Date(), materialsFromList(represent.getMaterials()), userRepo.findById(userId).orElseThrow(NotFoundException::new));
+        Order order;
+        if(represent.getMaterials()!=null) {
+            order = new Order(represent, OrderStatus.IN_SEARCH, new Date(),  userRepo.findById(userId).orElseThrow(NotFoundException::new),materialsFromList(represent.getMaterials()));
+        }else{
+            order = new Order(represent, OrderStatus.IN_SEARCH, new Date(), userRepo.findById(userId).orElseThrow(NotFoundException::new));
+        }
         Order dbOrder = orderRepo.save(order);
         log.info("User {} created order {}", userId, order.getId());
         return dbOrder;
@@ -60,8 +63,13 @@ public class OrderService {
     public Order createDraft(OrderRepresent inputOrder, UUID userId) {
         User user = userRepo.findById(userId).orElseThrow(NotFoundException::new);
         inputOrder.setId(UUID.randomUUID());
-        Order order = new Order(inputOrder, OrderStatus.DRAFT, new Date(), materialsFromList(inputOrder.getMaterials()), user);
-        order.setName(inputOrder.getName());
+        Order order;
+        if(inputOrder.getMaterials()!=null) {
+            order = new Order(inputOrder, OrderStatus.DRAFT, new Date(), user, materialsFromList(inputOrder.getMaterials()));
+        }else {
+            order = new Order(inputOrder, OrderStatus.DRAFT, new Date(), user);
+        }
+//        order.setName(inputOrder.getName());
         Order dbOrder = orderRepo.save(order);
         log.info("User {} created orderDraft {}", userId, order.getId());
         return dbOrder;
@@ -172,7 +180,23 @@ public class OrderService {
             orderRepo.save(order);
             log.info("Order not a Draft anymore= {}", order.getId());
         }
+       return order;
+    }
 
-        return order;
+    public OrderRepresent getOrderById(UUID id) {
+        Optional<Order> orderData = orderRepo.findById(id);
+        return orderToOrderRepresent(orderData.orElseThrow(NotFoundException::new));
+    }
+
+    public Order updateOrder(OrderRepresent inputOrderRepresent, UUID orderId) {
+        Order dbOrder=orderRepo.findById(orderId).orElseThrow(NullPointerException::new);
+        Order inputOrder=new Order(inputOrderRepresent,dbOrder.getDate(),dbOrder.getUser(),materialsFromList(inputOrderRepresent.getMaterials()));
+        BeanUtils.copyProperties(inputOrder, dbOrder, "user");
+        Order saveOrder=orderRepo.save(dbOrder);
+        log.info("Update order {}",saveOrder.getId());
+        return saveOrder;
+
+       
+
     }
 }
