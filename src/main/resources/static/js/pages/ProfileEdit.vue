@@ -13,7 +13,7 @@
                    </v-flex>
 
                    <div class="my-2">
-                           <v-btn  large color="primary" @click="edit">Сохранить изменения</v-btn>
+                           <v-btn  large color="primary" @click="edit" :disabled="!validP">Сохранить изменения</v-btn>
                    </div>
                 </v-layout>
             </v-container>
@@ -42,12 +42,14 @@ export default {
                  surname:'',
                  addresses:[]
             },
-            testUserRole:''
+            testUserRole:'',
+            validP:true
 
             }
           },
     methods:{
         edit:function(){
+            if(this.$data.validP){
                 var user=this.user;
                 var id=this.user.id;
                 AXIOS.put('/user/update/'+id,{
@@ -57,14 +59,16 @@ export default {
                     name:user.name,
                     phone:user.phone,
                     role:user.role,
-                    surname:user.surname
-                });
+                     surname:user.surname
+                    });
 
-                    this.$router.push('/profile');
-                    location.reload();
-                    console.log(user);
-
-
+                this.$router.push('/profile');
+                location.reload();
+                console.log(user);
+            }
+        },
+        tt(validP) {
+            this.$data.validP =validP;
         }
     }
 

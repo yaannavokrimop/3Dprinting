@@ -39,7 +39,7 @@
                     <div class="mt-2"></div>
 
                 </div>
-                <v-btn v-on:click="addEquip" variant="primary">Добавить</v-btn>
+                <v-btn v-on:click="addEquip" variant="primary" :disabled="!valid">Добавить</v-btn>
 
             </v-form>
         </b-card>

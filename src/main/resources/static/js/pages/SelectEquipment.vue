@@ -53,7 +53,7 @@
                 Если Вы не нашли нужное оборудование в нашей базе, можете зарегистрировать своё оборудование вручную
                 </div>
                 <div class="mt-2"></div>
-                <v-btn to="/create_equipment" variant="primary">Зарегистрировать новое оборудование</v-btn>
+                <v-btn to="/create_equipment" variant="primary" :disabled="!valid">Зарегистрировать новое оборудование</v-btn>
 
             </b-alert>
         </b-card>

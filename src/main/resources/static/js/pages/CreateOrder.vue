@@ -7,30 +7,20 @@
                     style="max-width: 20rem;"
                     class="mb-2"
             >
-                <form class="needs-validation" novalidate >
+                <v-form ref="form" v-model="valid" lazy-validation>
 
-                    <b-form-input type="number" placeholder="Сумма заказа" v-model="sum"  max="999999" min="0"/>
-                    <div class="invalid-feedback">Нужно ввести число от 0 до 999999</div>
-                    <div class="mt-2"></div>
+                    <v-text-field outlined type="number" placeholder="Сумма заказа" v-model="sum" dense  :rules="[v => v<=999999 && v>=0 || 'Нужно ввести число от 0 до 999999']"></v-text-field>
 
-                    <b-form-input type="text" placeholder="Название заказа" v-model="name"  required />
-                    <div class="invalid-feedback">Не должно быть пустым</div>
-                    <div class="mt-2"></div>
+                    <v-text-field outlined type="text" placeholder="Название заказа" v-model="name" dense required :rules="NameRules" ></v-text-field>
 
-                    <b-form-input type="text" placeholder="Описание" v-model="description"/>
-                    <div class="mt-2"></div>
+                    <v-text-field outlined type="text" placeholder="Описание" v-model="description" dense :rules="[v => v.length<=200 || 'Должно быть не больше 200 символов']"></v-text-field>
 
-                    <b-form-input type="number" placeholder="Высота изделия (в мм)" v-model="height" max="999999" min="0"/>
-                    <div class="invalid-feedback">Нужно ввести число от 0 до 999999</div>
-                    <div class="mt-2"></div>
+                    <v-text-field  outlined type="number" placeholder="Высота изделия (в мм)" v-model="height" dense :rules="[v => v<=2000 && v>=0 || 'Нужно ввести число от 0 до 2000']"></v-text-field>
 
-                    <b-form-input type="number" placeholder="Ширина изделия (в мм)" v-model="width" max="999999" min="0"/>
-                    <div class="invalid-feedback">Нужно ввести число от 0 до 999999</div>
-                    <div class="mt-2"></div>
+                    <v-text-field outlined type="number" placeholder="Ширина изделия (в мм)" v-model="width" dense :rules="[v => v<=2000 && v>=0 || 'Нужно ввести число от 0 до 2000']"></v-text-field>
 
-                    <b-form-input type="number" placeholder="Длина изделия (в мм)" v-model="length" max="999999" min="0"/>
-                    <div class="invalid-feedback">Нужно ввести число от 0 до 999999</div>
-                    <div class="mt-2"></div>
+                    <v-text-field outlined type="number" placeholder="Длина изделия (в мм)" v-model="length" dense :rules="[v => v<=2000 && v>=0 || 'Нужно ввести число от 0 до 2000']"></v-text-field>
+
                     <v-autocomplete
                         v-model="selectMaterial"
                         :items="items"
@@ -43,11 +33,11 @@
                         chips
                     ></v-autocomplete>
                     <div class="mt-2"></div>
-                    <v-btn v-on:click="addOrder" type="submit" variant="primary">Добавить</v-btn>
+                    <v-btn v-on:click="addOrder" type="submit" variant="primary" :disabled="!valid">Добавить</v-btn>
                     <div class="mt-2"></div>
-                    <v-btn v-on:click="addDraft" type="submit" variant="primary">Сохранить как черновик</v-btn>
+                    <v-btn v-on:click="addDraft" type="submit" variant="primary" :disabled="!valid">Сохранить как черновик</v-btn>
                     <div class="mt-2"></div>
-                </form>
+                </v-form>
             </b-card>
         </div>
     </v-container>
@@ -70,6 +60,11 @@
                 items: [],
                 search: null,
                 accessToken: localStorage.getItem('accessToken'),
+                valid:true,
+                NameRules: [
+                            v => !!v || 'Не должно быть пустым ',
+                            v => v.length<=50 || 'Должно быть не больше 50 символов'
+                        ],
             }
         },
 
@@ -78,20 +73,7 @@
         },
         methods: {
             addOrder() {
-            var valid;
-                var forms = document.getElementsByClassName('needs-validation');
-                   var validation = Array.prototype.filter.call(forms, function(form) {
-                      form.addEventListener('submit', function(event) {
-                        if (form.checkValidity() === false) {
-                          event.preventDefault();
-                          event.stopPropagation();
-                        }
-                        form.classList.add('was-validated');
-                      }, false);
-                      valid=form.checkValidity();
-
-                   });
-                if(valid){
+                if(this.$refs.form.validate()){
                     let newOrder = {
                         'sum': this.$data.sum,
                         'height': this.$data.height,
@@ -107,25 +89,13 @@
                             console.log(response);
                             this.successAlert();
                         }).catch(error => console.log(error));
-                    //this.$router.push('/orders');
-                    //location.reload()
+                    this.$router.push('/orders');
+                        location.reload()
                 }
 
             },
             addDraft() {
-                var valid;
-                var forms = document.getElementsByClassName('needs-validation');
-                var validation = Array.prototype.filter.call(forms, function(form) {
-                    form.addEventListener('submit', function(event) {
-                        if (form.checkValidity() === false) {
-                        event.preventDefault();
-                        event.stopPropagation();
-                        }
-                    form.classList.add('was-validated');
-                    }, false);
-                    valid=form.checkValidity();
-                });
-                if(valid){
+                if(this.$refs.form.validate()){
 
                     let newOrder = {
                         'sum': this.$data.sum,

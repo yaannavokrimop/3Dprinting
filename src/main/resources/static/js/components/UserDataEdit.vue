@@ -13,7 +13,6 @@
                 label="Имя"
                 :rules="[v => ( v.length <= 44 && v.length>0) || 'Должно быть от 1 до 44 символов']"
                 required>
-
              </v-text-field>
              <v-text-field
                   v-model="user.surname"
@@ -23,20 +22,19 @@
              </v-text-field>
              <v-text-field
                   v-model="user.email"
-                  label="Электронная почта">
-                  :rules="emailRules"
-                  required>
+                  label="Электронная почта"
+                  :rules="emailRules">
              </v-text-field>
-
              <v-text-field
                   v-model="user.phone"
-                  label="Номер телефона">
-                  :rules="[v => /^\d[\d\(\)\ -]{4,14}\d$/ || 'Номер телефона указан не правильно']">
+                  required
+                  label="Номер телефона"
+                  :rules="[v => v.length<=12 && v.length>=5 || 'Номер введен некорректно']">
              </v-text-field>
              <v-text-field
                   v-model="user.information"
-                  label="Информация">
-                  :rules="[v => (v.length <= 20)|| 'Должно быть до 200 символов']">
+                  label="Информация"
+                  :rules="[v => (v.length <= 200)|| 'Должно быть до 200 символов']">
              </v-text-field>
              <v-switch v-model="user.role" label="Стать исполнителем" value="EXECUTOR" v-show="user.role==='CUSTOMER'&&testRoleResult"></v-switch>
         </v-form>
@@ -68,7 +66,7 @@ export default {
         valid:true,
         emailRules: [
             v => !!v || 'Поле Электронная почта не должно быть пустым ',
-            v =>  /.+@.+\..+/.test(v)  || 'Электронная почта указана не правильно',
+            v => ( /.+@.+\..+/.test(v))  || 'Электронная почта указана не правильно'
         ],
         }
     },
@@ -85,6 +83,9 @@ export default {
          }).catch(error => console.log(error));
          this.checkRole();
     },
+    updated:function(){
+        this.validate();
+    },
     methods:{
         checkRole(){
             AXIOS.get('/user/role').then((response) =>{
@@ -92,7 +93,10 @@ export default {
 
             })
 
-        }
+        },
+        validate () {
+         this.$emit('tt' ,this.$refs.form.validate());
+        },
     }
 }
 </script>
