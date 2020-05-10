@@ -46,5 +46,5 @@ public class OrderRepresent implements Pageable {
 
     private UUID customerId;
 
-    private Date date;
+    private String date;
 }

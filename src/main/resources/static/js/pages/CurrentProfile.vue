@@ -66,7 +66,7 @@
 </template>
 
 <script>
-    import {AXIOS} from "../pages/http-common";
+    import {AXIOS} from "./http-common";
 
     export default {
         data() {
@@ -93,7 +93,9 @@
                 this.user.information = response.data.information;
                 this.user.name = response.data.name;
                 this.user.phone = response.data.phone;
-                this.user.role = response.data.role;
+                let role = response.data.role;
+                if (role === 'EXECUTOR') this.user.role = 'Исполнитель';
+                if (role === 'CUSTOMER') this.user.role = 'Заказчик';
                 this.user.surname = response.data.surname;
                 this.user.addresses = response.data.addresses;
             }).catch(error => console.log(error));
