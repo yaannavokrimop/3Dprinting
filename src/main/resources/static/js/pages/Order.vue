@@ -68,7 +68,7 @@
 </template>
 
 <script>
-    import {AXIOS} from "../pages/http-common";
+    import {AXIOS} from "./http-common";
 
     export default {
         props: [],
@@ -103,13 +103,17 @@
                 this.order.status = response.data.status;
                 this.order.sum = response.data.sum;
                 this.order.name = response.data.name;
-                this.order.date = response.data.date;
+                let dateStr = response.data.date;
+                let dateStr1 = (dateStr.substring(0,10));
+                let dateStr2 = (dateStr.substring(11,16));
+                this.order.date = dateStr1+" "+dateStr2;
                 this.order.height = response.data.height;
                 this.order.width = response.data.width;
                 this.order.length = response.data.length;
                 this.order.file = response.data.file;
                 this.order.description = response.data.description;
                 this.order.materials = response.data.materials;
+                console.log(response.data);
             }).catch(error => console.log(error));
 
             this.myId = localStorage.getItem('myId')

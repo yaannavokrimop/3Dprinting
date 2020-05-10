@@ -11,10 +11,6 @@
                         label="Имя">
                 </v-text-field>
                 <v-text-field
-                        v-model="order.status"
-                        label="Статус">
-                </v-text-field>
-                <v-text-field
                         v-model="order.description"
                         label="Описание">
                 </v-text-field>
@@ -39,6 +35,16 @@
                         v-model="order.file"
                         label="Ссылка на файл">
                 </v-text-field>
+                <div>
+                    <div v-if="order.status === 'DRAFT'">
+                        <strong>Статус заказа: {{order.status}}</strong>
+                        <b-button variant="outline-primary" @click="notDraft(order.id)">Заказ больше не черновик</b-button>
+                    </div>
+                    <div v-else>
+                        <strong>Статус заказа: {{order.status}}</strong>
+                    </div>
+
+                </div>
             </v-card-text>
         </v-card>
 
@@ -65,6 +71,15 @@
                 this.order.description = response.data.description;
 
             }).catch(error => console.log(error));
+        },
+        methods: {
+            notDraft(orderId) {
+                AXIOS.patch('order/notDraft/'+orderId).
+                then((response) => {
+                    console.log(response);
+                    location.reload()
+                }).catch(error => console.log(error));
+            }
         }
     }
 </script>
