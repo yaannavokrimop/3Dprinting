@@ -40,26 +40,28 @@
     },
     methods:{
         edit:function(){
-            var order=this.order;
-            var id=this.order.id;
-            AXIOS.put('/order/'+id,{
-                id : order.id,
-            userId : order.userId,
-            status : order.status,
-            sum : order.sum,
-            date : order.date,
-            name : order.name,
-            height : order.height,
-            width : order.width,
-            length : order.length,
-            file : order.file,
-            description : order.description
-            });
+            if(true){
+                var order=this.order;
+                var id=this.order.id;
+                AXIOS.put('/order/'+id,{
+                    id : order.id,
+                userId : order.userId,
+                status : order.status,
+                sum : order.sum,
+                date : order.date,
+                name : order.name,
+                height : order.height,
+                width : order.width,
+                length : order.length,
+                file : order.file,
+                description : order.description
+                });
 
-            console.log(order);
+                console.log(order);
 
-            this.$router.push("/orders");
-            location.reload()
+                this.$router.push("/orders");
+                location.reload()
+            }
         }
     }
     }

@@ -5,7 +5,7 @@
                 <v-layout justify-space-around column>
 
                    <v-layout row>
-                        <user-data-edit v-bind:user='user'></user-data-edit>
+                    <user-data-edit v-bind:user='user'></user-data-edit>
                    </v-layout>
                     <div class="mt-2"></div>
                    <v-flex xs6>
@@ -48,21 +48,22 @@ export default {
           },
     methods:{
         edit:function(){
-        var user=this.user;
-        var id=this.user.id;
-        AXIOS.put('/user/update/'+id,{
-            id:user.id,
-            email:user.email,
-            information:user.information,
-            name:user.name,
-            phone:user.phone,
-            role:user.role,
-            surname:user.surname
-        });
+                var user=this.user;
+                var id=this.user.id;
+                AXIOS.put('/user/update/'+id,{
+                    id:user.id,
+                    email:user.email,
+                    information:user.information,
+                    name:user.name,
+                    phone:user.phone,
+                    role:user.role,
+                    surname:user.surname
+                });
 
-            this.$router.push('/profile');
-            location.reload();
-            console.log(user);
+                    this.$router.push('/profile');
+                    location.reload();
+                    console.log(user);
+
 
         }
     }
