@@ -62,7 +62,7 @@
 </template>
 
 <script>
-    import {AXIOS} from "../pages/http-common";
+    import {AXIOS} from "./http-common";
 
     export default {
         data() {

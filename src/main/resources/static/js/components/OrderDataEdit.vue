@@ -6,6 +6,7 @@
                 Редактировать заказ
             </v-card-title>
             <v-card-text>
+
                 <v-form ref="form" v-model="valid" lazy-validation>
                     <v-text-field
                             v-model="order.name"
@@ -13,11 +14,6 @@
                             :rules="[v => ( v.length <= 50 && v.length>0) || 'Должно быть от 1 до 50 символов']"
                             required>
 
-                    </v-text-field>
-                    <v-text-field
-                            v-model="order.status"
-                            label="Статус">
-                            readonly
                     </v-text-field>
                     <v-text-field
                             v-model="order.description"
@@ -66,6 +62,18 @@
                      ></v-autocomplete>
 
                 </v-form>
+  
+                <div>
+                    <div v-if="order.status === 'DRAFT'">
+                        <strong>Статус заказа: {{order.status}}</strong>
+                        <b-button variant="outline-primary" @click="notDraft(order.id)">Заказ больше не черновик</b-button>
+                    </div>
+                    <div v-else>
+                        <strong>Статус заказа: {{order.status}}</strong>
+                    </div>
+
+                </div>
+
             </v-card-text>
         </v-card>
 
@@ -102,6 +110,7 @@
                 console.log("Материалы из данных")
                 console.log(this.order.materials);
             }).catch(error => console.log(error));
+
             this.querySelections();
         },
         watch:{
@@ -110,12 +119,20 @@
 
             }
         },
-        methods:{
+
+        methods: {
+            notDraft(orderId) {
+                AXIOS.patch('order/notDraft/'+orderId).
+                then((response) => {
+                    console.log(response);
+                    location.reload()
+                }).catch(error => console.log(error));
+            },
             querySelections () {
-                AXIOS.get('/material').then((response) =>{
-                    this.items=response.data;
-                 }).catch(error => console.log(error));
-             },
+               AXIOS.get('/material').then((response) =>{
+                this.items=response.data;
+              }).catch(error => console.log(error));
+            },
         }
     }
 </script>

@@ -24,6 +24,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Service
@@ -158,7 +159,10 @@ public class ResponseService {
         responseRepresent.setExecutorId(response.getExecutor().getId());
         responseRepresent.setSum(response.getSum());
         responseRepresent.setExecutorInfo("" + response.getExecutor().getSurname() + " " + response.getExecutor().getName());
-        responseRepresent.setDate(response.getDate());
+
+        SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy HH:mm");
+
+        responseRepresent.setDate(format.format(response.getDate()));
         responseRepresent.setStatus(response.getStatus());
         responseRepresent.setCustomerId(response.getOrder().getUser().getId());
         return responseRepresent;

@@ -85,4 +85,9 @@ public class OrderController {
     public Order receivedOrder(@PathVariable("id") UUID id) {
         return orderService.receivedOrder(id);
     }
+
+    @PatchMapping("/notDraft/{id}")
+    public Order notDraft(@PathVariable("id") UUID id) {
+        return orderService.notDraftOrder(id);
+    }
 }

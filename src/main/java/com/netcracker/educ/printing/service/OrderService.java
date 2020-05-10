@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 
 
 import javax.transaction.Transactional;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Service
@@ -89,6 +90,8 @@ public class OrderService {
     }
 
     public OrderRepresent orderToOrderRepresent(Order order) {
+        SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy HH:mm");
+        String date = format.format(order.getDate());
         return new OrderRepresent(
                 order.getId(),
                 order.getSum(),
@@ -102,8 +105,9 @@ public class OrderService {
                 order.getStatus(),
                 order.getFile(),
                 order.getUser().getId(),
-                order.getDate()
+                date
         );
+
     }
 
     public List<OrderRepresent> ordersToOrderRepresents(List<Order> orders) {
@@ -167,6 +171,17 @@ public class OrderService {
         return order;
     }
 
+    public Order notDraftOrder(UUID id) {
+        Order order = orderRepo.findById(id).orElseThrow(NotFoundException::new);
+
+        if (order.getStatus() == OrderStatus.DRAFT) {
+            order.setStatus(OrderStatus.IN_SEARCH);
+
+            orderRepo.save(order);
+            log.info("Order not a Draft anymore= {}", order.getId());
+        }
+       return order;
+    }
 
     public OrderRepresent getOrderById(UUID id) {
         Optional<Order> orderData = orderRepo.findById(id);
@@ -180,5 +195,8 @@ public class OrderService {
         Order saveOrder=orderRepo.save(dbOrder);
         log.info("Update order {}",saveOrder.getId());
         return saveOrder;
+
+       
+
     }
 }
