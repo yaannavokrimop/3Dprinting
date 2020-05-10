@@ -83,20 +83,19 @@ export default {
          }).catch(error => console.log(error));
          this.checkRole();
     },
-    updated:function(){
-        this.validate();
+    watch:{
+        valid:function(){
+        this.$emit('testMethod' ,this.$refs.form.validate());
+        }
     },
     methods:{
         checkRole(){
             AXIOS.get('/user/role').then((response) =>{
                 this.$data.testRoleResult=response.data;
-
             })
 
         },
-        validate () {
-         this.$emit('tt' ,this.$refs.form.validate());
-        },
+
     }
 }
 </script>

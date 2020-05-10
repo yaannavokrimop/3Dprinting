@@ -17,6 +17,7 @@
                     <v-text-field
                             v-model="order.status"
                             label="Статус">
+                            readonly
                     </v-text-field>
                     <v-text-field
                             v-model="order.description"
@@ -53,6 +54,17 @@
                             v-model="order.file"
                             label="Ссылка на файл">
                     </v-text-field>
+                     <v-autocomplete
+                         v-model="order.materials"
+                         :items="items"
+                         cache-items
+                         hide-no-data
+                         hide-details
+                         label="Материалы"
+                         multiple
+                         chips
+                     ></v-autocomplete>
+
                 </v-form>
             </v-card-text>
         </v-card>
@@ -67,13 +79,14 @@
         props:['order'],
         data(){
             return{
-                valid:true
+                valid:true,
+                items: []
             }
         },
         created:function(){
             AXIOS.get("/order/"+this.$route.params.id).then((response) =>{
                 this.order.id = response.data.id;
-                this.order.userId = response.data.userId;
+                this.order.userId = response.data.customerId;
                 this.order.status = response.data.status;
                 this.order.sum = response.data.sum;
                 this.order.name = response.data.name;
@@ -83,8 +96,26 @@
                 this.order.length = response.data.length;
                 this.order.file = response.data.file;
                 this.order.description = response.data.description;
-
+                this.order.materials = response.data.materials;
+                console.log("Материалы из ответа")
+                console.log(response.data.materials);
+                console.log("Материалы из данных")
+                console.log(this.order.materials);
             }).catch(error => console.log(error));
+            this.querySelections();
+        },
+        watch:{
+            valid:function(){
+                this.$emit('testMethod' ,this.$refs.form.validate());
+
+            }
+        },
+        methods:{
+            querySelections () {
+                AXIOS.get('/material').then((response) =>{
+                    this.items=response.data;
+                 }).catch(error => console.log(error));
+             },
         }
     }
 </script>

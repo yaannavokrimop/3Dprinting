@@ -14,6 +14,7 @@ import com.netcracker.educ.printing.model.repository.UserRepo;
 import com.netcracker.educ.printing.model.representationModel.OrderRepresent;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -167,4 +168,17 @@ public class OrderService {
     }
 
 
+    public OrderRepresent getOrderById(UUID id) {
+        Optional<Order> orderData = orderRepo.findById(id);
+        return orderToOrderRepresent(orderData.orElseThrow(NotFoundException::new));
+    }
+
+    public Order updateOrder(OrderRepresent inputOrderRepresent, UUID orderId) {
+        Order dbOrder=orderRepo.findById(orderId).orElseThrow(NullPointerException::new);
+        Order inputOrder=new Order(inputOrderRepresent,dbOrder.getDate(),dbOrder.getUser(),materialsFromList(inputOrderRepresent.getMaterials()));
+        BeanUtils.copyProperties(inputOrder, dbOrder, "user");
+        Order saveOrder=orderRepo.save(dbOrder);
+        log.info("Update order {}",saveOrder.getId());
+        return saveOrder;
+    }
 }

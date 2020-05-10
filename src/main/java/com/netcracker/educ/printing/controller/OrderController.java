@@ -39,11 +39,9 @@ public class OrderController {
     }
 
     @GetMapping("{id}")
-    public Order getOrderById(@PathVariable("id") UUID id) {
+    public OrderRepresent getOrderById(@PathVariable("id") UUID id) {
         log.info("get Order by id= {}", id);
-        Optional<Order> orderData = orderRepo.findById(id);
-
-        return orderData.orElseThrow(NotFoundException::new);
+        return orderService.getOrderById(id);
     }
 
     @GetMapping("forchat/{chatId}")
@@ -63,13 +61,9 @@ public class OrderController {
 
     @PutMapping("{id}")
     public Order updateOrder(
-            @RequestBody Order inputOrder,
-            @PathVariable("id") Order dbOrder
-    ) {
-        log.info("Order: {};    dbOrder: {}", dbOrder.toString(), inputOrder.toString());
-        BeanUtils.copyProperties(inputOrder, dbOrder, "user", "materials");
-
-        return orderRepo.save(dbOrder);
+            @RequestBody OrderRepresent inputOrder,
+            @PathVariable("id") UUID orderId) {
+        return orderService.updateOrder(inputOrder,orderId);
     }
 
     @DeleteMapping("{id}")

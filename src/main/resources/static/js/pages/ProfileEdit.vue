@@ -5,7 +5,7 @@
                 <v-layout justify-space-around column>
 
                    <v-layout row>
-                    <user-data-edit v-bind:user='user'></user-data-edit>
+                    <user-data-edit v-bind:user='user' @testMethod="testValid"></user-data-edit>
                    </v-layout>
                     <div class="mt-2"></div>
                    <v-flex xs6>
@@ -67,8 +67,9 @@ export default {
                 console.log(user);
             }
         },
-        tt(validP) {
+        testValid(validP) {
             this.$data.validP =validP;
+            console.log("testMethod");
         }
     }
 
