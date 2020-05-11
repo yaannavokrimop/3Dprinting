@@ -33,11 +33,11 @@ public class ResponseRepresent implements Pageable {
 
     private String date;
 
-    private ResponseStatus status;
+    private String status;
 
     private UUID customerId;
 
-    public ResponseRepresent(UUID id, float sum, String s, String date, ResponseStatus status) {
+    public ResponseRepresent(UUID id, float sum, String s, String date, String status) {
         this.executorId = id;
         this.sum = sum;
         this.executorInfo = s;
