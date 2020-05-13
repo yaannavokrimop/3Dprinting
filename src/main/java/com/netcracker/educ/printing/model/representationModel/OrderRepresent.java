@@ -1,19 +1,19 @@
 package com.netcracker.educ.printing.model.representationModel;
 
-import com.netcracker.educ.printing.model.entity.User;
 import com.netcracker.educ.printing.model.bean.OrderStatus;
 import com.netcracker.educ.printing.model.bean.Pageable;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.UUID;
-import java.util.Date;
 
 
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 public class OrderRepresent implements Pageable {
 
     private UUID id;
@@ -42,9 +42,9 @@ public class OrderRepresent implements Pageable {
 
     private OrderStatus status;
 
-    private String file;
-
     private UUID customerId;
 
     private String date;
+
+    private String fileName;
 }

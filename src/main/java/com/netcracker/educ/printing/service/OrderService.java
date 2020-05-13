@@ -20,9 +20,10 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -37,18 +38,45 @@ public class OrderService {
     private final ResponseRepo responseRepo;
     private final MaterialService materialService;
     private final ResponseService responseService;
+    private final FileService fileService;
 
     public Order create(OrderRepresent represent, UUID userId) throws RuntimeException {
         represent.setId(UUID.randomUUID());
+        OrderStatus status = OrderStatus.IN_SEARCH;
+        if (represent.getFileName() != null && !represent.getFileName().isEmpty()) status = OrderStatus.DRAFT;
         Order order;
-        if(represent.getMaterials()!=null) {
-            order = new Order(represent, OrderStatus.IN_SEARCH, new Date(),  userRepo.findById(userId).orElseThrow(NotFoundException::new),materialsFromList(represent.getMaterials()));
-        }else{
-            order = new Order(represent, OrderStatus.IN_SEARCH, new Date(), userRepo.findById(userId).orElseThrow(NotFoundException::new));
+        if (represent.getMaterials() != null) {
+            order = new Order(represent, status, new Date(), userRepo.findById(userId).orElseThrow(NotFoundException::new), materialsFromList(represent.getMaterials()));
+        } else {
+            order = new Order(represent, status, new Date(), userRepo.findById(userId).orElseThrow(NotFoundException::new));
         }
         Order dbOrder = orderRepo.save(order);
         log.info("User {} created order {}", userId, order.getId());
         return dbOrder;
+    }
+
+    public boolean addFileToDraft(MultipartFile file, UUID orderId) throws IOException {
+        Order order = orderRepo.findById(orderId).orElseThrow(NotFoundException::new);
+        String fileName = fileService.uploadFile(file);
+        if (!fileName.equals("")) {
+            order.setFile(fileName);
+            orderRepo.save(order);
+            log.info("File {} added to draft {}", fileName, orderId);
+            return true;
+        } else return false;
+
+    }
+
+    public boolean addFileToOrder(MultipartFile file, UUID orderId) throws IOException {
+        Order order = orderRepo.findById(orderId).orElseThrow(NotFoundException::new);
+        String fileName = fileService.uploadFile(file);
+        if (!fileName.equals("")) {
+            order.setFile(fileName);
+            order.setStatus(OrderStatus.IN_SEARCH);
+            orderRepo.save(order);
+            log.info("File {} added to order {}",fileName, orderId);
+            return true;
+        } else return false;
     }
 
     public Page<Order> getPageOfOrders(Map<String, String> pageParams, UUID principalId) {
@@ -64,9 +92,9 @@ public class OrderService {
         User user = userRepo.findById(userId).orElseThrow(NotFoundException::new);
         inputOrder.setId(UUID.randomUUID());
         Order order;
-        if(inputOrder.getMaterials()!=null) {
+        if (inputOrder.getMaterials() != null) {
             order = new Order(inputOrder, OrderStatus.DRAFT, new Date(), user, materialsFromList(inputOrder.getMaterials()));
-        }else {
+        } else {
             order = new Order(inputOrder, OrderStatus.DRAFT, new Date(), user);
         }
 //        order.setName(inputOrder.getName());
@@ -76,6 +104,7 @@ public class OrderService {
     }
 
     public UUID deleteOrder(UUID orderId) {
+        fileService.deleteFileByOrderId(orderId);
         orderRepo.deleteById(orderId);
         log.info("Order {}  was deleted", orderId);
         return orderId;
@@ -92,22 +121,22 @@ public class OrderService {
     public OrderRepresent orderToOrderRepresent(Order order) {
         SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy HH:mm");
         String date = format.format(order.getDate());
-        return new OrderRepresent(
-                order.getId(),
-                order.getSum(),
-                order.getName(),
-                order.getDescription(),
-                order.getHeight(),
-                order.getWidth(),
-                order.getWidth(),
-                materialService.MaterialSetToMatTitleList(order.getMaterials()),
-                responseRepo.countDistinctByOrderId(order.getId()),
-                order.getStatus(),
-                order.getFile(),
-                order.getUser().getId(),
-                date
-        );
-
+        OrderRepresent orderRepresent = new OrderRepresent();
+        orderRepresent.setId(order.getId());
+        orderRepresent.setSum(order.getSum());
+        orderRepresent.setName(order.getName());
+        orderRepresent.setDescription(order.getDescription());
+        orderRepresent.setHeight(order.getHeight());
+        orderRepresent.setWidth(order.getWidth());
+        orderRepresent.setLength(order.getLength());
+        orderRepresent.setMaterials(materialService.MaterialSetToMatTitleList(order.getMaterials()));
+        orderRepresent.setFileName(order.getFile());
+        orderRepresent.setResponsesCount(responseRepo.countDistinctByOrderId(order.getId()));
+        orderRepresent.setStatus(order.getStatus());
+        orderRepresent.setCustomerId(order.getUser().getId());
+        orderRepresent.setDate(date);
+        orderRepresent.setFileName(order.getFile());
+        return orderRepresent;
     }
 
     public List<OrderRepresent> ordersToOrderRepresents(List<Order> orders) {
@@ -180,7 +209,7 @@ public class OrderService {
             orderRepo.save(order);
             log.info("Order not a Draft anymore= {}", order.getId());
         }
-       return order;
+        return order;
     }
 
     public OrderRepresent getOrderById(UUID id) {
@@ -189,14 +218,13 @@ public class OrderService {
     }
 
     public Order updateOrder(OrderRepresent inputOrderRepresent, UUID orderId) {
-        Order dbOrder=orderRepo.findById(orderId).orElseThrow(NullPointerException::new);
-        Order inputOrder=new Order(inputOrderRepresent,dbOrder.getDate(),dbOrder.getUser(),materialsFromList(inputOrderRepresent.getMaterials()));
+        Order dbOrder = orderRepo.findById(orderId).orElseThrow(NullPointerException::new);
+        Order inputOrder = new Order(inputOrderRepresent, dbOrder.getDate(), dbOrder.getUser(), materialsFromList(inputOrderRepresent.getMaterials()));
         BeanUtils.copyProperties(inputOrder, dbOrder, "user");
-        Order saveOrder=orderRepo.save(dbOrder);
-        log.info("Update order {}",saveOrder.getId());
+        Order saveOrder = orderRepo.save(dbOrder);
+        log.info("Update order {}", saveOrder.getId());
         return saveOrder;
 
-       
 
     }
 }
