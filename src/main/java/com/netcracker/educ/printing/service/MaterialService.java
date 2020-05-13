@@ -44,20 +44,25 @@ public class MaterialService {
         for(MaterialEquipment matEquipment:materialEquipments){
             materials.add(matEquipment.getMaterial().getMatTitle());
         }
+        log.info("Get materials by userId: {}",userId);
         return materials;
     }
 
     public List<String> getMaterialsByEquipment(UUID equipId) {
-        return materialEquipmentRepo.findMatTitleByEquipmentId(equipId);
-
+        List<String> materials= materialEquipmentRepo.findMatTitleByEquipmentId(equipId);
+        log.info("Get materials by equipId: {}",equipId);
+        return materials;
     }
 
     public List<String> getAllMaterials() {
-        return materialRepo.findAllMatTitles();
+        List<String> materials= materialRepo.findAllMatTitles();
+        log.info("Get all materials");
+        return materials;
 
     }
 
     public List<String> MaterialSetToMatTitleList(Set<Material> materials) {
+        log.debug("MaterialSet to materialList");
         List<String> result = new ArrayList<>();
         for (Material material : materials) {
             result.add(material.getMatTitle());

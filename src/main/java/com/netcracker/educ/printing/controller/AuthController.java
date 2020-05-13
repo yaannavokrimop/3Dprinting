@@ -43,7 +43,7 @@ public class AuthController {
 
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
-
+        log.debug("Authenticate user {}",loginRequest.getEmail());
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         loginRequest.getEmail(),
@@ -58,14 +58,16 @@ public class AuthController {
         List<String> roles = userDetails.getAuthorities().stream()
                 .map(item -> item.getAuthority())
                 .collect(Collectors.toList());
-        log.info("User " + userDetails.getId() + " logged in! ");
+        log.info("User {} logged in!",userDetails.getId());
 
         return ResponseEntity.ok(new LoginResponse(jwt, roles));
     }
 
     @PostMapping("/signup")
     public ResponseEntity<?> registration(@Valid @RequestBody SignUpRequest signUpRequest) {
+        log.debug("Registration user {}",signUpRequest.getEmail());
         if(userRepo.existsByEmail(signUpRequest.getEmail())) {
+            log.debug("User with email {} already exists",signUpRequest.getEmail());
             return new ResponseEntity(new SignupResponse( false, "Email is already taken!"),
                     HttpStatus.BAD_REQUEST);
         }
@@ -80,6 +82,7 @@ public class AuthController {
         URI location = ServletUriComponentsBuilder
                 .fromCurrentContextPath().path("/signup")
                 .buildAndExpand(result.getEmail()).toUri();
+        log.info("User {} has successfully registered",result.getId());
         return ResponseEntity.created(location).body(new SignupResponse(true, "User registered successfully"));
     }
 }
