@@ -31,6 +31,7 @@ public class UserRestController {
     @GetMapping()
     public UserRepresent getCurrentUser(){
         UserDetailsImpl principal = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        log.debug("Get current user {}",principal.getId());
         return  userService.getCurrentUser(principal);
 
     }
@@ -39,27 +40,32 @@ public class UserRestController {
 
     @GetMapping("{id}")
     public UserRepresent getUserById(@PathVariable("id") User user){
+        log.debug("Get user by id= {}",user.getId());
         return userService.userToUserRepresent(user);
     }
 
     //Возвращает всех Исполнителей
     @GetMapping("/executors")
     public List<UserRepresent> listExecutors(){
+        log.debug("Get list of executors");
         return userService.findAllExecutors();
     }
 
     @PutMapping("/update/{id}")
     public UserRepresent updateProfile(@RequestBody UserRepresent user){
+        log.debug("User {} update his profile",user.getId());
         return userService.updateUser(user);
     }
 
     @GetMapping("/role")
     public Boolean checkUserRoleCustomer(){
         UserDetailsImpl principal = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        log.debug("Check userRole for current user {}",principal.getId());
         return userService.checkUserRole(principal.getId());
     }
     @GetMapping("/role/{id}")
     public Boolean checkUserRoleCustomerById(@PathVariable("id") UUID id){
+        log.debug("Check userRole for user by id {}",id);
         return userService.checkUserRole(id);
     }
 

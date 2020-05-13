@@ -39,11 +39,13 @@ public class MaterialController {
     }
     @GetMapping(value = "/equip/{equipmentId}")
     public List<String> getAllMaterialNamesForEquip(@PathVariable("equipmentId") UUID equipId){
+        log.debug("Get materials for equipment {}",equipId);
         return materialService.getMaterialsByEquipment(equipId);
     }
 
     @GetMapping("/executor/")
     public Set<String> getMaterialsByExecutor(@AuthenticationPrincipal UserDetailsImpl executor){
+        log.debug("Get materials by executor {}",executor.getId());
         return  materialService.getMaterialsByUser(executor.getId());
     }
 

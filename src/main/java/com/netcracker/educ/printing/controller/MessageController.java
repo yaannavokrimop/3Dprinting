@@ -8,12 +8,13 @@ import com.netcracker.educ.printing.security.UserDetailsImpl;
 import com.netcracker.educ.printing.service.MessageService;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
-
+@Slf4j
 @RestController
 @Data
 @AllArgsConstructor
@@ -25,7 +26,7 @@ public class MessageController {
 
     @GetMapping("{chatId}")
     public List<MessageRepresent> getMessageByChat(@PathVariable(name = "chatId") UUID chatId, @AuthenticationPrincipal UserDetailsImpl principal) {
-
+        log.debug("Get message by chat {}, User {}",chatId,principal.getId());
         List<Message> messageList = messageService.getMessagesByChat(chatId, principal);
         List<MessageRepresent> messageRepresents = new ArrayList<>();
         SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy HH:mm");
@@ -43,6 +44,7 @@ public class MessageController {
 
     @PostMapping
     public Message createMessage(@AuthenticationPrincipal UserDetailsImpl principal, @RequestBody MessageRepresent message) {
+        log.debug("User {} create message in chat {}",principal.getId(),message.getChatId());
         User currentUser = userRepo.findByEmail(principal.getEmail());
         return messageService.createMessage(message, currentUser);
     }

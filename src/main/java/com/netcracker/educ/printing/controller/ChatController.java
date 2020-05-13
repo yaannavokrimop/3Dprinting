@@ -34,6 +34,7 @@ public class ChatController {
     @GetMapping
     public List<ChatRepresent> getMyChats() {
         UserDetailsImpl principal = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        log.info("Get chats for user {}",principal.getId());
         User currentUser = userRepo.findByEmail(principal.getEmail());
         List<Chat> myChats = chatRepo.findAllByExecutorOrCustomer(currentUser, currentUser);
         return chatService.chatsToChatRepresents(myChats);
@@ -41,15 +42,17 @@ public class ChatController {
 
     @GetMapping("{id}")
     public Chat getChat(@PathVariable("id")UUID id) {
-        log.info("Chat  id=" + id);
+        log.debug("Get chat by id= {}",id);
         return chatService.getChatById(id);
     }
 
     @PostMapping
     public ResponseEntity<String> createChat(@RequestBody ChatRepresent chatRepresent) {
+        log.debug("Create chat for {} and {}",chatRepresent.getExecutorId(),chatRepresent.getCustomerId());
         try {
             chatService.createChat(chatRepresent);
         } catch (ResponseCreationException ex) {
+            log.error("Exception {}",ex.getMessage());
             return ResponseEntity.badRequest().body(ex.getMessage());
         }
         return ResponseEntity.ok("Чат успешно создан.");
@@ -57,12 +60,14 @@ public class ChatController {
 
     @GetMapping("/response")
     public ResponseEntity getChatForResponse(@RequestParam Map<String, String> userIds, @AuthenticationPrincipal UserDetailsImpl principal) {
+        log.debug("Get chat for response, User {}",principal.getId());
         Chat chat;
         UUID executorId = UUID.fromString(userIds.get("executorId"));
         UUID customerId = UUID.fromString(userIds.get("customerId"));
         try {
             chat = chatService.getChatByExecutorIdAndCustomerId(executorId, customerId);
         } catch (NotFoundException ex) {
+            log.error("Chat for {} and {} not found",executorId,customerId);
             return ResponseEntity.badRequest().body("Чат не найден.");
         }
         User user = userRepo.findById(principal.getId())
