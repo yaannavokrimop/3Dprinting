@@ -34,21 +34,26 @@ public class EquipmentService {
         }
         ExecutorEquipment executorEquipment = new ExecutorEquipment(executor, equipmentDb,equipDesc,materialEquipmentRepo.findByMaterialNames(materialName,equipmentDb.getEquipName()));
         executorEquipmentRepo.save(executorEquipment);
+        log.info("User {} created equipment {}",executor.getId(),equipmentDb.getId());
         return equipmentDb;
     }
 
     public List<EquipmentRepresent> getUserEquipment(UUID userId) {
         List<ExecutorEquipment>executorEquipmentList= executorEquipmentRepo.findAllByExecutorId(userId);
+        log.info("Get equipments for user {}",userId);
         return executorEquipmentsToEquipmentRepresent(executorEquipmentList);
 }
 
     public List<String> getEquipmentsByEquipNamePart(String equipName) {
-        return equipmentRepo.findEquipNameByEquipNameContaining(equipName);
+        List<String> equipments= equipmentRepo.findEquipNameByEquipNameContaining(equipName);
+        log.info("Get equipment by part of name: {}",equipName);
+        return equipments;
     }
 
     public EquipmentRepresent getEquipmentByExecutorEquipId(UUID executorEquipId) {
       ExecutorEquipment executorEquipment=Objects.requireNonNull( executorEquipmentRepo.findById(executorEquipId).orElse(null),"executorEquipment must not be null");
-        return executorEquipmentToEquipmentRepresent(executorEquipment);
+      log.info("Get Equipment by executorEquipId= {}",executorEquipId);
+      return executorEquipmentToEquipmentRepresent(executorEquipment);
 
 
     }
@@ -57,10 +62,11 @@ public class EquipmentService {
             Equipment equipment = equipmentRepo.findByEquipName(equipName);
         Set<MaterialEquipment> matEquips = materialEquipmentRepo.findByMaterialNames(materials,equipName);
              executorEquipmentRepo.save(new ExecutorEquipment(userRepo.findByEmail(email), equipment, equipDesc,matEquips));
-
+            log.info("User {} added equipment {}",email,equipment.getId());
     }
 
     public List<EquipmentRepresent> executorEquipmentsToEquipmentRepresent(List<ExecutorEquipment> executorEquipments){
+        log.debug("ExecutorEquipments to EquipmentsRepresent");
         List<EquipmentRepresent> equipmentRepresents=new ArrayList<>();
         for(ExecutorEquipment exEquipment:executorEquipments){
             equipmentRepresents.add(executorEquipmentToEquipmentRepresent(exEquipment));
@@ -69,6 +75,7 @@ public class EquipmentService {
     }
 
     public EquipmentRepresent executorEquipmentToEquipmentRepresent(ExecutorEquipment executorEquipment) {
+        log.debug("ExecutorEquipment to EquipmentRepresent");
         Equipment equipment=executorEquipment.getEquipment();
             return new EquipmentRepresent(
                     equipment.getId(),
@@ -88,16 +95,20 @@ public class EquipmentService {
         for(MaterialEquipment m:materialEquipments){
             materials.add(m.getMaterial().getMatTitle());
         }
+        log.info("Get materials by executorEquipment {}",executorEquipment.getId());
         return materials;
     }
 
 
     public void deleteById(UUID executorEquipId) {
             executorEquipmentRepo.deleteById(executorEquipId);
+            log.info("ExecutorEquipment {} was deleted",executorEquipId);
     }
 
     public Equipment getEquipmentByName(String equipName,UUID userId) {
-        return equipmentRepo.findByEquipName(equipName);
+        Equipment equipment= equipmentRepo.findByEquipName(equipName);
+        log.info("Get equipment by name: {}",equipName);
+        return equipment;
 
     }
 }

@@ -31,7 +31,9 @@ public class SearchService {
     private final String QUERY = "";
 
     public List<String> getCitiesByTitlePart(String cityTitlePart) {
-        return cityRepo.findTitleByTitleContaining(cityTitlePart);
+        List<String> cities= cityRepo.findTitleByTitleContaining(cityTitlePart);
+        log.info("Get cities by part of title: {}",cityTitlePart);
+        return cities;
     }
 
     public Page<User> getPageOfExecutors(SearchParam params) {
@@ -40,11 +42,16 @@ public class SearchService {
         if (params.getCities() == null || params.getCities().isEmpty()) cities = null;
         else cities = cityRepo.findAllByTitleIn(params.getCities());
         List<Material> materials;
-        if (params.getMaterials() == null || params.getMaterials().isEmpty())
-            return userRepo.findAllByParams(cities, params.getHeight(), params.getWidth(), params.getLength(), Role.EXECUTOR, page);
+        if (params.getMaterials() == null || params.getMaterials().isEmpty()){
+            Page<User> pages= userRepo.findAllByParams(cities, params.getHeight(), params.getWidth(), params.getLength(), Role.EXECUTOR, page);
+            log.info("Get page of executors (without materials)");
+            return pages;
+        }
         else {
             materials = materialRepo.findAllByMatTitleIn(params.getMaterials());
-            return userRepo.findAllByParamsWithMaterials(cities, params.getHeight(), params.getWidth(), params.getLength(), materials, Role.EXECUTOR, page);
+            Page<User> pages= userRepo.findAllByParamsWithMaterials(cities, params.getHeight(), params.getWidth(), params.getLength(), materials, Role.EXECUTOR, page);
+            log.info("Get page of executors ");
+            return pages;
         }
     }
 }

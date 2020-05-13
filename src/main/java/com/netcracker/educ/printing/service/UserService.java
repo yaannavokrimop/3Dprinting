@@ -33,7 +33,9 @@ public class UserService {
     }
 
     public User get(UUID id) {
-            return userRepo.findById(id).orElse(null);
+            User user= userRepo.findById(id).orElseThrow(NotFoundException::new);
+            log.info("Get user by id= {}",id);
+            return user;
     }
 
     public String userSave(
@@ -93,12 +95,16 @@ public class UserService {
 
         if (dbUser != null){
         BeanUtils.copyProperties(updateUser,dbUser,"id","password","addresses");
-        return userToUserRepresent(userRepo.save(dbUser));}
+        UserRepresent userRepresent= userToUserRepresent(userRepo.save(dbUser));
+        log.info("User {} successfully updated",dbUser.getId());
+        return userRepresent;
+        }
         else return null;
     }
 
     public List<UserRepresent> findAllExecutors() {
         List<User> executors=userRepo.findByRole(Role.EXECUTOR);
+        log.info("Get all executors");
         return usersToUserRepresents(executors);
     }
 //Удалить
@@ -112,10 +118,12 @@ public class UserService {
         for (User user : users) {
             userRepresents.add(userToUserRepresent(user));
         }
+        log.info("Get UserRepresents from Users");
         return userRepresents;
     }
 
     public UserRepresent userToUserRepresent(User user) {
+            log.debug("Get UserRepresent from User: {}",user.getId());
         return new UserRepresent(user.getId(),
                 user.getName(),
                 user.getSurname(),
@@ -134,12 +142,13 @@ public class UserService {
                 addr=iterator.next();
                 addressRepresents.add(new AddressRepresent(addr.getCity().getTitle(),addr.getDescription(),addr.getUser().getId(),addr.getId()));
             }
+            log.info("Get AddressRepresents from Addresses ");
             return addressRepresents;
     }
 
     public UserRepresent getCurrentUser(UserDetailsImpl principal) {
         UserRepresent user=userToUserRepresent(userRepo.findByEmail(principal.getEmail()));
-        log.info("This user "+user.getEmail()+" in his profile");
+        log.info("This user {} in his profile",user.getId());
         return user;
 
 
@@ -147,6 +156,7 @@ public class UserService {
 
     public Boolean checkUserRole(UUID userId) {
         User user=userRepo.findById(userId).orElseThrow(NotFoundException::new);
+        log.debug("Check role for user: {}",userId);
         return user.getRole().equals(Role.CUSTOMER);
 
     }

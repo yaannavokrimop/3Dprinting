@@ -35,15 +35,15 @@ public class OrderController {
 
     @GetMapping("/user")
     public ResponseEntity<PaginationBean> getOrdersByUserId(@RequestParam Map<String, String> pageParams, @AuthenticationPrincipal UserDetailsImpl principal) {
+        log.debug("Get orders for user {}",principal.getId());
         Page<Order> ordersPage = orderService.getPageOfOrders(pageParams, principal.getId());
         List<OrderRepresent> orders = orderService.ordersToOrderRepresents(ordersPage.getContent());
-
         return ResponseEntity.ok(new PaginationBean(ordersPage.getTotalPages(), orders));
     }
 
     @GetMapping("{id}")
     public OrderRepresent getOrderById(@PathVariable("id") UUID id) {
-        log.info("get Order by id= {}", id);
+        log.debug("Get order by id= {}", id);
         return orderService.getOrderById(id);
     }
 
@@ -54,11 +54,13 @@ public class OrderController {
 
     @GetMapping("forchat/{chatId}")
     public List<Order> getOrdersForChat(@PathVariable(name = "chatId") UUID chatId) {
+        log.debug("Get Order by chat id= {}", chatId);
         return orderService.getOrdersForChat(chatId);
     }
 
     @PostMapping
     public Order createOrder(@RequestBody OrderRepresent inputOrder, @AuthenticationPrincipal UserDetailsImpl details) {
+        log.debug("User {} create order {}",details.getId(),inputOrder.getName());
         return orderService.create(inputOrder, details.getId());
     }
 
@@ -78,6 +80,7 @@ public class OrderController {
 
     @PostMapping("/draft")
     public Order createDraft(@RequestBody OrderRepresent inputOrder, @AuthenticationPrincipal UserDetailsImpl details) {
+        log.debug("User {} create orderDraft {}",details.getId(),inputOrder.getName());
         return orderService.createDraft(inputOrder, details.getId());
     }
 
@@ -99,31 +102,37 @@ public class OrderController {
     public Order updateOrder(
             @RequestBody OrderRepresent inputOrder,
             @PathVariable("id") UUID orderId) {
+        log.debug("Update order {}", orderId);
         return orderService.updateOrder(inputOrder,orderId);
     }
 
     @DeleteMapping("{id}")
     public UUID deleteOrder(@PathVariable("id") UUID id) {
+        log.debug("Delete order {}",id);
         return orderService.deleteOrder(id);
     }
 
     @PatchMapping("/pay/{id}")
     public Order payOrder(@PathVariable("id") UUID id) {
+        log.debug("Pay order {}",id);
         return orderService.payOrder(id);
     }
 
     @PatchMapping("/done/{id}")
     public Order doneOrder(@PathVariable("id") UUID id) {
+        log.debug("Done order {}",id);
         return orderService.doneOrder(id);
     }
 
     @PatchMapping("/receive/{id}")
     public Order receivedOrder(@PathVariable("id") UUID id) {
+        log.debug("Receive order {}",id);
         return orderService.receivedOrder(id);
     }
 
     @PatchMapping("/notDraft/{id}")
     public Order notDraft(@PathVariable("id") UUID id) {
+        log.debug("Not Draft order {}",id);
         return orderService.notDraftOrder(id);
     }
 }

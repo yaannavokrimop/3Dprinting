@@ -7,6 +7,7 @@ import com.netcracker.educ.printing.model.repository.MessageRepo;
 import com.netcracker.educ.printing.model.representationModel.MessageRepresent;
 import com.netcracker.educ.printing.security.UserDetailsImpl;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
@@ -15,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+@Slf4j
 @Service
 @Data
 public class MessageService {
@@ -24,6 +26,7 @@ public class MessageService {
 
 
     public List<Message> getMessagesByChat(UUID chatId, UserDetailsImpl principal) {
+        log.debug("Get messages by chatId= {} , User: {}",chatId,principal.getId());
         Chat chat = chatService.getChatById(chatId);
         if (chat != null && ((chat.getCustomer().getId().equals(principal.getId())) || chat.getExecutor().getId().equals(principal.getId()))) {
             return messageRepo.findAllByChat(chat);
@@ -38,7 +41,9 @@ public class MessageService {
         newMessage.setAuthor(currentUser);
         newMessage.setChecked(Boolean.FALSE);
         newMessage.setText(message.getText());
-        return messageRepo.save(newMessage);
+        Message dbMessage= messageRepo.save(newMessage);
+        log.debug("User {} created message {}",currentUser.getId(),dbMessage.getId());
+        return dbMessage;
     }
 
     public void deleteMessage(Message message) {
