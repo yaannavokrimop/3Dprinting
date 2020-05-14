@@ -133,7 +133,7 @@ public class OrderService {
         orderRepresent.setMaterials(materialService.MaterialSetToMatTitleList(order.getMaterials()));
         orderRepresent.setFile(order.getFile());
         orderRepresent.setResponsesCount(responseRepo.countDistinctByOrderId(order.getId()));
-        orderRepresent.setStatus(order.getStatus());
+        orderRepresent.setStatus(statusToString(order.getStatus()));
         orderRepresent.setCustomerId(order.getUser().getId());
         orderRepresent.setDate(date);
         orderRepresent.setFile(order.getFile());
@@ -225,7 +225,23 @@ public class OrderService {
         Order saveOrder = orderRepo.save(dbOrder);
         log.info("Update order {}", saveOrder.getId());
         return saveOrder;
+    }
 
-
+    public String statusToString(OrderStatus status) {
+        switch (status) {
+            case DRAFT :
+                return "Черновик";
+            case IN_SEARCH:
+                return "В поиске исполнителя";
+            case NO_PAY :
+                return "Не оплачено";
+            case PAYED :
+                return "Оплачено";
+            case DONE :
+                return "Сделано";
+            case RECEIVED :
+                return "Заказ получен";
+        }
+        return "Статус не найден";
     }
 }

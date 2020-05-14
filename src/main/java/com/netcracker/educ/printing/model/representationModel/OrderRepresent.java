@@ -40,7 +40,7 @@ public class OrderRepresent implements Pageable {
 
     private int responsesCount;
 
-    private OrderStatus status;
+    private String status;
 
     private UUID customerId;
 
