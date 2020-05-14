@@ -60,7 +60,7 @@
                 </v-form>
 
                 <div>
-                    <div v-if="order.status === 'DRAFT'">
+                    <div v-if="order.status === 'Черновик'">
                         <strong>Статус заказа: {{order.status}}</strong>
                         <b-button variant="outline-primary" @click="notDraft(order.id)">Заказ больше не черновик</b-button>
                     </div>

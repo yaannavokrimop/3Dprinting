@@ -220,7 +220,7 @@ public class OrderService {
 
     public Order updateOrder(OrderRepresent inputOrderRepresent, UUID orderId) {
         Order dbOrder = orderRepo.findById(orderId).orElseThrow(NullPointerException::new);
-        Order inputOrder = new Order(inputOrderRepresent, dbOrder.getDate(), dbOrder.getUser(), materialsFromList(inputOrderRepresent.getMaterials()));
+        Order inputOrder = new Order(inputOrderRepresent, dbOrder.getDate(), dbOrder.getUser(), dbOrder.getStatus(), materialsFromList(inputOrderRepresent.getMaterials()));
         BeanUtils.copyProperties(inputOrder, dbOrder, "user");
         Order saveOrder = orderRepo.save(dbOrder);
         log.info("Update order {}", saveOrder.getId());

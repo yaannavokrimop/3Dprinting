@@ -8,10 +8,9 @@
                         <v-list-item :key="i">
                             <template v-slot>
                                 <v-list-item-content>
-                                    <v-list-item-title><h5>Заказ: {{response.order.name}}</h5></v-list-item-title>
+                                    <v-list-item-title><h5>Заказ: {{response.orderName}}</h5></v-list-item-title>
                                     <v-list-item-title><strong>{{response.sum}}₽</strong></v-list-item-title>
-                                    <v-list-item-title><strong>Заказчик: {{response.order.user.surname}}
-                                        {{response.order.user.name}} </strong></v-list-item-title>
+                                    <v-list-item-title><strong>Заказчик: {{response.customerInfo}}</strong></v-list-item-title>
                                     <v-list-item-subtitle>{{response.status}}</v-list-item-subtitle>
                                     <v-list-item-subtitle>{{response.date}}</v-list-item-subtitle>
                                 </v-list-item-content>
@@ -55,7 +54,6 @@
     export default {
         data() {
             return {
-                order: JSON.parse(localStorage.getItem("order")),
                 responses: [],
                 pagination: {
                     page: 1,
@@ -80,19 +78,19 @@
                     }).catch(error => console.log(error));
             },
             openOrder(response) {
-                this.$router.push('/orders/' + response.order.id);
+                this.$router.push('/orders/' + response.orderId);
             },
             openChat(response) {
                 localStorage.removeItem('currentChat');
                 AXIOS.get('/chat/response?' +
-                    'executorId=' + response.executor.id +
-                    '&customerId=' + response.order.user.id).then((response) => {
+                    'executorId=' + response.executorId +
+                    '&customerId=' + response.customerId).then((response) => {
                     localStorage.setItem('currentChat', JSON.stringify(response.data));
                     this.$router.push('/chat/' + response.data.chatId);
                 }).catch(error => console.log(error));
             },
             openProfile(response) {
-                this.$router.push('/profile/' + response.order.user.id);
+                this.$router.push('/profile/' + response.customerId);
             }
         }
     }

@@ -127,10 +127,10 @@ public class Order  {
         this.length=orderRepresent.getLength();
         this.name=orderRepresent.getName();
     }
-    public Order(OrderRepresent orderRepresent,Date date,User user,Set<Material> materials) {
+    public Order(OrderRepresent orderRepresent,Date date,User user, OrderStatus status, Set<Material> materials) {
         this.id = orderRepresent.getId();
         this.user = user;
-        this.status = OrderStatus.valueOf(orderRepresent.getStatus());
+        this.status = status;
         this.date = date;
         this.description = orderRepresent.getDescription();
         this.sum=orderRepresent.getSum();
