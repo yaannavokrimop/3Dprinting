@@ -6,6 +6,7 @@
                     tag="article"
                     style="max-width: 20rem;"
                     class="mb-2"
+                    align="center"
             >
                 <div>
                     <b-alert
@@ -17,15 +18,7 @@
                     > {{ alertMessage }}
                     </b-alert>
                 </div>
-                <div>
-                    <b-alert variant="success" :show="successfullyRegistered">
-                        Поздравляем, Вы зарегистрировались! Можете авторизоваться, используя свои данные.
-                        <hr/>
-                        <router-link to="/signin">
-                            <b-button variant="primary">Вход</b-button>
-                        </router-link>
-                    </b-alert>
-                </div>
+
                 <div>
 
                     <b-form-input type="text" placeholder="Имя" v-model="name" />
@@ -46,7 +39,7 @@
                     <b-form-input type="text" placeholder="О себе" v-model="information" />
                     <div class="mt-2"></div>
 
-                    <b-form-group label="Выберите роль">
+                    <b-form-group label="Выберите роль:" align="left">
                         <b-form-radio v-model="role" name="some-radios" value="CUSTOMER">Заказчик</b-form-radio>
                         <b-form-radio v-model="role" name="some-radios" value="EXECUTOR">Исполнитель</b-form-radio>
                     </b-form-group>
@@ -91,7 +84,6 @@
                 dismissSecs: 5,
                 dismissCountDown: 0,
                 alertMessage: '',
-                successfullyRegistered: false,
                 cityTitle:null,
                 description:'',
                 items: [],
@@ -131,6 +123,9 @@
                 } else if (this.$data.password === '' || this.$data.password == null) {
                     this.$data.alertMessage = 'Пожалуйста, укажите пароль';
                     this.showAlert();
+                }else if (this.$data.role == null || this.$data.role === '') {
+                    this.$data.alertMessage = 'Пожалуйста, выберите роль';
+                    this.showAlert();
                 }
                 else {
                     AXIOS.post('/auth/signup', {
@@ -146,9 +141,15 @@
                     })
                         .then(response => {
                             console.log(response);
-                            this.successAlert();
+                            this.$router.push({name: 'SignIn', params: {successfullyRegistered: true}});
                         }, error => {
-                            this.$data.alertMessage = (error.response.data.message.length < 150) ? error.response.data.message : 'Ошибка'
+                            if (error.response.data.message.includes('Validation failed')) {
+                                this.$data.alertMessage = 'Проверьте корректность данных';
+                                this.showAlert();
+                            } else {
+                                this.$data.alertMessage = error.response.data.message;
+                                this.showAlert();
+                            }
                             this.showAlert();
                         })
                         .catch(error => {
@@ -163,18 +164,6 @@
             },
             showAlert() {
                 this.dismissCountDown = this.dismissSecs
-            },
-            successAlert() {
-                this.name = '';
-                this.surname = '';
-                this.email = '';
-                this.password = '';
-                this.role = '';
-                this.phone = '';
-                this.information = '';
-                this.description='';
-                this.cityTitle='';
-                this.successfullyRegistered = true;
             }
         }
     }
