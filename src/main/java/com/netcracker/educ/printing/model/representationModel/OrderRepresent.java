@@ -46,5 +46,5 @@ public class OrderRepresent implements Pageable {
 
     private String date;
 
-    private String fileName;
+    private String file;
 }

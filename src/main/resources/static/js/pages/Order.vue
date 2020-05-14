@@ -28,13 +28,10 @@
             </v-list-item>
         </v-card>
         <v-content>
-            <div v-if="this.order.userId === this.myId" class="mt-2" align="center">
-                <v-btn to="/orders">К заказам</v-btn>
-                <v-btn @click="goToEditOrder">Редактировать заказ</v-btn>
-                <v-btn class="red--text" @click="deleteOrder">Удалить заказ</v-btn>
-            </div>
-            <div v-else class="mt-2" align="center">
+            <div class="mt-2" align="center">
                 <v-btn @click="$router.go(-1)">Назад</v-btn>
+                <v-btn v-if="this.order.userId === this.myId" @click="goToEditOrder">Редактировать заказ</v-btn>
+                <v-btn v-if="this.order.userId === this.myId" class="red--text" @click="deleteOrder">Удалить заказ</v-btn>
             </div>
         </v-content>
     </v-container>
@@ -63,7 +60,7 @@
 
 
                 },
-                myId: '',
+                myId: localStorage.getItem('myId'),
                 accessToken: localStorage.getItem('accessToken')
 
             }
@@ -83,13 +80,11 @@
                 this.order.height = response.data.height;
                 this.order.width = response.data.width;
                 this.order.length = response.data.length;
-                this.order.file = response.data.fileName;
+                this.order.file = response.data.file;
                 this.order.description = response.data.description;
                 this.order.materials = response.data.materials;
                 console.log(response.data);
             }).catch(error => console.log(error));
-
-            this.myId = localStorage.getItem('myId')
         },
         methods: {
             deleteOrder: function () {

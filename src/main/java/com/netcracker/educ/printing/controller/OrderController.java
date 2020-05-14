@@ -66,7 +66,7 @@ public class OrderController {
 
     @PostMapping("/file")
     public ResponseEntity<String> addFileToOrder(@RequestParam("file")MultipartFile file, @RequestParam("orderId") UUID orderId) {
-        boolean result;
+        String result;
         try {
             result = orderService.addFileToOrder(file, orderId);
         }catch (IOException ex) {
@@ -74,7 +74,7 @@ public class OrderController {
         } catch (NotFoundException ex) {
             return ResponseEntity.badRequest().body("Не удалось прикрепить файл. Заказ не найден.");
         }
-        if (result) return ResponseEntity.ok("Файл успешно загружен.");
+        if (!result.equals("")) return ResponseEntity.ok("Файл успешно загружен.");
         else return ResponseEntity.badRequest().body("Фвйл пустой. Выберите другой файл.");
     }
 
@@ -106,10 +106,31 @@ public class OrderController {
         return orderService.updateOrder(inputOrder,orderId);
     }
 
+    @PutMapping("/file/{orderId}")
+    public ResponseEntity<String> updateFile (@PathVariable UUID orderId, @RequestBody MultipartFile file) {
+        fileService.deleteFileByOrderId(orderId);
+        String result;
+        try {
+            result = orderService.addFileToOrder(file, orderId);
+        }catch (IOException ex) {
+            return ResponseEntity.badRequest().body("Не удалось изменить файл. Попробуйте ещё раз.");
+        } catch (NotFoundException ex) {
+            return ResponseEntity.badRequest().body("Не удалось изменить файл. Заказ не найден.");
+        }
+        if (!result.equals("")) return ResponseEntity.ok(result);
+        else return ResponseEntity.badRequest().body("Фвйл пустой. Выберите другой файл.");
+    }
+
     @DeleteMapping("{id}")
     public UUID deleteOrder(@PathVariable("id") UUID id) {
         log.debug("Delete order {}",id);
         return orderService.deleteOrder(id);
+    }
+
+    @DeleteMapping("/file/{orderId}")
+    public void deleteFile(@PathVariable UUID orderId) {
+        log.debug("Delete file from order {}", orderId);
+        fileService.deleteFileByOrderId(orderId);
     }
 
     @PatchMapping("/pay/{id}")

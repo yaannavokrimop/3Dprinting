@@ -101,7 +101,7 @@
                         'name': this.$data.name,
                         'description': this.$data.description,
                         'materials': this.$data.selectMaterial,
-                        'fileName': this.fileName
+                        'file': this.fileName
                     };
 
                     AXIOS.post('order', newOrder)
@@ -140,7 +140,7 @@
                         'length': this.$data.length,
                         'description': this.$data.description,
                         'materials': this.$data.selectMaterial,
-                        'fileName': this.fileName
+                        'file': this.fileName
                     };
 
                     AXIOS.post('order/draft', newOrder)

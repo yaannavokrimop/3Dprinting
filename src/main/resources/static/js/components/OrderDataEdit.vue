@@ -24,31 +24,27 @@
                     <v-text-field
                             type="number"
                             v-model="order.sum"
-                            label="Сумма"
+                            label="Стоимость"
                             :rules="[v => ( v <= 999999 && v>0 ) || 'Должно быть от 0 до 999999']">
                     </v-text-field>
 
                     <v-text-field
                             v-model="order.width"
                             type="number"
-                            label="Ширина"
+                            label="Ширина(мм)"
                             :rules="[v => ( v <= 2000 && v>0 ) || 'Должно быть от 0 до 2000']">
                     </v-text-field>
                     <v-text-field
                             v-model="order.length"
                             type="number"
-                            label="Длина"
+                            label="Длина(мм)"
                             :rules="[v => ( v <= 2000 && v>0 ) || 'Должно быть от 0 до 2000']">
                     </v-text-field>
                     <v-text-field
                         v-model="order.height"
                         type="number"
-                        label="Высота"
+                        label="Высота(мм)"
                         :rules="[v => ( v <= 2000 && v>0 ) || 'Должно быть от 0 до 2000']">
-                    </v-text-field>
-                    <v-text-field
-                            v-model="order.file"
-                            label="Ссылка на файл">
                     </v-text-field>
                      <v-autocomplete
                          v-model="order.materials"
@@ -60,9 +56,9 @@
                          multiple
                          chips
                      ></v-autocomplete>
-
+                    <v-file-input label="Схема изделия" ref="file" v-model="order.file" show-size></v-file-input>
                 </v-form>
-  
+
                 <div>
                     <div v-if="order.status === 'DRAFT'">
                         <strong>Статус заказа: {{order.status}}</strong>
@@ -102,13 +98,20 @@
                 this.order.height = response.data.height;
                 this.order.width = response.data.width;
                 this.order.length = response.data.length;
-                this.order.file = response.data.file;
+                this.order.fileName = response.data.file;
                 this.order.description = response.data.description;
                 this.order.materials = response.data.materials;
                 console.log("Материалы из ответа")
                 console.log(response.data.materials);
                 console.log("Материалы из данных")
                 console.log(this.order.materials);
+                if(this.order.fileName !== '' || this.order.fileName != null) {
+                    AXIOS.get('/order/file/' + this.order.fileName).then((response) => {
+                        let blob = new Blob([response.data]);
+                        blob.name = this.order.fileName;
+                        this.order.file = blob;
+                    }).catch(error => console.log(error));
+                }
             }).catch(error => console.log(error));
 
             this.querySelections();

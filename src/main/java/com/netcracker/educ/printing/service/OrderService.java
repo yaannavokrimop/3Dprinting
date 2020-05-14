@@ -43,7 +43,7 @@ public class OrderService {
     public Order create(OrderRepresent represent, UUID userId) throws RuntimeException {
         represent.setId(UUID.randomUUID());
         OrderStatus status = OrderStatus.IN_SEARCH;
-        if (represent.getFileName() != null && !represent.getFileName().isEmpty()) status = OrderStatus.DRAFT;
+        if (represent.getFile() != null && !represent.getFile().isEmpty()) status = OrderStatus.DRAFT;
         Order order;
         if (represent.getMaterials() != null) {
             order = new Order(represent, status, new Date(), userRepo.findById(userId).orElseThrow(NotFoundException::new), materialsFromList(represent.getMaterials()));
@@ -67,7 +67,7 @@ public class OrderService {
 
     }
 
-    public boolean addFileToOrder(MultipartFile file, UUID orderId) throws IOException {
+    public String addFileToOrder(MultipartFile file, UUID orderId) throws IOException {
         Order order = orderRepo.findById(orderId).orElseThrow(NotFoundException::new);
         String fileName = fileService.uploadFile(file);
         if (!fileName.equals("")) {
@@ -75,8 +75,8 @@ public class OrderService {
             order.setStatus(OrderStatus.IN_SEARCH);
             orderRepo.save(order);
             log.info("File {} added to order {}",fileName, orderId);
-            return true;
-        } else return false;
+            return fileName;
+        } else return "";
     }
 
     public Page<Order> getPageOfOrders(Map<String, String> pageParams, UUID principalId) {
@@ -131,12 +131,12 @@ public class OrderService {
         orderRepresent.setWidth(order.getWidth());
         orderRepresent.setLength(order.getLength());
         orderRepresent.setMaterials(materialService.MaterialSetToMatTitleList(order.getMaterials()));
-        orderRepresent.setFileName(order.getFile());
+        orderRepresent.setFile(order.getFile());
         orderRepresent.setResponsesCount(responseRepo.countDistinctByOrderId(order.getId()));
         orderRepresent.setStatus(order.getStatus());
         orderRepresent.setCustomerId(order.getUser().getId());
         orderRepresent.setDate(date);
-        orderRepresent.setFileName(order.getFile());
+        orderRepresent.setFile(order.getFile());
         return orderRepresent;
     }
 

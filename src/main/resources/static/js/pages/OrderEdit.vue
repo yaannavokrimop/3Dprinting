@@ -1,12 +1,10 @@
 <template>
     <v-container>
         <v-layout justify-space-around column>
-            <div class="title">Редактирование</div>
-
             <v-flex xs6>
                 <order-data-edit v-bind:order='order' @testMethod="testValid"></order-data-edit>
             </v-flex>
-            <div class="my-2">
+            <div class="my-2" align="center">
                 <v-btn  large color="primary" @click="edit" :disabled="!validP" >Сохранить изменения</v-btn>
             </div>
         </v-layout>
@@ -32,7 +30,8 @@
                 height:0,
                 width:0,
                 length:0,
-                file:'',
+                file: null,
+                fileName: '',
                 description:'',
                 materials:null
             },
@@ -45,6 +44,17 @@
             if(this.$data.validP){
                 var order=this.order;
                 var id=this.order.id;
+                console.log(order.fileName);
+                if (order.file == null) {
+                    order.fileName = null;
+                    AXIOS.delete('/order/file/' + id);
+                } else if (order.fileName !== order.file.name) {
+                    let formData = new FormData();
+                    formData.append("file", order.file);
+                    AXIOS.put('/order/file/' + id, formData).then((response) => {
+                        order.fileName = response.data;
+                    }).catch(error => console.log(error));
+                }
                 AXIOS.put('/order/'+id,{
                     id : order.id,
                     userId : order.userId,
@@ -55,7 +65,7 @@
                     height : order.height,
                     width : order.width,
                     length : order.length,
-                    file : order.file,
+                    file : order.fileName,
                     description : order.description,
                     materials:order.materials
                 });
