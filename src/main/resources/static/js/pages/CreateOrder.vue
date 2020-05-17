@@ -8,18 +8,26 @@
                     class="mb-2"
             >
                 <v-form ref="form" v-model="valid" lazy-validation>
+                    <div>
+                        <b-alert
+                            :show="errorMinimum"
+                            dismissible
+                            variant="danger"
+                        > Для создания черновика хотябы одно поле должно быть заполнено
+                        </b-alert>
+                    </div>
 
-                    <v-text-field outlined type="number" placeholder="Сумма заказа" v-model="sum" dense  :rules="[v => v<=999999 && v>=0 || 'Нужно ввести число от 0 до 999999']"></v-text-field>
+                    <v-text-field outlined type="number" placeholder="Сумма заказа*" v-model="sum" dense  :rules="[v => v<=999999 && v>0 || 'Нужно ввести число от 1 до 999999']" required></v-text-field>
 
-                    <v-text-field outlined type="text" placeholder="Название заказа" v-model="name" dense required :rules="NameRules" ></v-text-field>
+                    <v-text-field outlined type="text"  placeholder="Название заказа*" v-model="name" dense  :rules="NameRules" required></v-text-field>
 
                     <v-text-field outlined type="text" placeholder="Описание" v-model="description" dense :rules="[v => v.length<=200 || 'Должно быть не больше 200 символов']"></v-text-field>
 
-                    <v-text-field  outlined type="number" placeholder="Высота изделия (в мм)" v-model="height" dense :rules="[v => v<=2000 && v>=0 || 'Нужно ввести число от 0 до 2000']"></v-text-field>
+                    <v-text-field  outlined type="number" placeholder="Высота изделия (в мм)*" v-model="height" dense :rules="[v => v<=2000 && v>0 || 'Нужно ввести число от 1 до 2000']" ></v-text-field>
 
-                    <v-text-field outlined type="number" placeholder="Ширина изделия (в мм)" v-model="width" dense :rules="[v => v<=2000 && v>=0 || 'Нужно ввести число от 0 до 2000']"></v-text-field>
+                    <v-text-field outlined type="number"  placeholder="Ширина изделия (в мм)*" v-model="width" dense :rules="[v => v<=2000 && v>0 || 'Нужно ввести число от 1 до 2000']"></v-text-field>
 
-                    <v-text-field outlined type="number" placeholder="Длина изделия (в мм)" v-model="length" dense :rules="[v => v<=2000 && v>=0 || 'Нужно ввести число от 0 до 2000']"></v-text-field>
+                    <v-text-field outlined type="number"  placeholder="Длина изделия (в мм)*" v-model="length" dense :rules="[v => v<=2000 && v>0 || 'Нужно ввести число от 1 до 2000']"></v-text-field>
 
                     <v-autocomplete
                         v-model="selectMaterial"
@@ -33,9 +41,10 @@
                         chips
                     ></v-autocomplete>
                     <div class="mt-2"></div>
+                    <small>*обязательные поля для создания заказа</small>
                     <v-btn v-on:click="addOrder" type="submit" variant="primary" :disabled="!valid">Добавить</v-btn>
                     <div class="mt-2"></div>
-                    <v-btn v-on:click="addDraft" type="submit" variant="primary" :disabled="!valid">Сохранить как черновик</v-btn>
+                    <v-btn v-on:click="addDraft" type="submit" variant="primary" :disabled="false">Сохранить как черновик</v-btn>
                     <div class="mt-2"></div>
                 </v-form>
             </b-card>
@@ -65,6 +74,7 @@
                             v => !!v || 'Не должно быть пустым ',
                             v => v.length<=50 || 'Должно быть не больше 50 символов'
                         ],
+                errorMinimum:false
             }
         },
 
@@ -95,8 +105,6 @@
 
             },
             addDraft() {
-                if(this.$refs.form.validate()){
-
                     let newOrder = {
                         'sum': this.$data.sum,
                         'height': this.$data.height,
@@ -105,8 +113,9 @@
                         'length': this.$data.length,
                         'description': this.$data.description,
                         'materials': this.$data.selectMaterial,
-
                     };
+                    if(newOrder.sum!='' || newOrder.height!=''|| newOrder.width!=''||
+                     newOrder.name!='' || newOrder.length!='' || newOrder.description!='' || newOrder.materials!=null){
 
                     AXIOS.post('order/draft', newOrder)
                         .then(response => {
@@ -116,6 +125,9 @@
 
                     this.$router.push('/orders');
                     location.reload()
+                }else{
+                    this.$data.errorMinimum=true;
+                    console.log(newOrder);
                 }
             },
             successAlert() {
