@@ -33,4 +33,4 @@ build/
 *.class
 
 #outjs
-/src/main/resources/static/outjs/
+#/src/main/resources/static/outjs/
