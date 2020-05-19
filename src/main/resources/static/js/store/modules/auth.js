@@ -37,8 +37,7 @@ export default {
             commit('updateAccessToken', localStorage.getItem('accessToken'));
         },
         doLogout({commit}) {
-            localStorage.removeItem('accessToken');
-            localStorage.removeItem('authority');
+            localStorage.clear();
             commit('logout');
             router.push('/signin');
         }

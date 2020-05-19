@@ -6,18 +6,20 @@ import com.netcracker.educ.printing.model.entity.Order;
 import com.netcracker.educ.printing.model.repository.OrderRepo;
 import com.netcracker.educ.printing.model.representationModel.OrderRepresent;
 import com.netcracker.educ.printing.security.UserDetailsImpl;
+import com.netcracker.educ.printing.service.FileService;
 import com.netcracker.educ.printing.service.OrderService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.UUID;
 
 
@@ -29,6 +31,7 @@ public class OrderController {
 
     private final OrderRepo orderRepo;
     private final OrderService orderService;
+    private final FileService fileService;
 
     @GetMapping("/user")
     public ResponseEntity<PaginationBean> getOrdersByUserId(@RequestParam Map<String, String> pageParams, @AuthenticationPrincipal UserDetailsImpl principal) {
@@ -44,6 +47,11 @@ public class OrderController {
         return orderService.getOrderById(id);
     }
 
+    @GetMapping("/file/{fileName}")
+    public void returnFile(@PathVariable("fileName") String fileName, HttpServletResponse response) {
+        fileService.returnFile(fileName, response);
+    }
+
     @GetMapping("forchat/{chatId}")
     public List<Order> getOrdersForChat(@PathVariable(name = "chatId") UUID chatId) {
         log.debug("Get Order by chat id= {}", chatId);
@@ -56,7 +64,7 @@ public class OrderController {
         return orderService.create(inputOrder, details.getId());
     }
 
-    @PostMapping("draft")
+    @PostMapping("/draft")
     public Order createDraft(@RequestBody OrderRepresent inputOrder, @AuthenticationPrincipal UserDetailsImpl details) {
         log.debug("User {} create orderDraft {}",details.getId(),inputOrder.getName());
         return orderService.createDraft(inputOrder, details.getId());
@@ -70,10 +78,59 @@ public class OrderController {
         return orderService.updateOrder(inputOrder,orderId);
     }
 
+    @PutMapping("/file/{orderId}")
+    public ResponseEntity<String> updateFile(@PathVariable UUID orderId, @RequestBody MultipartFile file) {
+        fileService.deleteFileByOrderId(orderId);
+        String result;
+        try {
+            result = orderService.addFile(file, orderId);
+        } catch (IOException ex) {
+            return ResponseEntity.badRequest().body("Не удалось изменить файл. Попробуйте ещё раз.");
+        } catch (NotFoundException ex) {
+            return ResponseEntity.badRequest().body("Не удалось изменить файл. Заказ не найден.");
+        }
+        if (!result.equals("")) return ResponseEntity.ok(result);
+        else return ResponseEntity.badRequest().body("Фвйл пустой. Выберите другой файл.");
+    }
+
     @DeleteMapping("{id}")
     public UUID deleteOrder(@PathVariable("id") UUID id) {
         log.debug("Delete order {}",id);
         return orderService.deleteOrder(id);
+    }
+
+    @DeleteMapping("/file/{orderId}")
+    public void deleteFile(@PathVariable UUID orderId) {
+        log.debug("Delete file from order {}", orderId);
+        fileService.deleteFileByOrderId(orderId);
+    }
+
+    @PatchMapping("/file/{orderId}")
+    public ResponseEntity<String> addFileToOrder(@PathVariable UUID orderId, @RequestBody MultipartFile file) {
+        String result;
+        try {
+            result = orderService.addFileAndChangeStatus(file, orderId);
+        } catch (IOException ex) {
+            return ResponseEntity.badRequest().body("Не удалось загрузить файл. Попробуйте ещё раз.");
+        } catch (NotFoundException ex) {
+            return ResponseEntity.badRequest().body("Не удалось загрузить файл. Заказ не найден.");
+        }
+        if (!result.equals("")) return ResponseEntity.ok(result);
+        else return ResponseEntity.badRequest().body("Фвйл пустой. Выберите другой файл.");
+    }
+
+    @PatchMapping("/draft/file/{orderId}")
+    public ResponseEntity<String> addFileToDraft(@PathVariable UUID orderId, @RequestBody MultipartFile file) {
+        String result;
+        try {
+            result = orderService.addFile(file, orderId);
+        } catch (IOException ex) {
+            return ResponseEntity.badRequest().body("Не удалось загрузить файл. Попробуйте ещё раз.");
+        } catch (NotFoundException ex) {
+            return ResponseEntity.badRequest().body("Не удалось загрузить файл. Заказ не найден.");
+        }
+        if (!result.equals("")) return ResponseEntity.ok(result);
+        else return ResponseEntity.badRequest().body("Фвйл пустой. Выберите другой файл.");
     }
 
     @PatchMapping("/pay/{id}")

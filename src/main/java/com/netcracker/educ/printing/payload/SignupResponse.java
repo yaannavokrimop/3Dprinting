@@ -4,11 +4,11 @@ import lombok.Data;
 
 @Data
 public class SignupResponse {
-    private Boolean success;
+    private Boolean finished;
     private String message;
 
-    public SignupResponse(Boolean success, String message) {
-        this.success = success;
+    public SignupResponse(Boolean finished, String message) {
+        this.finished = finished;
         this.message = message;
     }
 }

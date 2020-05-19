@@ -15,7 +15,12 @@
                             variant="danger"
                             @dismissed="dismissCountDown=0"
                             @dismiss-count-down="countDownChanged"
-                    > {{ alertMessage1 }}
+                    > {{ alertMessage }}
+                    </b-alert>
+                </div>
+                <div>
+                    <b-alert variant="success" :show="successfullyRegistered" dismissible>
+                        Регистрация завершена. Можете войти, используя свои данные.
                     </b-alert>
                 </div>
                 <div>
@@ -43,8 +48,10 @@
 
 <script>
     import {AXIOS} from './http-common'
+    import jwt_decode from "jwt-decode";
 
     export default {
+        props: ['successfullyRegistered'],
         name: 'SignIn',
         data() {
             return {
@@ -52,10 +59,10 @@
                 password: '',
                 dismissSecs: 5,
                 dismissCountDown: 0,
-                alertMessage: 'Request error',
-                alertMessage1:'Неверный логин или пароль'
+                alertMessage:'Неверный логин или пароль'
             }
         },
+
         methods: {
             login() {
                 this.$store.commit('loginStart');
@@ -64,13 +71,19 @@
                         this.$store.commit('loginStart');
                         localStorage.setItem('accessToken', response.data.accessToken);
                         localStorage.setItem('authority', response.data.authority);
+                        let token = localStorage.getItem('accessToken');
+                        console.log(token);
+                        let decoded = jwt_decode(token);
+                        console.log(decoded);
+                        let userId = decoded['sub'];
+                        console.log(userId);
+                        localStorage.setItem('myId', userId);
                         this.$store.commit('updateAccessToken', response.data.accessToken);
                         this.$store.commit('setUserAuthority', response.data.authority);
                         this.$router.push('/profile')
                     }, error => {
-                        this.$data.alertMessage = (error.response.data.message.length < 150) ? error.response.data.message : 'Request error. Please, report this error website owners';
-                       console.log("error .........Y");
-                       this.showAlert();
+                        this.$data.alertMessage = 'Возникла ошибка. Попробуйте снова.';
+                        this.showAlert();
                         console.log(error)
                     })
                     .catch(e => {

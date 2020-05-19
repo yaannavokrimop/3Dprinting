@@ -164,12 +164,13 @@ public class ResponseService {
         responseRepresent.setExecutorId(response.getExecutor().getId());
         responseRepresent.setSum(response.getSum());
         responseRepresent.setExecutorInfo("" + response.getExecutor().getSurname() + " " + response.getExecutor().getName());
-
         SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy HH:mm");
-
         responseRepresent.setDate(format.format(response.getDate()));
-        responseRepresent.setStatus(response.getStatus());
+        responseRepresent.setStatus(statusToString(response.getStatus()));
         responseRepresent.setCustomerId(response.getOrder().getUser().getId());
+        responseRepresent.setCustomerInfo("" + response.getOrder().getUser().getSurname() + " " + response.getOrder().getUser().getName());
+        responseRepresent.setOrderName(response.getOrder().getName());
+        responseRepresent.setOrderId(response.getOrder().getId());
         return responseRepresent;
     }
 
@@ -179,5 +180,23 @@ public class ResponseService {
             represents.add(this.responseToResponseRepresent(response));
         }
         return represents;
+    }
+
+    public String statusToString(ResponseStatus status) {
+        switch (status) {
+            case REQUESTED :
+                return "Запрошено";
+            case DISCUSSION:
+                return "В обсуждении";
+            case BY_CUSTOMER :
+                return "Цена предложена заказчиком";
+            case BY_EXECUTOR :
+                return "Цена предложена исполнителем";
+            case AGREED :
+                return "Заказ согласован";
+            case REFUSED :
+                return "Заказ отклонен";
+        }
+        return "Статус не найден";
     }
 }

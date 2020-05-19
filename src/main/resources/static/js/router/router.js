@@ -26,7 +26,7 @@ Vue.use(VueRouter);
 let router = new VueRouter({
     routes: [
         {path: '/', component: Main},
-        {path: '/signin', component: SignIn},
+        {path: '/signin', component: SignIn, name: 'SignIn', props: true},
         {path: '/signup', component: SignUp},
         {path: '/profile', component: Profile},
         {path: '/profile_edit', component: ProfileEdit},
