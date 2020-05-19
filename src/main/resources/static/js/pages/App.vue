@@ -55,7 +55,7 @@
                     <v-icon>mdi-account</v-icon>
                 </v-btn>
                 <v-btn icon to="/orders" v-show="authenticated">
-                    <v-icon>mdi-email</v-icon>
+                    <v-icon>mdi-cogs</v-icon>
                 </v-btn>
 
                 <v-btn icon @click="checkLogout" v-show="authenticated">
