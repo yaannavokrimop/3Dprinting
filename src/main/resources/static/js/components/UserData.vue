@@ -1,46 +1,5 @@
 <template>
     <div>
-    <v-layout row>
-    <v-flex  xs12 sm9 offset-sm2>
-            <v-card class="mx-auto" max-width="1150" tile>
-                      <v-row>
-                        <v-col class="pa-5">
-                          <v-avatar class="profile" color="black" size="240" >
-                             <span class="white--text headline">АЗ</span>
-                          </v-avatar>
-                          <v-list-item>
-                           <v-list-item-content>
-                            <v-list-item-title class="title">{{user.name }} {{user.surname}}</v-list-item-title>
-                            <v-list-item-subtitle>{{user.role}}</v-list-item-subtitle>
-                            </v-list-item-content>
-                            </v-list-item>
-        <v-list-item class="text pl-5 pt-5">
-        <div class="display-1" >Ali Conners</div>
-
-         <div> Исполнительница</div>
-        </v-list-item>
-                        </v-col>
-
-                        <v-col class="py-0">
-                    <div>
-                        <h3> Email: {{user.email}}</h3>
-                    </div>
-                    <v-spacer></v-spacer>
-                    <div>
-                        <h3> Телефон: {{user.phone}}</h3>
-                    </div>
-                    <v-spacer></v-spacer>
-                    <div>
-                        <h3> {{user.information}}</h3>
-                    </div>
-                        </v-col>
-                      </v-row>
-
-                  </v-card>
-                     </v-flex>
-                      </v-layout>
-
-
         <v-flex xs12 sm6 md12>
             <v-card height="500px" max-width="1150px">
                 <v-card-title class="text--primary" justify-center>

@@ -90,5 +90,15 @@
 </script>
 
 <style scoped>
+.list-group-item{
+    width: 1052px;
+    margin-bottom: 12px;
+    border-radius: 16px;
+}
+
+.list-group-item:first-child {
+    border-top-left-radius: 16px;
+    border-top-right-radius: 16px;
+}
 
 </style>
