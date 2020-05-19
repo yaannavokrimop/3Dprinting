@@ -7,7 +7,7 @@
                 <order-data-edit v-bind:order='order' @testMethod="testValid"></order-data-edit>
             </v-flex>
             <div class="my-2">
-                <v-btn  large color="primary" @click="edit" :disabled="!validP" >Сохранить изменения</v-btn>
+                <v-btn  large color="primary" @click="edit" :disabled="!validP && order.status!='DRAFT' " >Сохранить изменения</v-btn>
             </div>
         </v-layout>
     </v-container>
@@ -36,13 +36,15 @@
                 description:'',
                 materials:null
             },
-            validP:true
+            validP:true,
+
 
         }
     },
+    //beforeUpdate:function(){if(this.validP==false){startedValid=this.validP;}},
     methods:{
         edit:function(){
-            if(this.$data.validP){
+            if(this.$data.validP||this.$data.order.status=='DRAFT'){
                 var order=this.order;
                 var id=this.order.id;
                 AXIOS.put('/order/'+id,{

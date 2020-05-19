@@ -20,16 +20,16 @@
                   :rules="[v => ( v.length <= 59 && v.length>0) || 'Должно быть от 1 до 60 символов']"
                    required>
              </v-text-field>
-             <v-text-field
-                  v-model="user.email"
-                  label="Электронная почта"
-                  :rules="emailRules">
-             </v-text-field>
+     <!--    <v-text-field-->
+     <!--       v-model="user.email"-->
+     <!--      label="Электронная почта"-->
+     <!--     :rules="emailRules">-->
+     <!--    </v-text-field>-->
              <v-text-field
                   v-model="user.phone"
                   required
                   label="Номер телефона"
-                  :rules="[v => v.length<=12 && v.length>=5 || 'Номер введен некорректно']">
+                  :rules="[v => v.length<=12  || 'Номер введен некорректно']">
              </v-text-field>
              <v-text-field
                   v-model="user.information"

@@ -1,9 +1,9 @@
 <template>
     <v-container>
         <b-card
-             title="Регистрация Оборудования"
+             title="Регистрация оборудования"
              tag="article"
-             style="max-width: 20rem;"
+             style="max-width: 32rem;"
              class="mb-2"
         >
             <v-form ref="form" v-model="valid" lazy-validation>
@@ -111,5 +111,15 @@ export default {
 </script>
 
 <style scoped>
+.card {
+    border-radius: 1.25rem;
+    margin-left: 294px;
+}
+.card-title {
+    margin-bottom: -0.25rem;
+    margin-left: 71px;
+    margin-bottom: 27px;
+    margin-top: 9px;
+}
 
 </style>

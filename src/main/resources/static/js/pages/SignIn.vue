@@ -95,7 +95,7 @@
 
 <style>
     .login-form {
-        margin-left: 38%;
+        margin-left: 42%;
         margin-top: 50px;
     }
 </style>
