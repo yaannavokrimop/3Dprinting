@@ -3,8 +3,8 @@
 <v-container>
 
     <v-card  max-width="1000" tile>
-        <h4>Оборудование {{equipment.equipName}}</h4>
-
+        <h4 class="orderNameHeader">Оборудование {{equipment.equipName}}</h4>
+        <v-divider></v-divider>
         <v-list-item>
             <v-list-item-content>
                 <v-list-item-title><strong>Описание:  {{equipment.equipDesc}}</strong></v-list-item-title>
@@ -88,7 +88,20 @@ props:[],
 </script>
 
 <style scoped>
+.v-card {
+    margin-left: 65px;
+    margin-top: 28px;
+    border-radius: 20px
 
+}
+.btn-outline-primary {
+    margin-left: 64px;
+}
+
+.orderNameHeader{
+    margin-left: 17px;
+    padding-top: 21px;
+}
 
 
 </style>

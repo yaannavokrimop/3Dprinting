@@ -35,13 +35,15 @@
                 description:'',
                 materials:null
             },
-            validP:true
+            validP:true,
+
 
         }
     },
+    //beforeUpdate:function(){if(this.validP==false){startedValid=this.validP;}},
     methods:{
         edit:function(){
-            if(this.$data.validP){
+            if(this.$data.validP||this.$data.order.status=='DRAFT'){
                 var order=this.order;
                 var id=this.order.id;
                 console.log(order.fileName);

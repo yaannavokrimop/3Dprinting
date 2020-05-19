@@ -143,5 +143,13 @@ export default {
 </script>
 
 <style scoped>
-
+.card {
+        margin-left: 282px;
+        margin-top: 15px;
+}
+.card-title {
+    margin-left: 101px;
+    margin-top: 10px;
+    margin-bottom: 45px;
+}
 </style>

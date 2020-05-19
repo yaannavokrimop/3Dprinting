@@ -32,16 +32,16 @@
             </v-row>
         </v-content>
 
-        <v-card max-width="1000" tile>
+        <v-card max-width="1100">
             <v-card-title>
-                <h4 align="center">Заказы</h4>
+                <h4 align="center" class="ordersHeader">Заказы</h4>
                 <v-spacer></v-spacer>
                 <v-btn class="mx-2" dark small color="indigo" to="/order/create">
                     <v-icon dark>mdi-plus</v-icon>
                     Создать
                 </v-btn>
             </v-card-title>
-            <ul class="list-group">
+            <ul class="list-group" max-width="600">
                 <li class="list-group-item"
                     v-for="(order,index) in orders"
                     :class="{ active: index == currentIndex }"
@@ -50,7 +50,7 @@
                     @dblclick="goToOrder(order)"
                 >
 
-                    <v-list-item>
+                    <v-list-item rounded  >
                         <v-list-item-content three-line>
                             <v-list-item-title>
                                 <strong>Имя заказа: {{order.name}}</strong>
@@ -248,6 +248,40 @@
 </script>
 
 <style scoped>
+.list-group-item{
+    width: 1052px;
+    margin-bottom: 12px;
+    border-radius: 16px;
+}
+
+.list-group-item:first-child {
+    border-top-left-radius: 16px;
+    border-top-right-radius: 16px;
+}
+
+.v-card v-sheet theme--light{
+    border-radius: 11px;
+}
+
+.ordersHeader{
+    margin-top: 6px;
+    margin-left: 43px;}
 
 
+    .v-application .indigo {
+        background-color: #007bff!important;
+        border-color: #007bff!important;
+        border-radius: 23px;
+    }
+    .v-btn:not(.v-btn--round).v-size--small{
+        height: 41px;
+    }
+    .v-btn.v-size--small{
+        font-size: 0.9rem;
+    }
+
+    .list-group-item:last-child {
+        border-bottom-right-radius: 1.25rem;
+        border-bottom-left-radius: 1.25rem;
+    }
 </style>

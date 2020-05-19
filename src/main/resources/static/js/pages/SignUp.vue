@@ -21,16 +21,16 @@
 
                 <div>
 
-                    <b-form-input type="text" placeholder="Имя" v-model="name" />
+                    <b-form-input type="text" placeholder="Имя*" v-model="name" />
                     <div class="mt-2"></div>
 
-                    <b-form-input type="text" placeholder="Фамилия" v-model="surname" />
+                    <b-form-input type="text" placeholder="Фамилия*" v-model="surname" />
                     <div class="mt-2"></div>
 
-                    <b-form-input type="text" placeholder="Email" v-model="email" />
+                    <b-form-input type="text" placeholder="Email*" v-model="email" />
                     <div class="mt-2"></div>
 
-                    <b-form-input type="password" placeholder="Пароль" v-model="password" />
+                    <b-form-input type="password" placeholder="Пароль*" v-model="password" />
                     <div class="mt-2"></div>
 
                     <b-form-input type="text" placeholder="Номер телефона" v-model="phone" />
@@ -39,7 +39,7 @@
                     <b-form-input type="text" placeholder="О себе" v-model="information" />
                     <div class="mt-2"></div>
 
-                    <b-form-group label="Выберите роль:" align="left">
+                    <b-form-group label="Выберите роль:*" align="left">
                         <b-form-radio v-model="role" name="some-radios" value="CUSTOMER">Заказчик</b-form-radio>
                         <b-form-radio v-model="role" name="some-radios" value="EXECUTOR">Исполнитель</b-form-radio>
                     </b-form-group>
