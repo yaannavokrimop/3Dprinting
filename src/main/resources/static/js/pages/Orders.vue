@@ -92,7 +92,7 @@
 
         <v-content>
             <div class="mt-2">
-                <div v-if="currentStatus === 'DRAFT'">
+                <div v-if="currentStatus === 'Черновик'">
                     <b-button variant="danger" @click="showModal">Удалить заказ</b-button>
 
                     <b-modal ref="my-modal" hide-footer title="Подтверждение">
