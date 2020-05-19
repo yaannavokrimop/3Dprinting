@@ -64,38 +64,10 @@ public class OrderController {
         return orderService.create(inputOrder, details.getId());
     }
 
-    @PostMapping("/file")
-    public ResponseEntity<String> addFileToOrder(@RequestParam("file")MultipartFile file, @RequestParam("orderId") UUID orderId) {
-        String result;
-        try {
-            result = orderService.addFileToOrder(file, orderId);
-        }catch (IOException ex) {
-            return ResponseEntity.badRequest().body("Не удалось загрузить файл. Попробуйте ещё раз.");
-        } catch (NotFoundException ex) {
-            return ResponseEntity.badRequest().body("Не удалось прикрепить файл. Заказ не найден.");
-        }
-        if (!result.equals("")) return ResponseEntity.ok("Файл успешно загружен.");
-        else return ResponseEntity.badRequest().body("Фвйл пустой. Выберите другой файл.");
-    }
-
     @PostMapping("/draft")
     public Order createDraft(@RequestBody OrderRepresent inputOrder, @AuthenticationPrincipal UserDetailsImpl details) {
         log.debug("User {} create orderDraft {}",details.getId(),inputOrder.getName());
         return orderService.createDraft(inputOrder, details.getId());
-    }
-
-    @PostMapping("/draft/file")
-    public ResponseEntity<String> addFileToDraft(@RequestParam("file")MultipartFile file, @RequestParam("orderId") UUID orderId) {
-        boolean result;
-        try {
-            result = orderService.addFileToDraft(file, orderId);
-        }catch (IOException ex) {
-            return ResponseEntity.badRequest().body("Не удалось загрузить файл. Попробуйте ещё раз.");
-        } catch (NotFoundException ex) {
-            return ResponseEntity.badRequest().body("Не удалось прикрепить файл. Черновик не найден.");
-        }
-        if (result) return ResponseEntity.ok("Файл успешно загружен.");
-        else return ResponseEntity.badRequest().body("Фвйл пустой. Выберите другой файл.");
     }
 
     @PutMapping("{id}")
@@ -107,12 +79,12 @@ public class OrderController {
     }
 
     @PutMapping("/file/{orderId}")
-    public ResponseEntity<String> updateFile (@PathVariable UUID orderId, @RequestBody MultipartFile file) {
+    public ResponseEntity<String> updateFile(@PathVariable UUID orderId, @RequestBody MultipartFile file) {
         fileService.deleteFileByOrderId(orderId);
         String result;
         try {
-            result = orderService.addFileToOrder(file, orderId);
-        }catch (IOException ex) {
+            result = orderService.addFile(file, orderId);
+        } catch (IOException ex) {
             return ResponseEntity.badRequest().body("Не удалось изменить файл. Попробуйте ещё раз.");
         } catch (NotFoundException ex) {
             return ResponseEntity.badRequest().body("Не удалось изменить файл. Заказ не найден.");
@@ -131,6 +103,34 @@ public class OrderController {
     public void deleteFile(@PathVariable UUID orderId) {
         log.debug("Delete file from order {}", orderId);
         fileService.deleteFileByOrderId(orderId);
+    }
+
+    @PatchMapping("/file/{orderId}")
+    public ResponseEntity<String> addFileToOrder(@PathVariable UUID orderId, @RequestBody MultipartFile file) {
+        String result;
+        try {
+            result = orderService.addFileAndChangeStatus(file, orderId);
+        } catch (IOException ex) {
+            return ResponseEntity.badRequest().body("Не удалось загрузить файл. Попробуйте ещё раз.");
+        } catch (NotFoundException ex) {
+            return ResponseEntity.badRequest().body("Не удалось загрузить файл. Заказ не найден.");
+        }
+        if (!result.equals("")) return ResponseEntity.ok(result);
+        else return ResponseEntity.badRequest().body("Фвйл пустой. Выберите другой файл.");
+    }
+
+    @PatchMapping("/draft/file/{orderId}")
+    public ResponseEntity<String> addFileToDraft(@PathVariable UUID orderId, @RequestBody MultipartFile file) {
+        String result;
+        try {
+            result = orderService.addFile(file, orderId);
+        } catch (IOException ex) {
+            return ResponseEntity.badRequest().body("Не удалось загрузить файл. Попробуйте ещё раз.");
+        } catch (NotFoundException ex) {
+            return ResponseEntity.badRequest().body("Не удалось загрузить файл. Заказ не найден.");
+        }
+        if (!result.equals("")) return ResponseEntity.ok(result);
+        else return ResponseEntity.badRequest().body("Фвйл пустой. Выберите другой файл.");
     }
 
     @PatchMapping("/pay/{id}")

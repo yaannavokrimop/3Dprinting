@@ -43,45 +43,53 @@
     //beforeUpdate:function(){if(this.validP==false){startedValid=this.validP;}},
     methods:{
         edit:function(){
-            if(this.$data.validP||this.$data.order.status=='DRAFT'){
+            if(this.$data.validP||this.$data.order.status==='Черновик'){
                 var order=this.order;
                 var id=this.order.id;
-                console.log(order.fileName);
                 if (order.file == null) {
-                    order.fileName = null;
-                    AXIOS.delete('/order/file/' + id);
+                    AXIOS.delete('/order/file/' + id).then((response) => {
+                        order.fileName = null;
+                        console.log('deleted');
+                        this.sendOrder(order);
+                    })
                 } else if (order.fileName !== order.file.name) {
                     let formData = new FormData();
                     formData.append("file", order.file);
                     AXIOS.put('/order/file/' + id, formData).then((response) => {
+                        console.log(response.data);
                         order.fileName = response.data;
+                        this.sendOrder(order);
                     }).catch(error => console.log(error));
+                } else {
+                    this.sendOrder(order);
                 }
-                AXIOS.put('/order/'+id,{
-                    id : order.id,
-                    userId : order.userId,
-                    status : order.status,
-                    sum : order.sum,
-                    date : order.date,
-                    name : order.name,
-                    height : order.height,
-                    width : order.width,
-                    length : order.length,
-                    file : order.fileName,
-                    description : order.description,
-                    materials:order.materials
-                });
-
-                console.log(order);
-
-                this.$router.push("/orders");
-                location.reload()
             }
         },
         testValid(validP) {
             this.$data.validP =validP;
             console.log("testMethod");
-            }
+        },
+        sendOrder(order) {
+            console.log('sendOrder');
+            AXIOS.put('/order/'+order.id,{
+                id : order.id,
+                userId : order.userId,
+                status : order.status,
+                sum : order.sum,
+                date : order.date,
+                name : order.name,
+                height : order.height,
+                width : order.width,
+                length : order.length,
+                file : order.fileName,
+                description : order.description,
+                materials:order.materials
+            }).then(response => {
+                console.log(response);
+                this.$router.push("/orders");
+                location.reload()
+            });
+        }
     }
     }
 </script>

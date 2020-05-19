@@ -47,4 +47,12 @@ public class OrderRepresent implements Pageable {
     private String date;
 
     private String file;
+
+    public OrderRepresent(float sum, int height, int width, int length, String name) {
+        this.sum = sum;
+        this.height = height;
+        this.width = width;
+        this.length = length;
+        this.name = name;
+    }
 }

@@ -55,19 +55,19 @@ public class OrderService {
         return dbOrder;
     }
 
-    public boolean addFileToDraft(MultipartFile file, UUID orderId) throws IOException {
+    public String addFile(MultipartFile file, UUID orderId) throws IOException {
         Order order = orderRepo.findById(orderId).orElseThrow(NotFoundException::new);
         String fileName = fileService.uploadFile(file);
         if (!fileName.equals("")) {
             order.setFile(fileName);
             orderRepo.save(order);
-            log.info("File {} added to draft {}", fileName, orderId);
-            return true;
-        } else return false;
+            log.info("File {} added to order {}", fileName, orderId);
+            return fileName;
+        } else return "";
 
     }
 
-    public String addFileToOrder(MultipartFile file, UUID orderId) throws IOException {
+    public String addFileAndChangeStatus(MultipartFile file, UUID orderId) throws IOException {
         Order order = orderRepo.findById(orderId).orElseThrow(NotFoundException::new);
         String fileName = fileService.uploadFile(file);
         if (!fileName.equals("")) {
@@ -122,21 +122,15 @@ public class OrderService {
     public OrderRepresent orderToOrderRepresent(Order order) {
         SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy HH:mm");
         String date = format.format(order.getDate());
-        OrderRepresent orderRepresent = new OrderRepresent();
+        OrderRepresent orderRepresent = new OrderRepresent(order.getSum(),order.getHeight(), order.getWidth(), order.getLength(), order.getName());
         orderRepresent.setId(order.getId());
-        orderRepresent.setSum(order.getSum());
-        orderRepresent.setName(order.getName());
         orderRepresent.setDescription(order.getDescription());
-        orderRepresent.setHeight(order.getHeight());
-        orderRepresent.setWidth(order.getWidth());
-        orderRepresent.setLength(order.getLength());
         orderRepresent.setMaterials(materialService.MaterialSetToMatTitleList(order.getMaterials()));
         orderRepresent.setFile(order.getFile());
         orderRepresent.setResponsesCount(responseRepo.countDistinctByOrderId(order.getId()));
         orderRepresent.setStatus(statusToString(order.getStatus()));
         orderRepresent.setCustomerId(order.getUser().getId());
         orderRepresent.setDate(date);
-        orderRepresent.setFile(order.getFile());
         return orderRepresent;
     }
 
@@ -223,7 +217,7 @@ public class OrderService {
         Order inputOrder = new Order(inputOrderRepresent, dbOrder.getDate(), dbOrder.getUser(), dbOrder.getStatus(), materialsFromList(inputOrderRepresent.getMaterials()));
         BeanUtils.copyProperties(inputOrder, dbOrder, "user");
         Order saveOrder = orderRepo.save(dbOrder);
-        log.info("Update order {}", saveOrder.getId());
+        log.info("Updated order {}", saveOrder.getId());
         return saveOrder;
     }
 

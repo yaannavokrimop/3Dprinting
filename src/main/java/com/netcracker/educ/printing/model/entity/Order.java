@@ -139,6 +139,7 @@ public class Order  {
         this.length=orderRepresent.getLength();
         this.name=orderRepresent.getName();
         this.materials = materials;
+        this.file = orderRepresent.getFile();
     }
 
 }

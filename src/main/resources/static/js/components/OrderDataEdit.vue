@@ -123,7 +123,7 @@
                 console.log(response.data.materials);
                 console.log("Материалы из данных")
                 console.log(this.order.materials);
-                if(this.order.fileName !== '' || this.order.fileName != null) {
+                if(this.order.fileName !== '' && this.order.fileName != null) {
                     AXIOS.get('/order/file/' + this.order.fileName).then((response) => {
                         let blob = new Blob([response.data]);
                         blob.name = this.order.fileName;
