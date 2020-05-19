@@ -51,11 +51,13 @@ public class EquipmentController {
     @GetMapping("/my")
     public List<EquipmentRepresent> getUserEquip() {
         UserDetailsImpl principal = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        log.debug("Get equipments for current user {}",principal.getId());
         return equipmentService.getUserEquipment(principal.getId());
     }
 
     @GetMapping("/user/{id}")
     public List<EquipmentRepresent> getUserEquipById(@PathVariable("id") UUID userId) {
+        log.debug("Get userEquip by userId= {}",userId);
         return equipmentService.getUserEquipment(userId);
     }
 
@@ -63,6 +65,7 @@ public class EquipmentController {
     @PostMapping
     public Equipment createEquip(@RequestBody EquipmentRepresent inputEquip) {
         UserDetailsImpl principal = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        log.debug("User {} create equipment {}",principal.getId(),inputEquip.getEquipName());
         Equipment equipment=new Equipment(inputEquip.getEquipName(),inputEquip.getHeight(),inputEquip.getWidth(),inputEquip.getLength());
         return equipmentService.create(principal.getEmail(), equipment,inputEquip.getEquipDesc(),inputEquip.getMaterialList());
     }
@@ -70,6 +73,7 @@ public class EquipmentController {
     @PostMapping("/add")
     public void addEquip(@RequestBody EquipmentRepresent  inputEquip) {
         UserDetailsImpl principal = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        log.debug("User {} add equipment {}",principal.getId(),inputEquip.getEquipName());
          equipmentService.addEquipment(principal.getEmail(),inputEquip.getEquipName(),inputEquip.getEquipDesc(),inputEquip.getMaterialList());
     }
 
@@ -78,6 +82,7 @@ public class EquipmentController {
             @PathVariable("id") UUID id,
             @RequestBody Equipment inputEquip
     ) {
+        log.debug("Update equipment {}",id);
         Optional<Equipment> equipmentData = repo.findById(id);
 
         if (equipmentData.isPresent()) {
@@ -86,14 +91,18 @@ public class EquipmentController {
                    equipment.setHeight(inputEquip.getHeight());
                    equipment.setWidth(inputEquip.getWidth());
                    equipment.setLength(inputEquip.getLength());
-            return repo.save(equipment);
+            Equipment dbEquipment=repo.save(equipment);
+            log.info("Equipment {} updated.",id);
+                   return dbEquipment;
         } else {
+            log.error("Equipment {} not found",id);
             throw new NotFoundException();
         }
     }
 
     @DeleteMapping("{id}")
     public UUID deleteEquip(@PathVariable("id") UUID executorEquipId) {
+        log.debug("Delete equipment for executorEquip {}",executorEquipId);
         equipmentService.deleteById(executorEquipId);
         return executorEquipId;
 
@@ -101,16 +110,19 @@ public class EquipmentController {
 
     @GetMapping("/equipByPartName/{partName}")
     public List<String> getEquipmentByPartName(@PathVariable("partName") String equipPartName){
+        log.debug("Get equipment by part of Name {}",equipPartName);
         return equipmentService.getEquipmentsByEquipNamePart(equipPartName);
     }
 
     @GetMapping("/equipById/{executorEquipId}")
     public EquipmentRepresent getMyEquipmentById(@PathVariable("executorEquipId") UUID executorEquipId){
+        log.debug("Get equipments by executorEquipId= {}",executorEquipId);
         return equipmentService.getEquipmentByExecutorEquipId(executorEquipId);
     }
 
     @GetMapping("/name/{equipName}")
     public Equipment getEquipmentByName(@PathVariable("equipName") String equipName,@AuthenticationPrincipal UserDetailsImpl userDetails){
+        log.debug("Get Equipment by name {}, User {}",equipName,userDetails.getId());
         return equipmentService.getEquipmentByName(equipName,userDetails.getId());
     }
 

@@ -86,6 +86,7 @@ public class OrderService {
         for (String materialName : materialTitleList) {
             materials.add(materialRepo.findByMatTitle(materialName));
         }
+        log.debug("Get materials from materialTitleList");
         return materials;
     }
 
@@ -128,7 +129,7 @@ public class OrderService {
                 chatOrders.add(response.getOrder());
             }
         }
-
+        log.info("Get orders for chat: {}",chatId);
         return chatOrders;
     }
 

@@ -290,4 +290,28 @@
         margin: auto;
     }
 
+    .list-group-item{
+        width: 1052px;
+        margin-bottom: 12px;
+        border-radius: 16px;
+    }
+
+    .list-group-item:first-child {
+        border-top-left-radius: 16px;
+        border-top-right-radius: 16px;
+    }
+
+    .v-list-item__title {
+        font-size: 1.3rem;
+    }
+
+    .v-list-item__subtitle {
+        font-size: .9rem;
+    }
+
+    .list-group-item:last-child {
+        border-bottom-right-radius: 1.25rem;
+        border-bottom-left-radius: 1.25rem;
+    }
+
 </style>

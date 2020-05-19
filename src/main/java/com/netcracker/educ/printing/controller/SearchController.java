@@ -28,6 +28,7 @@ public class SearchController {
 
     @PostMapping("/executors")
     public ResponseEntity<PaginationBean> listExecutorsPage(@RequestBody SearchParam params) {
+        log.debug("Get list of executors by params");
         Page<User> executorsPage = searchService.getPageOfExecutors(params);
         List<UserRepresent> executors = userService.usersToUserRepresents(executorsPage.getContent());
         return ResponseEntity.ok(new PaginationBean(executorsPage.getTotalPages(), executors));
@@ -35,6 +36,7 @@ public class SearchController {
 
     @GetMapping("/cityList/{titlePart}")
     public List<String> getCityNames(@PathVariable("titlePart") String cityTitlePart){
+        log.debug("Get cityName by part of name: {}",cityTitlePart);
         return searchService.getCitiesByTitlePart(cityTitlePart);
 
     }

@@ -35,9 +35,11 @@ public class ResponseController {
 
     @PostMapping
     public ResponseEntity<String> createResponse(@RequestBody ResponseRepresent responseRepresent) {
+        log.debug("User {} create response for order {}",responseRepresent.getExecutorId(),responseRepresent.getOrderId());
         try {
             responseService.createResponse(responseRepresent);
         } catch (ResponseCreationException ex) {
+            log.error("ResponseCreationException {}",ex.getMessage());
             return ResponseEntity.badRequest().body(ex.getMessage());
         }
         return ResponseEntity.ok("Заказ успешно отправлен исполнителю.");
@@ -45,31 +47,37 @@ public class ResponseController {
 
     @GetMapping("forchat/{chatId}")
     public List<Response> getResponsesForChat(@PathVariable(name = "chatId") UUID chatId) {
+        log.debug("Get responses for chat {}",chatId);
         return responseService.getResponsesForChat(chatId);
     }
 
     @PostMapping("/offer")
     public void makeAnOffer(@RequestBody ResponseRepresent responseRepresent) {
+        log.debug("User {} make an offer for order {}",responseRepresent.getExecutorId(),responseRepresent.getOrderId());
         responseService.makeAnOffer(responseRepresent);
     }
 
     @PatchMapping("/offer")
     public void refuseResponse(@RequestBody ResponseRepresent responseRepresent) {
+        log.debug("Refuse response from {} for order {}",responseRepresent.getExecutorId(),responseRepresent.getOrderId());
         responseService.refuseResponse(responseRepresent);
     }
 
     @PatchMapping("/offer/discuss")
     public void refuseOffer(@RequestBody ResponseRepresent responseRepresent) {
+        log.debug("Refuse offer in order {}",responseRepresent.getOrderId());
         responseService.refuseOffer(responseRepresent);
     }
 
     @PatchMapping("/offer/accept")
     public void acceptOffer(@RequestBody ResponseRepresent responseRepresent) {
+        log.debug("Accept offer in order {}",responseRepresent.getOrderId());
         responseService.acceptOffer(responseRepresent);
     }
 
     @GetMapping("/forcustomer")
     public ResponseEntity<PaginationBean> getResponsesForCustomer(@RequestParam Map<String, String> params) {
+        log.debug("Get responses for customer");
         Page<Response> responsesPage = responseService.getPageOfResponsesForCustomer(params);
         List<ResponseRepresent> responses = responseService.responsesToResponseRepresents(responsesPage.getContent());
         return ResponseEntity.ok(new PaginationBean(responsesPage.getTotalPages(), responses));
@@ -77,6 +85,7 @@ public class ResponseController {
 
     @GetMapping("/forexecutor")
     public ResponseEntity<PaginationBean> getResponsesForExecutor(@RequestParam Map<String, String> params, @AuthenticationPrincipal UserDetailsImpl principal) {
+        log.debug("Get responses for executor {}",principal.getId());
         Page<Response> responses = responseService.getPageOfResponsesForExecutor(params, principal.getId());
         return ResponseEntity.ok(new PaginationBean(responses.getTotalPages(), responses.getContent()));
     }

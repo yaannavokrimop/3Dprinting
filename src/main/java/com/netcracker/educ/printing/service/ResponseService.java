@@ -48,6 +48,7 @@ public class ResponseService {
         if (responseRepo.existsById(responseId))
             throw new ResponseCreationException("Этот пользователь уже выбран исполнителем текущего заказа!");
         responseRepo.save(new Response(responseId, order, executor, ResponseStatus.REQUESTED, represent.getSum(), new Date()));
+        log.info("Response to order {} was created",represent.getOrderId());
     }
 
     public List<Response> getResponsesForChat(UUID chatId) {
@@ -144,14 +145,18 @@ public class ResponseService {
         int currentPage = Integer.parseInt(params.get("page")) - 1;
         int perPage = Integer.parseInt(params.get("perPage"));
         Pageable page = PageRequest.of(currentPage, perPage, Sort.by("date").descending());
-        return responseRepo.findAllByOrderId(orderId, page);
+        Page<Response> pages= responseRepo.findAllByOrderId(orderId, page);
+        log.info("Get page of responses for order: {}",orderId);
+        return pages;
     }
 
     public Page<Response> getPageOfResponsesForExecutor(Map<String, String> params, UUID execId) {
         int currentPage = Integer.parseInt(params.get("page")) - 1;
         int perPage = Integer.parseInt(params.get("perPage"));
         Pageable page = PageRequest.of(currentPage, perPage, Sort.by("date").descending());
-        return responseRepo.findAllByExecutorId(execId, page);
+        Page<Response> pages= responseRepo.findAllByExecutorId(execId, page);
+        log.info("Get page of responses for executor: {}",execId);
+        return pages;
     }
 
     public ResponseRepresent responseToResponseRepresent(Response response) {

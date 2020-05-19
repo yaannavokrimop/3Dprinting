@@ -1,7 +1,7 @@
 <template>
     <v-container>
         <v-content>
-            <h4>Мои диалоги</h4>
+            <h4 class="chatsHeader">Мои диалоги</h4>
             <ul class="list-group">
                 <li class="list-group-item"
                     v-for="(chat,index) in chats"
@@ -58,3 +58,29 @@
         }
     }
 </script>
+
+<style scoped>
+.list-group-item{
+    width: 1052px;
+    margin-bottom: 12px;
+    border-radius: 16px;
+}
+
+.list-group-item:first-child {
+    border-top-left-radius: 16px;
+    border-top-right-radius: 16px;
+}
+
+.v-card v-sheet theme--light{
+    border-radius: 11px;
+}
+
+    .list-group-item:last-child {
+        border-bottom-right-radius: 1.25rem;
+        border-bottom-left-radius: 1.25rem;
+    }
+    .chatsHeader{
+       margin-top: 6px;
+       margin-left: 43px;
+    }
+</style>
