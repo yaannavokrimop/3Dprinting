@@ -13,6 +13,8 @@
 
         </div>
 
+            <b-alert v-model="justShowAlert" variant="danger" dismissible>{{justTextAlert}}</b-alert>
+
         <v-content>
             <v-row align="center"
                    justify="center">
@@ -164,7 +166,9 @@
                     total: 0,
                     perPage: 4,
                     need: false
-                }
+                },
+                justShowAlert:false,
+                justTextAlert:null
 
             }
         },
@@ -221,7 +225,12 @@
 
                     this.$router.push('/chatList');
                     location.reload();
-                }).catch(error => console.log(error));
+                }).catch(error =>{
+                console.log(error);
+                //this.$data.justTextAlert='Нельзя принять собственный заказ. Выберите другого исполнителя!';
+                this.$data.justTextAlert=error.response.data;
+                this.$data.justShowAlert=true;
+                });
 
             },
             deleteOrder() {
