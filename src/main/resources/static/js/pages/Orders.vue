@@ -86,10 +86,6 @@
 
             </ul>
 
-            <div v-if="currentOrder">
-                <div class="mt-2"></div>
-                <label><strong>Текущий заказ:</strong></label> {{ currentOrder.name }}
-            </div>
         </v-card>
 
         <v-content>
@@ -109,10 +105,12 @@
 
                 </div>
                 <div v-else-if="currentOrder">
-                    <div v-if="!currentExecutor">
+                    <div v-if="!currentExecutor" class="mt-2" align="center">
                         <v-btn class="red--text" @click="selectExecutor">Выбрать исполнителя для заказа</v-btn>
+                        <v-btn class="blue-grey--text" @click="watchResponses"> Посмотреть отклики </v-btn>
+                        <b-button variant="danger" @click="showModal">Удалить заказ</b-button>
                     </div>
-                    <div v-if="currentExecutor">
+                    <div v-if="currentExecutor" class="mt-2" align="center">
                         <b-button v-b-modal.modal-1>Предложить заказ исполнителю</b-button>
 
                         <b-modal
@@ -124,12 +122,10 @@
                             <b-form-input type="text" placeholder="Сумма заказа" v-model="sum"/>
                             <div class="mt-2"></div>
                         </b-modal>
+                        <v-btn class="blue-grey--text" @click="watchResponses"> Посмотреть отклики </v-btn>
+                        <b-button variant="danger" @click="showModal">Удалить заказ</b-button>
                     </div>
-                    <div class="mt-2"></div>
-                    <v-btn class="blue-grey--text" @click="watchResponses"> Посмотреть отклики </v-btn>
 
-                    <div class="mt-2"></div>
-                    <b-button variant="danger" @click="showModal">Удалить заказ</b-button>
 
                     <b-modal ref="my-modal" hide-footer title="Подтверждение">
                         <div class="d-block text-center">
@@ -275,6 +271,8 @@
 .ordersHeader{
     margin-top: 6px;
     margin-left: 43px;}
+
+
 
 
     .v-application .indigo {
