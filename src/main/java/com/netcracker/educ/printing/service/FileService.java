@@ -25,10 +25,9 @@ public class FileService {
     private final OrderRepo orderRepo;
 
 //    @Value("${upload.path}")
-    private final String uploadPath = new File("file").getAbsolutePath();
+    private final String uploadPath = new File("src/main/resources/file").getAbsolutePath();
 
     public String uploadFile(MultipartFile file) throws IOException {
-        System.out.println(uploadPath);
         if (file != null && !file.isEmpty()) {
             File uploadFolder = new File(uploadPath);
             if (!uploadFolder.exists()) uploadFolder.mkdir();
