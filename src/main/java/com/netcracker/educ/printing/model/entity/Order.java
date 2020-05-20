@@ -5,8 +5,10 @@ import com.netcracker.educ.printing.model.bean.OrderStatus;
 import com.netcracker.educ.printing.model.bean.Pageable;
 import com.netcracker.educ.printing.model.representationModel.OrderRepresent;
 import lombok.*;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
+import java.sql.Blob;
 import java.util.*;
 
 @Entity
@@ -48,7 +50,6 @@ public class Order  {
     @Column
     private String file;
 
-
     @NonNull
     @Column
     private String name;
@@ -56,6 +57,9 @@ public class Order  {
     @Column
     private String description;
 
+    @Column
+    @Lob
+    private byte[] schema;
 
     @ManyToMany
     @JoinTable(

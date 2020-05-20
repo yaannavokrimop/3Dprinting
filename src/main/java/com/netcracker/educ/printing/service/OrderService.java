@@ -57,25 +57,21 @@ public class OrderService {
 
     public String addFile(MultipartFile file, UUID orderId) throws IOException {
         Order order = orderRepo.findById(orderId).orElseThrow(NotFoundException::new);
-        String fileName = fileService.uploadFile(file);
-        if (!fileName.equals("")) {
-            order.setFile(fileName);
+        Order changedOrder = fileService.uploadFile(file, order);
+        if (changedOrder != null) {
             orderRepo.save(order);
-            log.info("File {} added to order {}", fileName, orderId);
-            return fileName;
+            return "Файл загружен";
         } else return "";
 
     }
 
     public String addFileAndChangeStatus(MultipartFile file, UUID orderId) throws IOException {
         Order order = orderRepo.findById(orderId).orElseThrow(NotFoundException::new);
-        String fileName = fileService.uploadFile(file);
-        if (!fileName.equals("")) {
-            order.setFile(fileName);
+        Order changedOrder = fileService.uploadFile(file, order);
+        if (changedOrder != null) {
             order.setStatus(OrderStatus.IN_SEARCH);
             orderRepo.save(order);
-            log.info("File {} added to order {}",fileName, orderId);
-            return fileName;
+            return "Файл загружен";
         } else return "";
     }
 
