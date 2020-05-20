@@ -68,7 +68,7 @@ public class AuthController {
         log.debug("Registration user {}",signUpRequest.getEmail());
         if(userRepo.existsByEmail(signUpRequest.getEmail())) {
             log.debug("User with email {} already exists",signUpRequest.getEmail());
-            return new ResponseEntity(new SignupResponse( false, "Email is already taken!"),
+            return new ResponseEntity(new SignupResponse( false, "Введённый email уже используется"),
                     HttpStatus.BAD_REQUEST);
         }
 
@@ -83,6 +83,6 @@ public class AuthController {
                 .fromCurrentContextPath().path("/signup")
                 .buildAndExpand(result.getEmail()).toUri();
         log.info("User {} has successfully registered",result.getId());
-        return ResponseEntity.created(location).body(new SignupResponse(true, "User registered successfully"));
+        return ResponseEntity.created(location).body(new SignupResponse(true, "Пользователь успешно зарегистрирован."));
     }
 }

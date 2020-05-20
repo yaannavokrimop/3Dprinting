@@ -8,63 +8,33 @@
             <v-list-item>
                 <v-list-item-content>
                     <v-list-item-title><strong>Статус: {{order.status}}</strong></v-list-item-title>
+                    <v-list-item-title><strong>Начальная стоимость: {{order.sum}}₽</strong></v-list-item-title>
+                    <v-list-item-subtitle>
+                        <strong>Длина: {{order.length}} мм; </strong>
+                        <strong> Высота: {{order.height}} мм; </strong>
+                        <strong> Ширина: {{order.width}} мм </strong>
+                    </v-list-item-subtitle>
+                    <v-list-item-subtitle>
+                        <strong>Материалы: <span v-for="material of order.materials"> {{material}}  </span></strong>
+                    </v-list-item-subtitle>
+                    <v-list-item-subtitle><strong>Описание: {{order.description}}</strong></v-list-item-subtitle>
+                    <v-list-item-subtitle v-if="this.order.file">
+                        <strong>Схема изделия: ...{{order.file.substr(-15)}}</strong>
+                        <v-btn @click="downloadFile" icon>
+                            <v-icon color="dark">mdi-download</v-icon>
+                        </v-btn>
+                    </v-list-item-subtitle>
+                    <v-list-item-subtitle>Дата создания: {{order.date}}</v-list-item-subtitle>
                 </v-list-item-content>
             </v-list-item>
-            <v-list-item>
-                <v-list-item-content>
-                    <v-list-item-title><strong>Описание: {{order.description}}</strong></v-list-item-title>
-                </v-list-item-content>
-            </v-list-item>
-            <v-list-item>
-                <v-list-item-content>
-                    <v-list-item-title><strong>Сумма: {{order.sum}}</strong></v-list-item-title>
-                </v-list-item-content>
-            </v-list-item>
-            <v-list-item>
-                <v-list-item-content>
-                    <v-list-item-title><strong>Дата: {{order.date}}</strong></v-list-item-title>
-                </v-list-item-content>
-            </v-list-item>
-            <v-list-item>
-                <v-list-item-content>
-                    <v-list-item-title><strong>Ширина: {{order.width}}</strong></v-list-item-title>
-                </v-list-item-content>
-            </v-list-item>
-            <v-list-item>
-                <v-list-item-content>
-                    <v-list-item-title><strong>Длина: {{order.length}}</strong></v-list-item-title>
-                </v-list-item-content>
-            </v-list-item>
-            <v-list-item>
-                <v-list-item-content>
-                    <v-list-item-title><strong>Высота: {{order.height}}</strong></v-list-item-title>
-                </v-list-item-content>
-            </v-list-item>
-            <v-list-item>
-                <v-list-item-content>
-                    <v-list-item-title><strong>Файл: {{order.file}}</strong></v-list-item-title>
-                </v-list-item-content>
-            </v-list-item>
-            <v-list-item>
-                <div>
-                    <strong>Материалы:  <span v-for="material of order.materials"> {{material}}  </span></strong>
-                </div>
-            </v-list-item>
-
-
         </v-card>
         <v-content>
-            <div v-if="this.order.userId === this.myId" class="mt-2">
-                <v-btn to="/orders">К заказам</v-btn>
-                <v-btn @click="goToEditOrder">Редактировать заказ</v-btn>
-                <v-btn class="red--text" @click="deleteOrder">Удалить заказ</v-btn>
+            <div class="mt-2" align="center">
+                <v-btn @click="$router.go(-1)">Назад</v-btn>
+                <v-btn v-if="this.order.userId === this.myId" @click="goToEditOrder">Редактировать заказ</v-btn>
+                <v-btn v-if="this.order.userId === this.myId" class="red--text" @click="deleteOrder">Удалить заказ</v-btn>
             </div>
-            <div v-else class="mt-2">
-                <b-button variant="outline-primary" @click="$router.go(-1)">Назад</b-button>
-            </div>
-
         </v-content>
-
     </v-container>
 </template>
 
@@ -91,7 +61,7 @@
 
 
                 },
-                myId: '',
+                myId: localStorage.getItem('myId'),
                 accessToken: localStorage.getItem('accessToken')
 
             }
@@ -105,9 +75,9 @@
                 this.order.sum = response.data.sum;
                 this.order.name = response.data.name;
                 let dateStr = response.data.date;
-                let dateStr1 = (dateStr.substring(0,10));
-                let dateStr2 = (dateStr.substring(11,16));
-                this.order.date = dateStr1+" "+dateStr2;
+                let dateStr1 = (dateStr.substring(0, 10));
+                let dateStr2 = (dateStr.substring(11, 16));
+                this.order.date = dateStr1 + " " + dateStr2;
                 this.order.height = response.data.height;
                 this.order.width = response.data.width;
                 this.order.length = response.data.length;
@@ -116,8 +86,6 @@
                 this.order.materials = response.data.materials;
                 console.log(response.data);
             }).catch(error => console.log(error));
-
-            this.myId = localStorage.getItem('myId')
         },
         methods: {
             deleteOrder: function () {
@@ -130,6 +98,20 @@
             goToEditOrder() {
                 var s = '/order/edit/' + this.order.id;
                 this.$router.push(s)
+            },
+
+            downloadFile() {
+                AXIOS.get('/order/file/' + this.order.file, {responseType: 'blob'}).then((response) => {
+                    const url = window.URL.createObjectURL(new Blob([response.data]));
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.setAttribute('download', this.order.file);
+                    document.body.appendChild(link);
+                    link.click();
+                    link.remove();
+                    window.URL.revokeObjectURL(url);
+                }).catch(error => console.log(error));
+
             }
         }
     }

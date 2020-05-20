@@ -88,10 +88,8 @@
             this.scrollToEnd();
             if (this.currentChat.isExecutor) {
                 this.companionId = this.currentChat.customerId
-                localStorage.setItem('myId', this.currentChat.executorId)
             } else {
                 this.companionId = this.currentChat.executorId
-                localStorage.setItem('myId', this.currentChat.customerId)
             }
             this.scrollToEnd();
         },

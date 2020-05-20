@@ -86,7 +86,8 @@ public class ResponseController {
     @GetMapping("/forexecutor")
     public ResponseEntity<PaginationBean> getResponsesForExecutor(@RequestParam Map<String, String> params, @AuthenticationPrincipal UserDetailsImpl principal) {
         log.debug("Get responses for executor {}",principal.getId());
-        Page<Response> responses = responseService.getPageOfResponsesForExecutor(params, principal.getId());
-        return ResponseEntity.ok(new PaginationBean(responses.getTotalPages(), responses.getContent()));
+        Page<Response> responsesPage = responseService.getPageOfResponsesForExecutor(params, principal.getId());
+        List<ResponseRepresent> responses = responseService.responsesToResponseRepresents(responsesPage.getContent());
+        return ResponseEntity.ok(new PaginationBean(responsesPage.getTotalPages(), responses));
     }
 }

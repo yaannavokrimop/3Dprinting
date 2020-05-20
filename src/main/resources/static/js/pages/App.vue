@@ -47,7 +47,7 @@
                 <v-app-bar-nav-icon @click.native.stop="drawerToggle = !drawerToggle"></v-app-bar-nav-icon>
                 <v-toolbar-title>Additive Exchange</v-toolbar-title>
                 <v-spacer></v-spacer>
-                <v-btn icon href="/">
+                <v-btn icon to="/">
                     <v-icon>mdi-card-search-outline</v-icon>
                 </v-btn>
 
