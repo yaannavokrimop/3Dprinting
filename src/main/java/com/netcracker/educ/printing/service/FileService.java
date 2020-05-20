@@ -1,6 +1,7 @@
 package com.netcracker.educ.printing.service;
 
 import com.netcracker.educ.printing.exception.NotFoundException;
+import com.netcracker.educ.printing.model.bean.OrderStatus;
 import com.netcracker.educ.printing.model.entity.Order;
 import com.netcracker.educ.printing.model.repository.OrderRepo;
 import lombok.RequiredArgsConstructor;
@@ -10,8 +11,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.io.IOException;
+import javax.transaction.Transactional;
+import java.io.*;
 import java.net.URLConnection;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -27,17 +28,21 @@ public class FileService {
     @Value("${upload.path}")
     private String uploadPath;
 
-    public String uploadFile(MultipartFile file) throws IOException {
+    public Order uploadFile(MultipartFile file, Order order) throws IOException {
         if (file != null && !file.isEmpty()) {
-            File uploadFolder = new File(uploadPath);
-            if (!uploadFolder.exists()) uploadFolder.mkdir();
+           // File uploadFolder = new File(uploadPath);
+           // if (!uploadFolder.exists()) uploadFolder.mkdir();
             String uuidFile = UUID.randomUUID().toString();
             String fileName = uuidFile + "_" + file.getOriginalFilename();
-            file.transferTo(new File(uploadPath + File.separator + fileName));
-            log.info("File {} was uploaded", fileName);
-            return fileName;
+            byte[] bytesArray = file.getBytes();
+            order.setFile(fileName);
+            order.setSchema(bytesArray);
+            log.info("File {} added to order {}",fileName, order.getId());
+          //  file.transferTo(new File(uploadPath + File.separator + fileName));
+//            log.info("File {} was uploaded", fileName);
+            return order;
         }
-        return "";
+        return null;
     }
 
     public boolean deleteFileByOrderId(UUID orderId) {
@@ -52,17 +57,21 @@ public class FileService {
         } else return false;
     }
 
-    public void returnFile(String fileName, HttpServletResponse response) {
-        Path filePath = Paths.get(uploadPath, File.separator, fileName);
-        if(Files.exists(filePath)) {
+    @Transactional
+    public void returnFile(String fileName, HttpServletResponse response)  {
+        Order order = orderRepo.findByFile(fileName).orElseThrow(NotFoundException::new);
+       // Path filePath = Paths.get(uploadPath, File.separator, fileName);
+       // if(Files.exists(filePath)) {
             response.setContentType(URLConnection.guessContentTypeFromName(fileName));
             response.addHeader("Content-Disposition", "attachment; filename=" + fileName);
             try {
-                Files.copy(filePath, response.getOutputStream());
+                OutputStream output = response.getOutputStream();
+                output.write(order.getSchema());
+//                Files.copy(filePath, response.getOutputStream());
                 response.getOutputStream().flush();
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
-        }
+       // }
     }
 }
