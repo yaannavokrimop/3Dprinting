@@ -59,6 +59,7 @@ public class Order  {
 
     @Column
     @Lob
+    @JsonIgnore
     private byte[] schema;
 
     @ManyToMany

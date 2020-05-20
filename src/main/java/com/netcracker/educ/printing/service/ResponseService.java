@@ -24,12 +24,14 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import javax.transaction.Transactional;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Service
 @AllArgsConstructor
 @Slf4j
+@Transactional
 public class ResponseService {
     private final UserRepo userRepo;
     private final OrderRepo orderRepo;

@@ -17,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -26,6 +27,7 @@ import java.util.UUID;
 @RequestMapping("/api/response")
 @AllArgsConstructor
 @Data
+@Transactional
 public class ResponseController {
     private final ResponseService responseService;
     private final ChatService chatService;
