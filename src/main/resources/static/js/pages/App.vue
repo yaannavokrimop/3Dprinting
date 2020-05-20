@@ -51,19 +51,19 @@
                     <v-icon>mdi-card-search-outline</v-icon>
                 </v-btn>
 
-                <v-btn icon class="nav-link" to="/profile" v-show="authenticated">
-                    <v-icon>mdi-account</v-icon>
+                <v-btn icon to="/profile" v-show="authenticated">
+                    <v-icon>mdi-account-box</v-icon>
                 </v-btn>
                 <v-btn icon to="/orders" v-show="authenticated">
-                    <v-icon>mdi-cogs</v-icon>
+                    <v-icon>mdi-clipboard-text</v-icon>
                 </v-btn>
 
                 <v-btn icon @click="checkLogout" v-show="authenticated">
-                    <v-icon>mdi-exit-to-app</v-icon>
+                    <v-icon>mdi-logout</v-icon>
                 </v-btn>
 
-                <v-btn icon class="nav-link" to="/signin" v-show="!authenticated">
-                    <v-icon>mdi-exit-to-app</v-icon>
+                <v-btn icon to="/signin" v-show="!authenticated">
+                    <v-icon>mdi-login</v-icon>
                 </v-btn>
             </v-app-bar>
             <v-content>
