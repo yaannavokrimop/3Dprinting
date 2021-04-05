@@ -44,7 +44,7 @@ public class AddressController {
     @PostMapping
     public Address addAddress(@RequestBody Map<String, String> address) {
         UserDetailsImpl principal = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        log.debug("User {} add address(-es)",principal.getId());
+        log.debug("Address was added by user {}",principal.getId());
         return addressService.add(principal.getEmail(), address.get("cityTitle"), address.get("description"));
     }
 
