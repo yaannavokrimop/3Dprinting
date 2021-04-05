@@ -33,19 +33,20 @@
 </template>
 
 <script>
+import {AXIOS} from "../pages/http-common";
+
 export default {
     props:['user'],
     created:function(){
-         this.$resource('/api/user/').get().then(result =>result.json().then(data=>{
-             this.user.id = data.id;
-             this.user.email = data.email;
-             this.user.information = data.information;
-             this.user.name = data.name;
-             this.user.phone = data.phone;
-             this.user.role = data.role;
-             this.user.surname = data.surname;
-         }
-         ));
+         AXIOS.get('/user').then((responce) =>{
+             this.user.id = responce.data.id;
+             this.user.email =responce.data.email;
+             this.user.information = responce.data.information;
+             this.user.name = responce.data.name;
+             this.user.phone = responce.data.phone;
+             this.user.role = responce.data.role;
+             this.user.surname = responce.data.surname;
+         }).catch(error => console.log(error));;
     }
 }
 </script>

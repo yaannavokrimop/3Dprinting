@@ -1,27 +1,17 @@
 package com.netcracker.educ.printing.payload;
 
+import lombok.Data;
+
+import java.util.List;
+
+@Data
 public class LoginResponce {
     private String accessToken;
     private String tokenType = "Bearer";
+    private List<String> authority;
 
-    public LoginResponce(String accessToken) {
+    public LoginResponce(String accessToken, List<String> authority) {
         this.accessToken = accessToken;
-    }
-
-
-    public String getAccessToken() {
-        return accessToken;
-    }
-
-    public void setAccessToken(String accessToken) {
-        this.accessToken = accessToken;
-    }
-
-    public String getTokenType() {
-        return tokenType;
-    }
-
-    public void setTokenType(String tokenType) {
-        this.tokenType = tokenType;
+        this.authority = authority;
     }
 }

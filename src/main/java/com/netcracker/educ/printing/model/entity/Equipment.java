@@ -12,6 +12,7 @@ import java.util.UUID;
 @NoArgsConstructor
 public class Equipment {
     @Id
+    @GeneratedValue
     private UUID id;
 
     @NonNull

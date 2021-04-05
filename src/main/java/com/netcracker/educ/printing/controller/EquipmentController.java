@@ -3,7 +3,10 @@ package com.netcracker.educ.printing.controller;
 import com.netcracker.educ.printing.exception.NotFoundException;
 import com.netcracker.educ.printing.model.entity.Equipment;
 import com.netcracker.educ.printing.model.repository.EquipmentRepo;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.netcracker.educ.printing.security.UserDetailsImpl;
+import com.netcracker.educ.printing.service.EquipmentService;
+import lombok.AllArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -13,10 +16,11 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/equipment")
+@AllArgsConstructor
 public class EquipmentController {
 
-    @Autowired
-    EquipmentRepo repo;
+    private final EquipmentService equipmentService;
+    private final EquipmentRepo repo;
 
     @GetMapping
     public List<Equipment> getAllEquip(@RequestParam(required = false) String equipName) {
@@ -42,21 +46,17 @@ public class EquipmentController {
         }
     }
 
+    @GetMapping("/my")
+    public List<Equipment> getUserEquip() {
+        UserDetailsImpl principal = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return equipmentService.getUserEquipment(principal.getId());
+    }
+
 
     @PostMapping
     public Equipment createEquip(@RequestBody Equipment inputEquip) {
-
-        Equipment equipment = new Equipment(
-                inputEquip.getEquipName(),
-                inputEquip.getEquipDesc(),
-                inputEquip.getHeight(),
-                inputEquip.getWidth(),
-                inputEquip.getLength()
-        );
-
-        equipment.setId(UUID.randomUUID());
-
-        return repo.save(equipment);
+        UserDetailsImpl principal = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return equipmentService.create(principal.getEmail(), inputEquip);
     }
 
     @PutMapping("{id}")

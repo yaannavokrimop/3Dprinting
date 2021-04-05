@@ -20,7 +20,6 @@ public class Order {
     @Column(nullable = false)
     private UUID userId;
 
-    @NonNull
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private OrderStatus status;

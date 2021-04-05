@@ -20,8 +20,8 @@
                 <div>
                     <b-alert variant="success" :show="successfullyRegistered">
                         You have been successfully registered! Now you can login with your credentials
-                        <hr />
-                        <router-link to="/login">
+                        <hr/>
+                        <router-link to="/signin">
                             <b-button variant="primary">Login</b-button>
                         </router-link>
                     </b-alert>
@@ -66,7 +66,8 @@
 </template>
 
 <script>
-    import {AXIOS} from './http-common'
+    import {AXIOS} from '../pages/http-common'
+
     export default {
         name: 'SignUp',
         data () {
@@ -111,17 +112,16 @@
                 //     this.$data.alertMessage = 'Passwords are not match';
                 //     this.showAlert();
                 // }
-                    else {
-                    var newUser = {
+                else {
+                    AXIOS.post('/auth/signup', {
                         'name': this.$data.name,
                         'surname': this.$data.surname,
                         'email': this.$data.email,
                         'password': this.$data.password,
                         'phone': this.$data.phone,
                         'role': this.$data.role,
-                        'information': this.$data.information,
-                    };
-                    AXIOS.post('/registration', newUser)
+                        'information': this.$data.information
+                    })
                         .then(response => {
                             console.log(response);
                             this.successAlert();

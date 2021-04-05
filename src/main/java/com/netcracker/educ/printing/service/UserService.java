@@ -1,53 +1,34 @@
 package com.netcracker.educ.printing.service;
 
-import com.netcracker.educ.printing.config.WebSecurityConfig;
+import com.netcracker.educ.printing.model.bean.Role;
+import com.netcracker.educ.printing.model.entity.Address;
 import com.netcracker.educ.printing.model.entity.User;
 import com.netcracker.educ.printing.model.repository.UserRepo;
+import com.netcracker.educ.printing.model.representationModel.AddressRepresent;
+import com.netcracker.educ.printing.model.representationModel.UserRepresent;
 import lombok.AllArgsConstructor;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
 import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @AllArgsConstructor
-public class UserService implements UserDetailsService {
+public class UserService {
     private final UserRepo userRepo;
     private final PasswordEncoder passwordEncoder;
 
-    @Override
-    @Transactional
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        User user = userRepo.findByEmail(email);
-
-        if (user == null) {
-            throw new UsernameNotFoundException("User not found");
-        }
-        return user;
-    }
-
-    @Transactional
-    public UserDetails loadUserById(UUID id) {
-        User user = userRepo.findById(id).orElseThrow(
-                () -> new UsernameNotFoundException("User not found!!!")
-        );
-        return user;
-    }
-
-    public boolean createUser(User user) {
+        public boolean createUser(User user) {
         User userFromDB = userRepo.findByEmail(user.getEmail());
         if (userFromDB != null) return false;
-        user.setId(UUID.randomUUID());
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepo.save(user);
         return true;
+    }
+
+    public Optional<User> get(UUID id) {
+            return userRepo.findById(id);
     }
 
     public String userSave(
@@ -99,5 +80,42 @@ public class UserService implements UserDetailsService {
                     passwordEncoder.encode(password)
             );
         }
+    }
+
+    public User updateUser(User user){
+        return userRepo.save(user);
+    }
+
+    public List<UserRepresent> findAllExecutors() {
+        List<User> executors=userRepo.findByRole(Role.EXECUTOR);
+        return usersToUserRepresents(executors);
+    }
+
+    public List<UserRepresent> findExecutorsByAddresses() {
+        List<User> executors=userRepo.findByRole(Role.EXECUTOR);
+        return usersToUserRepresents(executors);
+    }
+
+    public List<UserRepresent> usersToUserRepresents(List<User> users){
+        List<UserRepresent> userRepresents=new ArrayList<>();
+        User user;
+        Iterator<User> iter=users.iterator();
+        while (iter.hasNext()){
+            user=iter.next();
+            userRepresents.add(new UserRepresent(user.getId(),user.getName(),user.getSurname(),user.getRole(),user.getPhone(),user.getEmail(),user.getInformation(),addressToAddressRepresent(user.getAddresses())));
+
+        }
+        return userRepresents;
+    }
+
+    public List<AddressRepresent> addressToAddressRepresent(List<Address> addresses){
+            List<AddressRepresent> addressRepresents=new ArrayList<>();
+            Iterator<Address> iterator=addresses.iterator();
+            Address addr;
+            while(iterator.hasNext()){
+                addr=iterator.next();
+                addressRepresents.add(new AddressRepresent(addr.getCity().getTitle(),addr.getDescription(),addr.getUser().getId()));
+            }
+            return addressRepresents;
     }
 }
