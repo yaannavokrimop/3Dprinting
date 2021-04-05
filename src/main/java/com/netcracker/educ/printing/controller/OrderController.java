@@ -1,95 +1,93 @@
 package com.netcracker.educ.printing.controller;
 
 import com.netcracker.educ.printing.exception.NotFoundException;
+import com.netcracker.educ.printing.model.bean.PaginationBean;
 import com.netcracker.educ.printing.model.entity.Order;
-import com.netcracker.educ.printing.model.entity.User;
 import com.netcracker.educ.printing.model.repository.OrderRepo;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.netcracker.educ.printing.model.representationModel.OrderRepresent;
+import com.netcracker.educ.printing.security.UserDetailsImpl;
+import com.netcracker.educ.printing.service.OrderService;
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
+import org.springframework.data.domain.Page;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
 
+
+@Slf4j
 @RestController
 @RequestMapping("/api/order")
+@AllArgsConstructor
 public class OrderController {
 
-    @Autowired
-    OrderRepo repo;
+    private final OrderRepo orderRepo;
+    private final OrderService orderService;
 
-    @GetMapping
-    public List<Order> getAllOrders(@RequestParam(required = false) String description) {
+    @GetMapping("/user")
+    public ResponseEntity<PaginationBean> getOrdersByUserId(@RequestParam Map<String, String> pageParams, @AuthenticationPrincipal UserDetailsImpl principal) {
+        Page<Order> ordersPage = orderService.getPageOfOrders(pageParams, principal.getId());
+        List<OrderRepresent> orders = orderService.ordersToOrderRepresents(ordersPage.getContent());
 
-        List<Order> orders = new ArrayList<>();
-
-        if (description == null)
-            orders.addAll(repo.findAll());
-        else
-            orders.addAll(repo.findByDescriptionContaining(description));
-
-        return orders;
+        return ResponseEntity.ok(new PaginationBean(ordersPage.getTotalPages(), orders));
     }
 
     @GetMapping("{id}")
-    public Order getOrderById(@PathVariable("id") UUID id) {
-        Optional<Order> orderData = repo.findById(id);
+    public OrderRepresent getOrderById(@PathVariable("id") UUID id) {
+        log.info("get Order by id= {}", id);
+        return orderService.getOrderById(id);
+    }
 
-        if (orderData.isPresent()) {
-            return orderData.get();
-        } else {
-            throw new NotFoundException();
-        }
+    @GetMapping("forchat/{chatId}")
+    public List<Order> getOrdersForChat(@PathVariable(name = "chatId") UUID chatId) {
+        return orderService.getOrdersForChat(chatId);
     }
 
     @PostMapping
-    public Order createOrder(
-            @RequestBody Order inputOrder,
-            @AuthenticationPrincipal User user
-    ) {
+    public Order createOrder(@RequestBody OrderRepresent inputOrder, @AuthenticationPrincipal UserDetailsImpl details) {
+        return orderService.create(inputOrder, details.getId());
+    }
 
-        Order order = new Order(
-                user.getId(),
-                inputOrder.getStatus(),
-                inputOrder.getSum(),
-                inputOrder.getHeight(),
-                inputOrder.getWidth(),
-                inputOrder.getLength(),
-                inputOrder.getDescription()
-        );
-
-        order.setId(UUID.randomUUID());
-        order.setDate(new Date());
-
-        return repo.save(order);
+    @PostMapping("draft")
+    public Order createDraft(@RequestBody OrderRepresent inputOrder, @AuthenticationPrincipal UserDetailsImpl details) {
+        return orderService.createDraft(inputOrder, details.getId());
     }
 
     @PutMapping("{id}")
     public Order updateOrder(
-            @PathVariable("id") UUID id,
-            @RequestBody Order inputOrder
-    ) {
-        Optional<Order> orderData = repo.findById(id);
-
-        if (orderData.isPresent()) {
-            Order order = orderData.get();
-            order.setStatus(inputOrder.getStatus());
-            order.setSum(inputOrder.getSum());
-            order.setHeight(inputOrder.getHeight());
-            order.setWidth(inputOrder.getWidth());
-            order.setLength(inputOrder.getLength());
-            order.setDescription(inputOrder.getDescription());
-            return repo.save(order);
-        } else {
-            throw new NotFoundException();
-        }
+            @RequestBody OrderRepresent inputOrder,
+            @PathVariable("id") UUID orderId) {
+        return orderService.updateOrder(inputOrder,orderId);
     }
 
     @DeleteMapping("{id}")
     public UUID deleteOrder(@PathVariable("id") UUID id) {
+        return orderService.deleteOrder(id);
+    }
 
-        repo.deleteById(id);
+    @PatchMapping("/pay/{id}")
+    public Order payOrder(@PathVariable("id") UUID id) {
+        return orderService.payOrder(id);
+    }
 
-        return id;
+    @PatchMapping("/done/{id}")
+    public Order doneOrder(@PathVariable("id") UUID id) {
+        return orderService.doneOrder(id);
+    }
 
+    @PatchMapping("/receive/{id}")
+    public Order receivedOrder(@PathVariable("id") UUID id) {
+        return orderService.receivedOrder(id);
+    }
+
+    @PatchMapping("/notDraft/{id}")
+    public Order notDraft(@PathVariable("id") UUID id) {
+        return orderService.notDraftOrder(id);
     }
 }
