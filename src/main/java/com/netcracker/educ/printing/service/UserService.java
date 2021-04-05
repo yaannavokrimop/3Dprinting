@@ -1,53 +1,39 @@
 package com.netcracker.educ.printing.service;
 
-import com.netcracker.educ.printing.config.WebSecurityConfig;
+import com.netcracker.educ.printing.exception.NotFoundException;
+import com.netcracker.educ.printing.model.bean.Role;
+import com.netcracker.educ.printing.model.entity.Address;
 import com.netcracker.educ.printing.model.entity.User;
 import com.netcracker.educ.printing.model.repository.UserRepo;
+import com.netcracker.educ.printing.model.representationModel.AddressRepresent;
+import com.netcracker.educ.printing.model.representationModel.UserRepresent;
+import com.netcracker.educ.printing.security.UserDetailsImpl;
 import lombok.AllArgsConstructor;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
 import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @AllArgsConstructor
-public class UserService implements UserDetailsService {
+@Slf4j
+public class UserService {
     private final UserRepo userRepo;
     private final PasswordEncoder passwordEncoder;
 
-    @Override
-    @Transactional
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        User user = userRepo.findByEmail(email);
-
-        if (user == null) {
-            throw new UsernameNotFoundException("User not found");
-        }
-        return user;
-    }
-
-    @Transactional
-    public UserDetails loadUserById(UUID id) {
-        User user = userRepo.findById(id).orElseThrow(
-                () -> new UsernameNotFoundException("User not found!!!")
-        );
-        return user;
-    }
-
-    public boolean createUser(User user) {
+        public boolean createUser(User user) {
         User userFromDB = userRepo.findByEmail(user.getEmail());
         if (userFromDB != null) return false;
-        user.setId(UUID.randomUUID());
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepo.save(user);
         return true;
+    }
+
+    public User get(UUID id) {
+            return userRepo.findById(id).orElse(null);
     }
 
     public String userSave(
@@ -99,5 +85,69 @@ public class UserService implements UserDetailsService {
                     passwordEncoder.encode(password)
             );
         }
+    }
+
+    public UserRepresent updateUser(UserRepresent user){
+        User dbUser=userRepo.findById(user.getId()).orElse(null);
+        User updateUser=new User(user.getName(),user.getSurname(),user.getEmail(),user.getInformation(),user.getPhone(),user.getRole());
+
+        if (dbUser != null){
+        BeanUtils.copyProperties(updateUser,dbUser,"id","password","addresses");
+        return userToUserRepresent(userRepo.save(dbUser));}
+        else return null;
+    }
+
+    public List<UserRepresent> findAllExecutors() {
+        List<User> executors=userRepo.findByRole(Role.EXECUTOR);
+        return usersToUserRepresents(executors);
+    }
+//Удалить
+    public List<UserRepresent> findExecutorsByAddresses() {
+        List<User> executors=userRepo.findByRole(Role.EXECUTOR);
+        return usersToUserRepresents(executors);
+    }
+
+    public List<UserRepresent> usersToUserRepresents(List<User> users){
+        List<UserRepresent> userRepresents=new ArrayList<>();
+        for (User user : users) {
+            userRepresents.add(userToUserRepresent(user));
+        }
+        return userRepresents;
+    }
+
+    public UserRepresent userToUserRepresent(User user) {
+        return new UserRepresent(user.getId(),
+                user.getName(),
+                user.getSurname(),
+                user.getRole(),
+                user.getPhone(),
+                user.getEmail(),
+                user.getInformation(),
+                addressToAddressRepresent(user.getAddresses()));
+    }
+
+    public List<AddressRepresent> addressToAddressRepresent(List<Address> addresses){
+            List<AddressRepresent> addressRepresents=new ArrayList<>();
+            Iterator<Address> iterator=addresses.iterator();
+            Address addr;
+            while(iterator.hasNext()){
+                addr=iterator.next();
+                addressRepresents.add(new AddressRepresent(addr.getCity().getTitle(),addr.getDescription(),addr.getUser().getId(),addr.getId()));
+            }
+            return addressRepresents;
+    }
+
+    public UserRepresent getCurrentUser(UserDetailsImpl principal) {
+        UserRepresent user=userToUserRepresent(userRepo.findByEmail(principal.getEmail()));
+        log.info("This user "+user.getEmail()+" in his profile");
+        return user;
+
+
+    }
+
+    public Boolean checkUserRole(UUID userId) {
+        User user=userRepo.findById(userId).orElseThrow(NotFoundException::new);
+        return user.getRole().equals(Role.CUSTOMER);
+
     }
 }
