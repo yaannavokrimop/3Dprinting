@@ -6,25 +6,28 @@ import lombok.AllArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-import java.util.Map;
 
-@Controller
-@AllArgsConstructor
+@RestController
 public class MainController {
-    private final UserRepo userRepo;
 
-    @GetMapping("/")
-    public String greeting() {
-        return "index";
-    }
 
-    @GetMapping("/main")
-    public List<User> main(
-            @AuthenticationPrincipal User user, Map<String, Object> model
-    ) {
-        model.put("message", user.getName());
-        return userRepo.findAll();
-    }
+//    private final UserRepo userRepo;
+
+
+//    @GetMapping(value = "/")
+//    public String greeting() {
+//        return "";
+//    }
+
+
+
+//    @GetMapping("/main")
+//    public List<User> main(
+//            @AuthenticationPrincipal User user, Map<String, Object> model
+//    ) {
+//        model.put("message", user.getName());
+//        return userRepo.findAll();
+//    }
 }
