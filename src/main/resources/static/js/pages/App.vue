@@ -1,45 +1,112 @@
 <template>
     <v-app>
         <div>
-            <v-app-bar  dark>
-                 <v-app-bar-nav-icon></v-app-bar-nav-icon>
-                 <v-toolbar-title>3DPrinting</v-toolbar-title>
-                 <v-spacer></v-spacer>
-                 <v-btn icon href="/">
-                       <v-icon>mdi-card-search-outline</v-icon>
-                 </v-btn>
+            <v-navigation-drawer
+                    absolute
+                    dark
+                    temporary
+                    v-model="drawerToggle"
+                    color="#212F3D"
+            >
+                <v-list
+                        dense
+                        nav
+                        class="py-0"
+                >
+                    <v-list-item>
+                        <div class="mt-2"></div>
+                        <v-list-item-avatar style="margin: 10px">
+                            <v-img src="https://sun9-24.userapi.com/6DKCNMbEKuSg43y4h7w8xTRT6MJdfWSrEhD_Qw/OUUFGIbwJes.jpg"></v-img>
+                        </v-list-item-avatar>
 
-                 <v-btn icon href="/profile">
-                       <v-icon>mdi-account</v-icon>
-                 </v-btn>
-                 <v-btn icon href="/">
-                       <v-icon>mdi-email</v-icon>
-                 </v-btn>
+                        <v-list-item-content>
+                            <v-list-item-title>
+                                Меню пользователя
+                            </v-list-item-title>
+                        </v-list-item-content>
+                    </v-list-item>
 
-                 <v-btn icon @click="logout">
-                       <v-icon>mdi-exit-to-app</v-icon>
-                 </v-btn>
+                    <v-divider></v-divider>
+                    <v-list-item
+                            v-for="item in items"
+                            :key="item.title"
+                            router :to="item.route"
+                    >
+                        <v-list-item-icon>
+                            <v-icon>{{ item.icon }}</v-icon>
+                        </v-list-item-icon>
+
+                        <v-list-item-content>
+                            <v-list-item-title>{{ item.title }}</v-list-item-title>
+                        </v-list-item-content>
+                    </v-list-item>
+                </v-list>
+            </v-navigation-drawer>
+
+            <v-app-bar dark>
+                <v-app-bar-nav-icon @click.native.stop="drawerToggle = !drawerToggle"></v-app-bar-nav-icon>
+                <v-toolbar-title>Additive Exchange</v-toolbar-title>
+                <v-spacer></v-spacer>
+                <v-btn icon to="/">
+                    <v-icon>mdi-card-search-outline</v-icon>
+                </v-btn>
+
+                <v-btn icon to="/profile" v-show="authenticated">
+                    <v-icon>mdi-account-box</v-icon>
+                </v-btn>
+                <v-btn icon to="/orders" v-show="authenticated">
+                    <v-icon>mdi-clipboard-text</v-icon>
+                </v-btn>
+
+                <v-btn icon @click="checkLogout" v-show="authenticated">
+                    <v-icon>mdi-logout</v-icon>
+                </v-btn>
+
+                <v-btn icon to="/signin" v-show="!authenticated">
+                    <v-icon>mdi-login</v-icon>
+                </v-btn>
             </v-app-bar>
             <v-content>
                 <router-view></router-view>
             </v-content>
         </div>
-
-
     </v-app>
 </template>
 
 <script>
-export default {
-    methods:{
-            logout:function(){
-                this.$resource.dispatch('logout').
-                    then(()=>{
-                        console.log("logout success")
-                    });
+    import {mapActions} from "vuex";
+    import router from "../router/router";
+
+    export default {
+        data () {
+            return {
+                items: [
+                    { title: 'Адреса', icon: 'mdi-home-map-marker', route: "/address" },
+                    { title: 'Оборудование', icon: 'mdi-printer-3d', route: "/equipment" },
+                    { title: 'Заявки', icon: 'mdi-account-check', route: "/response" },
+                    { title: 'Чаты', icon: 'mdi-email', route: "/chatList" },
+                ],
+                drawerToggle: false,
+                isExecutor : false
             }
-         }
-}
+        },
+        methods: {
+            ...mapActions([
+                'fetchAccessToken',
+                'doLogout'
+            ]),
+            checkLogout(event) {
+                event.preventDefault();
+                this.doLogout();
+            }
+        },
+        computed: {
+            authenticated() {
+                this.$store.commit('updateAccessToken', localStorage.getItem('accessToken'));
+                return this.$store.getters.authenticated;
+            },
+        },
+    }
 </script>
 
 <style scoped>

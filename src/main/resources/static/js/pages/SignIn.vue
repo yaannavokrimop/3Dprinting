@@ -2,10 +2,11 @@
     <div div="signin">
         <div class="login-form">
             <b-card
-                    title="Login"
+                    title="Вход"
                     tag="article"
                     style="max-width: 20rem;"
                     class="mb-2"
+                    align="center"
             >
                 <div>
                     <b-alert
@@ -18,17 +19,28 @@
                     </b-alert>
                 </div>
                 <div>
-                    <b-form-input type="email" placeholder="Email" v-model="email" />
+                    <b-alert variant="success" :show="successfullyRegistered" dismissible>
+                        Регистрация завершена. Можете войти, используя свои данные.
+                    </b-alert>
+                </div>
+                <div>
+                    <b-form-input type="email" placeholder="Email" v-model="email"/>
                     <div class="mt-2"></div>
 
-                    <b-form-input type="password" placeholder="Password" v-model="password" />
+                    <b-form-input type="password" placeholder="Пароль" v-model="password"/>
                     <div class="mt-2"></div>
                 </div>
-
-                <b-button v-on:click="login" variant="primary">Login</b-button>
-
-                <hr class="my-4" />
-
+                <v-row align="center"
+                       justify="center">
+                    <b-button v-on:click="login" variant="primary">Войти</b-button>
+                </v-row>
+                <hr class="my-4"/>
+                <div style=" font-size:85%" align="center">
+                    Нет аккаунта?
+                    <a href="#" @click="goToSignUpPage">
+                        Зарегистрируйтесь
+                    </a>
+                </div>
             </b-card>
         </div>
     </div>
@@ -36,7 +48,10 @@
 
 <script>
     import {AXIOS} from './http-common'
+    import jwt_decode from "jwt-decode";
+
     export default {
+        props: ['successfullyRegistered'],
         name: 'SignIn',
         data() {
             return {
@@ -44,20 +59,35 @@
                 password: '',
                 dismissSecs: 5,
                 dismissCountDown: 0,
-                alertMessage: 'Request error',
+                alertMessage:'Неверный логин или пароль'
             }
         },
+
         methods: {
             login() {
+                this.$store.commit('loginStart');
                 AXIOS.post(`/auth/signin`, {'email': this.$data.email, 'password': this.$data.password})
                     .then(response => {
-                        this.$store.dispatch('login', {'token': response.data.accessToken, 'roles': response.data.authorities, 'username': response.data.username});
+                        this.$store.commit('loginStart');
+                        localStorage.setItem('accessToken', response.data.accessToken);
+                        localStorage.setItem('authority', response.data.authority);
+                        let token = localStorage.getItem('accessToken');
+                        console.log(token);
+                        let decoded = jwt_decode(token);
+                        console.log(decoded);
+                        let userId = decoded['sub'];
+                        console.log(userId);
+                        localStorage.setItem('myId', userId);
+                        this.$store.commit('updateAccessToken', response.data.accessToken);
+                        this.$store.commit('setUserAuthority', response.data.authority);
                         this.$router.push('/profile')
                     }, error => {
-                        this.$data.alertMessage = (error.response.data.message.length < 150) ? error.response.data.message : 'Request error. Please, report this error website owners';
+                        this.$data.alertMessage = 'Возникла ошибка. Попробуйте снова.';
+                        this.showAlert();
                         console.log(error)
                     })
                     .catch(e => {
+                        this.$store.commit('updateAccessToken', null);
                         console.log(e);
                         this.showAlert();
                     })
@@ -68,13 +98,21 @@
             showAlert() {
                 this.dismissCountDown = this.dismissSecs
             },
+            goToSignUpPage(event) {
+                event.preventDefault();
+                this.$router.push("/signup")
+            }
         }
     }
 </script>
 
 <style>
     .login-form {
-        margin-left: 38%;
+        margin-left: 42%;
         margin-top: 50px;
     }
 </style>
+
+
+
+

@@ -1,0 +1,59 @@
+package com.netcracker.educ.printing.controller;
+
+import com.netcracker.educ.printing.model.entity.Message;
+import com.netcracker.educ.printing.model.entity.User;
+import com.netcracker.educ.printing.model.repository.UserRepo;
+import com.netcracker.educ.printing.model.representationModel.MessageRepresent;
+import com.netcracker.educ.printing.security.UserDetailsImpl;
+import com.netcracker.educ.printing.service.MessageService;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
+
+import java.text.SimpleDateFormat;
+import java.util.*;
+@Slf4j
+@RestController
+@Data
+@AllArgsConstructor
+@RequestMapping("/api/message")
+public class MessageController {
+
+    private MessageService messageService;
+    private UserRepo userRepo;
+
+    @GetMapping("{chatId}")
+    public List<MessageRepresent> getMessageByChat(@PathVariable(name = "chatId") UUID chatId, @AuthenticationPrincipal UserDetailsImpl principal) {
+        log.debug("Get message by chat {}, User {}",chatId,principal.getId());
+        List<Message> messageList = messageService.getMessagesByChat(chatId, principal);
+        List<MessageRepresent> messageRepresents = new ArrayList<>();
+        SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy HH:mm");
+
+        for (Message message : messageList) {
+            MessageRepresent represent = new MessageRepresent(message.getText(), message.getChat().getId());
+            represent.setAuthor(message.getAuthor().getName()+" "+message.getAuthor().getSurname());
+            represent.setAuthorId(message.getAuthor().getId());
+            represent.setDate(format.format(message.getDate()));
+            messageRepresents.add(represent);
+        }
+
+        return messageRepresents;
+    }
+
+    @PostMapping
+    public Message createMessage(@AuthenticationPrincipal UserDetailsImpl principal, @RequestBody MessageRepresent message) {
+        log.debug("User {} create message in chat {}",principal.getId(),message.getChatId());
+        User currentUser = userRepo.findByEmail(principal.getEmail());
+        return messageService.createMessage(message, currentUser);
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public void deleteMessage(@AuthenticationPrincipal UserDetailsImpl principal, @PathVariable("id") UUID messageId) {
+    }
+
+}
+
+
+

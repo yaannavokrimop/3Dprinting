@@ -2,10 +2,11 @@
     <div div="signup">
         <div class="login-form">
             <b-card
-                    title="Register"
+                    title="Регистрация"
                     tag="article"
                     style="max-width: 20rem;"
                     class="mb-2"
+                    align="center"
             >
                 <div>
                     <b-alert
@@ -17,48 +18,49 @@
                     > {{ alertMessage }}
                     </b-alert>
                 </div>
+
                 <div>
-                    <b-alert variant="success" :show="successfullyRegistered">
-                        You have been successfully registered! Now you can login with your credentials
-                        <hr />
-                        <router-link to="/login">
-                            <b-button variant="primary">Login</b-button>
-                        </router-link>
-                    </b-alert>
+
+                    <b-form-input type="text" placeholder="Имя*" v-model="name" />
+                    <div class="mt-2"></div>
+
+                    <b-form-input type="text" placeholder="Фамилия*" v-model="surname" />
+                    <div class="mt-2"></div>
+
+                    <b-form-input type="text" placeholder="Email*" v-model="email" />
+                    <div class="mt-2"></div>
+
+                    <b-form-input type="password" placeholder="Пароль*" v-model="password" />
+                    <div class="mt-2"></div>
+
+                    <b-form-input type="text" placeholder="Номер телефона" v-model="phone" />
+                    <div class="mt-2"></div>
+
+                    <b-form-input type="text" placeholder="О себе" v-model="information" />
+                    <div class="mt-2"></div>
+
+                    <b-form-group label="Выберите роль:*" align="left">
+                        <b-form-radio v-model="role" name="some-radios" value="CUSTOMER">Заказчик</b-form-radio>
+                        <b-form-radio v-model="role" name="some-radios" value="EXECUTOR">Исполнитель</b-form-radio>
+                    </b-form-group>
+
+                    <v-autocomplete
+                     v-model="cityTitle"
+                     :items="items"
+                     :search-input.sync="search"
+                     cache-items
+                     hide-no-data
+                     hide-details
+                     label="Город"
+                     chips
+                    ></v-autocomplete>
+                    <div class="mt-2"></div>
+
+                    <b-form-input type="text" placeholder="Адрес" v-model="description" />
+                    <div class="mt-2"></div>
                 </div>
-                <div>
-<!--                    <b-form-input type="text" placeholder="Username" v-model="username" />-->
-<!--                    <div class="mt-2"></div>-->
 
-                    <b-form-input type="text" placeholder="First Name" v-model="name" />
-                    <div class="mt-2"></div>
-
-                    <b-form-input type="text" placeholder="Last name" v-model="surname" />
-                    <div class="mt-2"></div>
-
-                    <b-form-input type="text" placeholder="Email" v-model="email" />
-                    <div class="mt-2"></div>
-
-                    <b-form-input type="password" placeholder="Password" v-model="password" />
-                    <div class="mt-2"></div>
-
-                    <b-form-input type="text" placeholder="Phone number" v-model="phone" />
-                    <div class="mt-2"></div>
-
-                    <b-form-input type="text" placeholder="Information" v-model="information" />
-                    <div class="mt-2"></div>
-
-                    <input type="radio" value="CUSTOMER" v-model="role">
-                    <label>Заказчик</label>
-
-                    <input type="radio" value="EXECUTOR" v-model="role">
-                    <label>Исполнитель</label>
-
-                    <!--<b-form-input type="password" placeholder="Confirm Password" v-model="confirmpassword" />
-                    <div class="mt-2"></div>-->
-                </div>
-
-                <b-button v-on:click="register" variant="primary">Register</b-button>
+                <b-button v-on:click="register" variant="primary">Зарегистрироваться</b-button>
 
             </b-card>
         </div>
@@ -67,6 +69,7 @@
 
 <script>
     import {AXIOS} from './http-common'
+
     export default {
         name: 'SignUp',
         data () {
@@ -81,38 +84,51 @@
                 dismissSecs: 5,
                 dismissCountDown: 0,
                 alertMessage: '',
-                successfullyRegistered: false
+                cityTitle:null,
+                description:'',
+                items: [],
+                search: null
+
             }
         },
+        watch: {
+            search (val) {
+                val && val !== this.cityTitle && this.querySelections(val)
+            },
+         },
         methods: {
+            querySelections (cityPartName) {
+                setTimeout(()=>{
+                if(cityPartName===this.$data.search){
+                AXIOS.get('/search/cityList/'+cityPartName).then((response) =>{
+
+                    this.items=response.data;
+                }).catch(error => console.log(error));
+                }},1200)
+            },
+
             register: function () {
                 if (this.$data.name === '' || this.$data.name == null) {
-                    this.$data.alertMessage = 'Please, fill "Username" field';
-                    this.showAlert();}
-                // } else if (this.$data.firstname === '' || this.$data.firstname == null) {
-                //     this.$data.alertMessage = 'Please, fill "First name" field';
-                //     this.showAlert();
-                // } else if (this.$data.lastname === '' || this.$data.lastname == null) {
-                //     this.$data.alertMessage = 'Please, fill "Last name" field';
-                //     this.showAlert();
-                // } else if (this.$data.email === '' || this.$data.email == null) {
-                //     this.$data.alertMessage = 'Please, fill "Email" field';
-                //     this.showAlert();
-                // } else if (!this.$data.email.includes('@')) {
-                //     this.$data.alertMessage = 'Email is incorrect';
-                //     this.showAlert();
-                // } else if (this.$data.password === '' || this.$data.password == null) {
-                //     this.$data.alertMessage = 'Please, fill "Password" field';
-                //     this.showAlert();
-                // } else if (this.$data.confirmpassword === '' || this.$data.confirmpassword == null) {
-                //     this.$data.alertMessage = 'Please, confirm password';
-                //     this.showAlert();
-                // } else if (this.$data.confirmpassword !== this.$data.password) {
-                //     this.$data.alertMessage = 'Passwords are not match';
-                //     this.showAlert();
-                // }
-                    else {
-                    var newUser = {
+                    this.$data.alertMessage = 'Пожалуйста, укажите своё имя';
+                    this.showAlert();
+                } else if (this.$data.surname === '' || this.$data.surname == null) {
+                    this.$data.alertMessage = 'Пожалуйста, укажите свою фамилию';
+                    this.showAlert();
+                } else if (this.$data.email === '' || this.$data.email == null) {
+                    this.$data.alertMessage = 'Пожалуйста, укажите электронную почту';
+                    this.showAlert();
+                } else if (!this.$data.email.includes('@')) {
+                    this.$data.alertMessage = 'Проверьте правильность электронной почты';
+                    this.showAlert();
+                } else if (this.$data.password === '' || this.$data.password == null) {
+                    this.$data.alertMessage = 'Пожалуйста, укажите пароль';
+                    this.showAlert();
+                }else if (this.$data.role == null || this.$data.role === '') {
+                    this.$data.alertMessage = 'Пожалуйста, выберите роль';
+                    this.showAlert();
+                }
+                else {
+                    AXIOS.post('/auth/signup', {
                         'name': this.$data.name,
                         'surname': this.$data.surname,
                         'email': this.$data.email,
@@ -120,18 +136,25 @@
                         'phone': this.$data.phone,
                         'role': this.$data.role,
                         'information': this.$data.information,
-                    };
-                    AXIOS.post('/registration', newUser)
+                        'cityTitle':this.$data.cityTitle,
+                        'description':this.$data.description
+                    })
                         .then(response => {
                             console.log(response);
-                            this.successAlert();
+                            this.$router.push({name: 'SignIn', params: {successfullyRegistered: true}});
                         }, error => {
-                            this.$data.alertMessage = (error.response.data.message.length < 150) ? error.response.data.message : 'Request error. Please, report this error website owners'
+                            if (error.response.data.message.includes('Validation failed')) {
+                                this.$data.alertMessage = 'Проверьте корректность данных';
+                                this.showAlert();
+                            } else {
+                                this.$data.alertMessage = error.response.data.message;
+                                this.showAlert();
+                            }
                             this.showAlert();
                         })
                         .catch(error => {
                             console.log(error);
-                            this.$data.alertMessage = 'Request error. Please, report this error website owners';
+                            this.$data.alertMessage = 'Ошибка';
                             this.showAlert();
                         });
                 }
@@ -141,16 +164,6 @@
             },
             showAlert() {
                 this.dismissCountDown = this.dismissSecs
-            },
-            successAlert() {
-                this.name = '';
-                this.surname = '';
-                this.email = '';
-                this.password = '';
-                this.role = '';
-                this.phone = '';
-                this.information = '';
-                this.successfullyRegistered = true;
             }
         }
     }

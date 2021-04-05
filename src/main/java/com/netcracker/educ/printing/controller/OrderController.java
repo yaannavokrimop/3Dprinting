@@ -1,95 +1,161 @@
 package com.netcracker.educ.printing.controller;
 
 import com.netcracker.educ.printing.exception.NotFoundException;
+import com.netcracker.educ.printing.model.bean.PaginationBean;
 import com.netcracker.educ.printing.model.entity.Order;
-import com.netcracker.educ.printing.model.entity.User;
 import com.netcracker.educ.printing.model.repository.OrderRepo;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.netcracker.educ.printing.model.representationModel.OrderRepresent;
+import com.netcracker.educ.printing.security.UserDetailsImpl;
+import com.netcracker.educ.printing.service.FileService;
+import com.netcracker.educ.printing.service.OrderService;
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.*;
+import javax.servlet.http.HttpServletResponse;
+import javax.transaction.Transactional;
+import java.io.IOException;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
+
+@Slf4j
 @RestController
 @RequestMapping("/api/order")
+@AllArgsConstructor
+@Transactional
 public class OrderController {
 
-    @Autowired
-    OrderRepo repo;
+    private final OrderRepo orderRepo;
+    private final OrderService orderService;
+    private final FileService fileService;
 
-    @GetMapping
-    public List<Order> getAllOrders(@RequestParam(required = false) String description) {
-
-        List<Order> orders = new ArrayList<>();
-
-        if (description == null)
-            orders.addAll(repo.findAll());
-        else
-            orders.addAll(repo.findByDescriptionContaining(description));
-
-        return orders;
+    @GetMapping("/user")
+    public ResponseEntity<PaginationBean> getOrdersByUserId(@RequestParam Map<String, String> pageParams, @AuthenticationPrincipal UserDetailsImpl principal) {
+        log.debug("Get orders for user {}",principal.getId());
+        Page<Order> ordersPage = orderService.getPageOfOrders(pageParams, principal.getId());
+        List<OrderRepresent> orders = orderService.ordersToOrderRepresents(ordersPage.getContent());
+        return ResponseEntity.ok(new PaginationBean(ordersPage.getTotalPages(), orders));
     }
 
     @GetMapping("{id}")
-    public Order getOrderById(@PathVariable("id") UUID id) {
-        Optional<Order> orderData = repo.findById(id);
+    public OrderRepresent getOrderById(@PathVariable("id") UUID id) {
+        log.debug("Get order by id= {}", id);
+        return orderService.getOrderById(id);
+    }
 
-        if (orderData.isPresent()) {
-            return orderData.get();
-        } else {
-            throw new NotFoundException();
-        }
+    @GetMapping("/file/{fileName}")
+    public void returnFile(@PathVariable("fileName") String fileName, HttpServletResponse response) {
+        fileService.returnFile(fileName, response);
+    }
+
+    @GetMapping("forchat/{chatId}")
+    public List<Order> getOrdersForChat(@PathVariable(name = "chatId") UUID chatId) {
+        log.debug("Get Order by chat id= {}", chatId);
+        return orderService.getOrdersForChat(chatId);
     }
 
     @PostMapping
-    public Order createOrder(
-            @RequestBody Order inputOrder,
-            @AuthenticationPrincipal User user
-    ) {
+    public Order createOrder(@RequestBody OrderRepresent inputOrder, @AuthenticationPrincipal UserDetailsImpl details) {
+        log.debug("User {} create order {}",details.getId(),inputOrder.getName());
+        return orderService.create(inputOrder, details.getId());
+    }
 
-        Order order = new Order(
-                user.getId(),
-                inputOrder.getStatus(),
-                inputOrder.getSum(),
-                inputOrder.getHeight(),
-                inputOrder.getWidth(),
-                inputOrder.getLength(),
-                inputOrder.getDescription()
-        );
-
-        order.setId(UUID.randomUUID());
-        order.setDate(new Date());
-
-        return repo.save(order);
+    @PostMapping("/draft")
+    public Order createDraft(@RequestBody OrderRepresent inputOrder, @AuthenticationPrincipal UserDetailsImpl details) {
+        log.debug("User {} create orderDraft {}",details.getId(),inputOrder.getName());
+        return orderService.createDraft(inputOrder, details.getId());
     }
 
     @PutMapping("{id}")
     public Order updateOrder(
-            @PathVariable("id") UUID id,
-            @RequestBody Order inputOrder
-    ) {
-        Optional<Order> orderData = repo.findById(id);
+            @RequestBody OrderRepresent inputOrder,
+            @PathVariable("id") UUID orderId) {
+        log.debug("Update order {}", orderId);
+        return orderService.updateOrder(inputOrder,orderId);
+    }
 
-        if (orderData.isPresent()) {
-            Order order = orderData.get();
-            order.setStatus(inputOrder.getStatus());
-            order.setSum(inputOrder.getSum());
-            order.setHeight(inputOrder.getHeight());
-            order.setWidth(inputOrder.getWidth());
-            order.setLength(inputOrder.getLength());
-            order.setDescription(inputOrder.getDescription());
-            return repo.save(order);
-        } else {
-            throw new NotFoundException();
+    @PutMapping("/file/{orderId}")
+    public ResponseEntity<String> updateFile(@PathVariable UUID orderId, @RequestBody MultipartFile file) {
+        fileService.deleteFileByOrderId(orderId);
+        String result;
+        try {
+            result = orderService.addFile(file, orderId);
+        } catch (IOException ex) {
+            return ResponseEntity.badRequest().body("Не удалось изменить файл. Попробуйте ещё раз.");
+        } catch (NotFoundException ex) {
+            return ResponseEntity.badRequest().body("Не удалось изменить файл. Заказ не найден.");
         }
+        if (!result.equals("")) return ResponseEntity.ok(result);
+        else return ResponseEntity.badRequest().body("Фвйл пустой. Выберите другой файл.");
     }
 
     @DeleteMapping("{id}")
     public UUID deleteOrder(@PathVariable("id") UUID id) {
+        log.debug("Delete order {}",id);
+        return orderService.deleteOrder(id);
+    }
 
-        repo.deleteById(id);
+    @DeleteMapping("/file/{orderId}")
+    public void deleteFile(@PathVariable UUID orderId) {
+        log.debug("Delete file from order {}", orderId);
+        fileService.deleteFileByOrderId(orderId);
+    }
 
-        return id;
+    @PatchMapping("/file/{orderId}")
+    public ResponseEntity<String> addFileToOrder(@PathVariable UUID orderId, @RequestBody MultipartFile file) {
+        String result;
+        try {
+            result = orderService.addFileAndChangeStatus(file, orderId);
+        } catch (IOException ex) {
+            return ResponseEntity.badRequest().body("Не удалось загрузить файл. Попробуйте ещё раз.");
+        } catch (NotFoundException ex) {
+            return ResponseEntity.badRequest().body("Не удалось загрузить файл. Заказ не найден.");
+        }
+        if (!result.equals("")) return ResponseEntity.ok(result);
+        else return ResponseEntity.badRequest().body("Фвйл пустой. Выберите другой файл.");
+    }
 
+    @PatchMapping("/draft/file/{orderId}")
+    public ResponseEntity<String> addFileToDraft(@PathVariable UUID orderId, @RequestBody MultipartFile file) {
+        String result;
+        try {
+            result = orderService.addFile(file, orderId);
+        } catch (IOException ex) {
+            return ResponseEntity.badRequest().body("Не удалось загрузить файл. Попробуйте ещё раз.");
+        } catch (NotFoundException ex) {
+            return ResponseEntity.badRequest().body("Не удалось загрузить файл. Заказ не найден.");
+        }
+        if (!result.equals("")) return ResponseEntity.ok(result);
+        else return ResponseEntity.badRequest().body("Фвйл пустой. Выберите другой файл.");
+    }
+
+    @PatchMapping("/pay/{id}")
+    public Order payOrder(@PathVariable("id") UUID id) {
+        log.debug("Pay order {}",id);
+        return orderService.payOrder(id);
+    }
+
+    @PatchMapping("/done/{id}")
+    public Order doneOrder(@PathVariable("id") UUID id) {
+        log.debug("Done order {}",id);
+        return orderService.doneOrder(id);
+    }
+
+    @PatchMapping("/receive/{id}")
+    public Order receivedOrder(@PathVariable("id") UUID id) {
+        log.debug("Receive order {}",id);
+        return orderService.receivedOrder(id);
+    }
+
+    @PatchMapping("/notDraft/{id}")
+    public Order notDraft(@PathVariable("id") UUID id) {
+        log.debug("Not Draft order {}",id);
+        return orderService.notDraftOrder(id);
     }
 }

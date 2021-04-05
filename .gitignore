@@ -31,3 +31,6 @@ build/
 
 # Compiled class file
 *.class
+
+#outjs
+#/src/main/resources/static/outjs/
