@@ -1,16 +1,11 @@
 <template>
+        <v-container>
+        <v-flex>
+        <user-data v-bind:user='user'></user-data>
+        </v-flex>
 
 
-            <v-container>
-                <v-layout justify-space-around column>
-                    <div class="title">Профиль</div>
-
-                   <v-flex xs6>
-                        <user-data v-bind:user='user'></user-data>
-                   </v-flex>
-                </v-layout>
-            </v-container>
-
+         </v-container>
 
 </template>
 
@@ -18,6 +13,7 @@
 import UserData from 'components/UserData.vue'
 
 export default {
+name: "Profile",
     components:{
         UserData
     },
@@ -31,8 +27,11 @@ export default {
                  phone:'',
                  role:'',
                  surname:'',
+                 addresses:[]
 
-            }
+                },
+                accessToken: localStorage.getItem('accessToken'),
+                role: localStorage.getItem('authority'),
             }
           },
 

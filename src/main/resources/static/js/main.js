@@ -7,15 +7,17 @@ import 'vuetify/dist/vuetify.min.css'
 import BootstrapVue from 'bootstrap-vue'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
+import store from "store/store";
 // import Axios from 'axios'
 
 // Vue.use(Vuetify)
 Vue.use(VueResource);
-Vue.use(BootstrapVue)
+Vue.use(BootstrapVue);
 // Vue.prototype.$http = Axios;
 
 new Vue({
     vuetify,
     router,
+    store,
     render: a => a(App)
 }).$mount('#app')
